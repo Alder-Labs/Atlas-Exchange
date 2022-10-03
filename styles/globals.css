@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+/* Sets things like scrollbars to dark color in dark mode */
+.dark {
+    color-scheme: dark;
+}
+
+body {
+    @apply scroll-smooth;
+}
+
+/* File upload styling */
+.filepond--panel-root {
+    @apply dark:bg-grayDark-50 dark:hover:bg-grayDark-80 !important;
+}
+
+.filepond--drop-label {
+    @apply text-md dark:text-white !important;
+}
+
+/* Always show the scrollbar */
+html {
+    overflow-y: scroll;
+}
+
+/* Modal Backdrop Z-Index is 50 - Show recaptcha above modal */
+.grecaptcha-badge {
+    z-index: 51;
+}
