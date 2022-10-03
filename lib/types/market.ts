@@ -1,0 +1,27 @@
+export type Market = {
+  name: string;
+  enabled: boolean;
+  postOnly: boolean;
+  priceIncrement: number;
+  sizeIncrement: number;
+  minProvideSize: number;
+  last: number;
+  bid: number;
+  ask: number;
+  price: number;
+  type: string;
+  futureType?: string;
+  baseCurrency: string;
+  quoteCurrency: string;
+  underlying?: string;
+  restricted: boolean;
+  highLeverageFeeExempt: boolean;
+  largeOrderThreshold: number;
+  change1h: number;
+  change24h: number;
+  changeBod: number;
+  quoteVolume24h: number;
+  volumeUsd24h: number;
+  priceHigh24h: number;
+  priceLow24h: number;
+};
