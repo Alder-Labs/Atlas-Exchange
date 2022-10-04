@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 import {
   faCheckCircle,
   faEye,
   faEyeSlash,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
-} from 'react-google-recaptcha-v3';
-import { useForm } from 'react-hook-form';
+} from "react-google-recaptcha-v3";
+import { useForm } from "react-hook-form";
 
-import { useModalState } from '../../../hooks/useModalState';
-import { useUserState, SignupParams } from '../../../lib/auth-token-context';
-import { toast } from '../../../lib/toast';
-import { ModalState } from '../../../lib/types/modalState';
-import { TextInput, TextButton, InputCheckbox, Button, Text } from '../../base';
-import { TitledModal } from '../../modals/TitledModal';
+import { useModalState } from "../../../hooks/useModalState";
+import { useUserState, SignupParams } from "../../../lib/auth-token-context";
+import { toast } from "../../../lib/toast";
+import { ModalState } from "../../../lib/types/modalState";
+import { TextInput, TextButton, InputCheckbox, Button, Text } from "../../base";
+import { TitledModal } from "../../modals/TitledModal";
 
-const FTX_RECAPTCHA_CREATE_USER_ACTION = 'REGISTER';
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
+const FTX_RECAPTCHA_CREATE_USER_ACTION = "REGISTER";
+const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? "";
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);
@@ -72,7 +72,7 @@ function PasswordRequirement({
           />
         </Text>
       )}
-      <Text size="sm" color={satisfied ? 'normal' : 'secondary'}>
+      <Text size="sm" color={satisfied ? "normal" : "secondary"}>
         {errorMessage}
       </Text>
     </div>
@@ -133,8 +133,8 @@ const SignUpModal = (props: SignUpProps) => {
     formState: { errors },
   } = useForm<SignupParams>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -144,26 +144,26 @@ const SignUpModal = (props: SignUpProps) => {
     setAgreed(false);
   }, [modalState, reset]);
 
-  const onSignUp = async (data: Omit<SignupParams, 'captcha'>) => {
+  const onSignUp = async (data: Omit<SignupParams, "captcha">) => {
     if (!agreed) {
-      toast.error('You must agree to the terms and conditions');
+      toast.error("You must agree to the terms and conditions");
       return;
     }
 
     const password: string = data.password;
     if (password.length < 8) {
-      toast.error('Password must be at least 8 characters long');
+      toast.error("Password must be at least 8 characters long");
       return;
     }
 
     const isValid = validatePassword(password).isValid;
     if (!isValid) {
-      toast.error('Invalid password');
+      toast.error("Invalid password");
       return;
     }
 
     if (!executeRecaptcha) {
-      toast.error('Error: reCAPTCHA not loaded.');
+      toast.error("Error: reCAPTCHA not loaded.");
       return;
     }
 
@@ -171,7 +171,7 @@ const SignUpModal = (props: SignUpProps) => {
     try {
       captchaToken = await executeRecaptcha(FTX_RECAPTCHA_CREATE_USER_ACTION);
     } catch (e) {
-      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      toast.error("Error: reCAPTCHA failed. Please contact Support.");
       return;
     }
 
@@ -180,7 +180,7 @@ const SignUpModal = (props: SignUpProps) => {
       userState
         .signup({ ...data, captcha: { recaptcha_challenge: captchaToken } })
         .then(() => {
-          router.push('/onboarding').then(() => {
+          router.push("/onboarding").then(() => {
             setModalState({ state: ModalState.Closed });
           });
         })
@@ -203,20 +203,20 @@ const SignUpModal = (props: SignUpProps) => {
   };
 
   return (
-    <div className="px-6 pb-6 pt-8">
+    <div className="px-4 pb-6 pt-8">
       <form onSubmit={handleSubmit(onSignUp)}>
         <TextInput
           label="Email"
-          placeholder={'Email'}
-          {...register('email', { required: true })}
+          placeholder={"Email"}
+          {...register("email", { required: true })}
         />
-        <div className="h-4"></div>
+        <div className="h-6"></div>
 
         <TextInput
           label="Password"
-          placeholder={'Password'}
-          type={passwordIsShowing ? 'text' : 'password'}
-          id={'inline-password'}
+          placeholder={"Password"}
+          type={passwordIsShowing ? "text" : "password"}
+          id={"inline-password"}
           renderSuffix={() => (
             <div>
               <TextButton
@@ -234,11 +234,11 @@ const SignUpModal = (props: SignUpProps) => {
               </TextButton>
             </div>
           )}
-          {...register('password', { required: true })}
+          {...register("password", { required: true })}
         />
-        {watch('password') && (
+        {watch("password") && (
           <div className="animate-enter mt-3">
-            <PasswordRequirements password={watch('password')} />
+            <PasswordRequirements password={watch("password")} />
           </div>
         )}
 

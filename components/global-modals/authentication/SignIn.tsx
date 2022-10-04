@@ -150,7 +150,7 @@ export function SignIn(props: SignInProps) {
             )}
             {...register("password", { required: true })}
           />
-          <div className="mt-2.5 flex w-full">
+          <div className="mt-4 mb-2 flex w-full">
             <TextButton
               type="button"
               variant={"primary"}
