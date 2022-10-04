@@ -81,7 +81,7 @@ const Wallet: NextPage = () => {
               >
                 <div className="mb-4 w-full overflow-x-auto">
                   <div className="inline-block min-w-full">
-                    <Tab.List className="dark:border-grayDark-50 border-grayLight-10 mb-4 flex min-w-full flex-nowrap gap-6 border-b-2">
+                    <Tab.List className="mb-4 flex min-w-full flex-nowrap gap-6 border-b-2 border-grayLight-10 dark:border-grayDark-50">
                       <Tab className={getBtnStyle(TabType.Balances)}>
                         Assets
                       </Tab>
@@ -122,12 +122,12 @@ const Wallet: NextPage = () => {
             </div>
           </div>
 
-          <div className="dark:bg-grayDark-50 bg-grayLight-10 my-8 hidden w-[2px] shrink-0 self-stretch sm:block"></div>
+          <div className="my-8 hidden w-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:block"></div>
 
           <div className="w-full shrink-0 lg:w-80">
             <Responsive showIfSmallerThan="lg">
               <div className="h-8" />
-              <div className="dark:bg-grayDark-50 bg-grayLight-10 h-[2px] shrink-0 self-stretch"></div>
+              <div className="h-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50"></div>
             </Responsive>
             <div className="flex w-full flex-col items-start py-8 sm:p-8">
               <BuySellConvert />
