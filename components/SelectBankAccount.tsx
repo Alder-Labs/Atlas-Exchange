@@ -66,7 +66,7 @@ function RenderBankAccount(props: RenderBankAccountProps) {
             >
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                className="ml-1 outline-none"
+                className="ml-1 outline-none h-3 w-3 inline"
               />
             </Tooltip>
           </span>
@@ -83,7 +83,7 @@ function RenderBankAccount(props: RenderBankAccountProps) {
             >
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                className="ml-1 outline-none"
+                className="ml-1 outline-none h-3 w-3 inline"
               />
             </Tooltip>
           </span>
