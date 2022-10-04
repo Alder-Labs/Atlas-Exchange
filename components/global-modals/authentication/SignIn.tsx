@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
-import { useModalState } from '../../../hooks/useModalState';
-import { useUserState } from '../../../lib/auth-token-context';
-import { useMutationFetcher } from '../../../lib/mutation';
-import { toast } from '../../../lib/toast';
-import { SignInResponse } from '../../../lib/types';
-import { ModalState } from '../../../lib/types/modalState';
-import { TextInput, TextButton, Button, Text } from '../../base';
-import { TitledModal } from '../../modals/TitledModal';
+import { useLoginStatus } from "../../../hooks/useLoginStatus";
+import { useModalState } from "../../../hooks/useModalState";
+import { useUserState } from "../../../lib/auth-token-context";
+import { useMutationFetcher } from "../../../lib/mutation";
+import { toast } from "../../../lib/toast";
+import { SignInResponse } from "../../../lib/types";
+import { ModalState } from "../../../lib/types/modalState";
+import { TextInput, TextButton, Button, Text } from "../../base";
+import { TitledModal } from "../../modals/TitledModal";
 
 interface SignInProps {}
 
@@ -29,19 +29,19 @@ export function SignIn(props: SignInProps) {
 
   function handleMfa(signinRes: SignInResponse) {
     if (!signinRes.mfaRequired) {
-      router.push('/onboarding');
+      router.push("/onboarding");
       return;
     }
     switch (signinRes.mfaMethod) {
-      case 'email':
+      case "email":
         // setAuthModalState(AuthModalState.EmailAuth);
         // Note: This should never happen, since email mfa is not used.
         setModalState({ state: ModalState.Closed });
         break;
-      case 'sms':
+      case "sms":
         setModalState({ state: ModalState.SmsAuth });
         break;
-      case 'totp':
+      case "totp":
         setModalState({ state: ModalState.TotpAuth });
         break;
       default:
@@ -58,8 +58,8 @@ export function SignIn(props: SignInProps) {
     formState: { errors },
   } = useForm<{ email: string; password: string }>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -88,7 +88,7 @@ export function SignIn(props: SignInProps) {
       useMutationFetcher<{}, {}>(`/proxy/api/users/public_change_password`),
       {
         onSuccess: (data) => {
-          toast.success('Reset password email sent.');
+          toast.success("Reset password email sent.");
         },
         onError: (error) => {
           toast.error(`Error resetting password. Please contact support.`);
@@ -123,16 +123,16 @@ export function SignIn(props: SignInProps) {
         <form onSubmit={onSignIn()} className="mx-auto w-full">
           <TextInput
             id="email-input"
-            placeholder={'Email'}
+            placeholder={"Email"}
             label="Email"
-            {...register('email', { required: true })}
+            {...register("email", { required: true })}
           />
           <div className="h-6"></div>
           <TextInput
             label="Password"
-            placeholder={'Password'}
-            type={passwordIsShowing ? 'text' : 'password'}
-            id={'inline-password'}
+            placeholder={"Password"}
+            type={passwordIsShowing ? "text" : "password"}
+            id={"inline-password"}
             renderSuffix={() => (
               <TextButton
                 onClick={toggleShowPassword}
@@ -148,11 +148,12 @@ export function SignIn(props: SignInProps) {
                 )}
               </TextButton>
             )}
-            {...register('password', { required: true })}
+            {...register("password", { required: true })}
           />
           <div className="mt-2.5 flex w-full">
             <TextButton
-              variant={'primary'}
+              type="button"
+              variant={"primary"}
               className="mr-1 ml-auto"
               onClick={(e) => {
                 setModalState({ state: ModalState.ForgotPassword });
@@ -168,7 +169,7 @@ export function SignIn(props: SignInProps) {
             className="w-full"
             loading={isLoggingIn}
             disabled={
-              watch('email').length === 0 || watch('password').length === 0
+              watch("email").length === 0 || watch("password").length === 0
             }
           >
             Sign in
