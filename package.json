@@ -45,9 +45,7 @@
     "react-qr-code": "^2.0.7",
     "react-query": "^3.39.1",
     "recharts": "2.1.12",
-    "rifm": "^0.12.1"
-  },
-  "peerDependencies": {
+    "rifm": "^0.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
