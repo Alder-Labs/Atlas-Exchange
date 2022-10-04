@@ -1,4 +1,5 @@
 import { WithdrawCryptoInput } from '../../components/global-modals/send-receive/WithdrawCryptoConfirm';
+
 import { Coin } from './coin';
 
 export enum ModalState {

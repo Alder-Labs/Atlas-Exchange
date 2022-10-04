@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
@@ -25,7 +26,6 @@ import { Dropdown } from './Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 
 export function IconButton(props: {
   icon: ReactNode;

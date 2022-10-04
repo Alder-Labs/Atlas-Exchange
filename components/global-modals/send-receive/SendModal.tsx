@@ -14,8 +14,8 @@ import CryptoDepositAddress from '../deposit/CryptoDepositAddress';
 
 import { ReceiveOption } from './ReceiveOption';
 import { SendOption } from './SendOption';
-import WithdrawCryptoForm from './WithdrawCryptoForm';
 import WithdrawCryptoConfirm from './WithdrawCryptoConfirm';
+import WithdrawCryptoForm from './WithdrawCryptoForm';
 
 const SendModal = () => {
   const router = useRouter();
