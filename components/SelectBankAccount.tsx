@@ -1,14 +1,25 @@
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
-import { useMutation } from 'react-query';
+import { useCallback } from "react";
 
-import { useBankAccounts } from '../hooks/useBankAccounts';
-import { useUserState } from '../lib/auth-token-context';
-import { useMutationFetcher } from '../lib/mutation';
-import { toast } from '../lib/toast';
+import {
+  faCheck,
+  faInfo,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 
-import { Text, Button, Select, TextButton } from './base';
+import {
+  BankAccount,
+  BankAccountStatus,
+  useBankAccounts,
+} from "../hooks/useBankAccounts";
+import { useUserState } from "../lib/auth-token-context";
+import { useMutationFetcher } from "../lib/mutation";
+import { toast } from "../lib/toast";
+
+import { Text, Button, Select, TextButton } from "./base";
+import { Tooltip } from "./Tooltip";
 
 interface RenderBankAccountProps {
   accountId: number;
@@ -28,18 +39,62 @@ function RenderBankAccount(props: RenderBankAccountProps) {
   const { isLoading: loadingDeleteAchAccount, mutateAsync: deleteAchAccount } =
     useMutation(
       useMutationFetcher(`/proxy/api/ach/accounts/${accountId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         onFetchSuccess: refetchBankAccounts,
       }),
       {
         onSuccess: () => {
-          toast.success('Bank account deleted.');
+          toast.success("Bank account deleted.");
         },
       }
     );
 
-  const account = bankAccountsMap?.[accountId];
+  console.log(bankAccountsMap);
+  const renderStatus = useCallback((account: BankAccount) => {
+    switch (account.status) {
+      case BankAccountStatus.REQUESTED:
+      case BankAccountStatus.NEEDS_DEPOSIT_VERIFICATION:
+      case BankAccountStatus.PENDING_PLAID_VERIFICATION:
+        return (
+          <span>
+            <Text color="warning" className="ml-2" size="sm">
+              (Pending Verification)
+            </Text>
+            <Tooltip
+              placement="bottom"
+              content={"Your bank account is pending verification from Plaid."}
+            >
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                className="ml-1 outline-none"
+              />
+            </Tooltip>
+          </span>
+        );
+      case BankAccountStatus.REJECTED:
+        return (
+          <span>
+            <Text color="error" className="ml-2" size="sm">
+              (Rejected)
+            </Text>
+            <Tooltip
+              placement="bottom"
+              content={"Your bank account has been rejected from Plaid."}
+            >
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                className="ml-1 outline-none"
+              />
+            </Tooltip>
+          </span>
+        );
+      case BankAccountStatus.APPROVED:
+      default:
+        return <></>;
+    }
+  }, []);
 
+  const account = bankAccountsMap?.[accountId];
   if (!account) {
     return null;
   }
@@ -49,13 +104,6 @@ function RenderBankAccount(props: RenderBankAccountProps) {
       <div className="flex flex-col">
         <Text className="flex items-center">
           {account?.name}
-          {account?.status === 'rejected' && (
-            <>
-              <Text color="error" className="ml-2">
-                ({account.status})
-              </Text>
-            </>
-          )}
           {account && (
             <Button
               size="xs"
@@ -66,7 +114,7 @@ function RenderBankAccount(props: RenderBankAccountProps) {
                 e.preventDefault();
                 if (
                   window.confirm(
-                    'Are you sure you want to delete this account?'
+                    "Are you sure you want to delete this account?"
                   )
                 ) {
                   deleteAchAccount(account.id);
@@ -79,6 +127,7 @@ function RenderBankAccount(props: RenderBankAccountProps) {
         </Text>
         <Text size="sm" color="secondary">
           {account?.identity.mask}
+          {renderStatus(account)}
         </Text>
       </div>
       {selected && <FontAwesomeIcon icon={faCheck} className="mr-2 h-4 w-4" />}
@@ -112,7 +161,7 @@ export function SelectBankAccount(props: SelectBankAccountProps) {
             if (onClickConnect) {
               onClickConnect();
             } else {
-              router.push('/connect-bank');
+              router.push("/connect-bank");
             }
           }}
         >
