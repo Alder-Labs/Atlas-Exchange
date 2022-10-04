@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+import { useAtom } from 'jotai';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
@@ -8,16 +9,13 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import { useModalState } from '../../../hooks/useModalState';
+import { sardineDeviceIdAtom } from '../../../lib/jotai';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
+import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { useAtom } from 'jotai';
-import { sardineDeviceIdAtom } from '../../../lib/jotai';
-
-const FTX_RECAPTCHA_CHANGE_PASSWORD_ACTION = 'CHANGEPASSWORD';
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
 type PublicResetPasswordRequest = {
   deviceId?: string | null;
@@ -77,9 +75,7 @@ const ForgotPasswordModal = () => {
 
     let captchaToken: string;
     try {
-      captchaToken = await executeRecaptcha(
-        FTX_RECAPTCHA_CHANGE_PASSWORD_ACTION
-      );
+      captchaToken = await executeRecaptcha(RecaptchaActions.CHANGEPASSWORD);
     } catch (e) {
       toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;

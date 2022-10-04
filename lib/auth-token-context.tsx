@@ -5,16 +5,11 @@ import { useQueryClient } from 'react-query';
 
 import { useStateCallback } from '../hooks/useStateCallback';
 
-import { SignInResponse } from './types';
+import { RecaptchaParams, SigninParams, SignInResponse, SigninWithMfaParams } from './types';
 
 interface User {
   token: string;
 }
-
-type SigninParams = {
-  email: string;
-  password: string;
-};
 
 export type SignupParams = {
   email: string;
@@ -23,14 +18,7 @@ export type SignupParams = {
   clientUserId?: string;
   acceptedWhitelabelTos: boolean;
   password: string;
-  captcha: {
-    recaptcha_challenge: string;
-  };
-};
-
-export type SigninWithMfaParams = {
-  code: string;
-};
+} & RecaptchaParams;
 
 type UserState =
   | {
@@ -125,7 +113,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         return res.result;
       })
       .then((res) => {
-        return signin({ email: data.email, password: data.password });
+        return signin({
+          email: data.email,
+          password: data.password,
+          captcha: {
+            recaptcha_challenge: data.captcha.recaptcha_challenge,
+          },
+        });
       });
   };
 
@@ -134,10 +128,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
+        body: JSON.stringify(data),
       })
         .then((res) => {
           return res.json();

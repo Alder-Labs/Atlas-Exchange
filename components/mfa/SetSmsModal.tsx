@@ -16,11 +16,13 @@ import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
-import { MfaType } from '../../lib/types';
+import { MfaType, RecaptchaActions } from '../../lib/types';
 import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
+
 import { ExistingMfaInput } from './ExistingMfaInput';
+
 
 const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
@@ -48,10 +50,10 @@ const countryCodeOption: { value: string; label: string }[] = [
 ];
 
 export function SetSmsModalInside(props: { mfa: MfaType }) {
-  const router = useRouter();
   const [open, handlers] = useModal(false);
   const [existingMfaCode, setExistingMfaCode] = useState('');
   const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const userState = useUserState();
 
@@ -124,8 +126,6 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
     }
   );
 
-  const { executeRecaptcha } = useGoogleReCaptcha();
-
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = async () => {
     const { countryCode, phoneNumber } = getValues();
@@ -144,7 +144,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
       return;
     }
 
-    const token = await executeRecaptcha('SMS').catch(() => {
+    const token = await executeRecaptcha(RecaptchaActions.SMS).catch(() => {
       toast.error('Error: reCaptcha failed');
       return null;
     });

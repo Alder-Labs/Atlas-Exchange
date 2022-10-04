@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
+import { useSetAtom } from 'jotai';
 import { useQuery } from 'react-query';
 
 import { useUserState } from '../../lib/auth-token-context';
 import { useFetcher } from '../../lib/fetcher';
-import { SardineSdkConfig } from '../../lib/types/sardine';
 import { sardineDeviceIdAtom } from '../../lib/jotai';
-import { useSetAtom } from 'jotai';
+import { SardineSdkConfig } from '../../lib/types/sardine';
 
 const useSardineSdkConfig = () => {
   const userState = useUserState();
