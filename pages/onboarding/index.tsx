@@ -202,7 +202,6 @@ const OnboardingPage: CustomPage = () => {
                   return submitKycLevel1(kycLevel1Data)
                     .then(() => {
                       localStorage.clear();
-                      toast.success("Successfully submitted KYC Level 1");
                       setModalState({
                         state: ModalState.Closed,
                       });
