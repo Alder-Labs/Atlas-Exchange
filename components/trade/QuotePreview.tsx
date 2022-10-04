@@ -4,10 +4,10 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useBalances } from '../../hooks/useBalances';
+import { useUserState } from '../../lib/auth-token-context';
 import { renderCurrency } from '../../lib/currency';
 import { Quote } from '../../lib/types';
 import { Button, Title, Text } from '../base';
-import { useUserState } from '../../lib/auth-token-context';
 
 export interface QuotePreviewProps {
   quote: Quote;

@@ -14,11 +14,11 @@ import { WEBSITE_URL } from '../../lib/constants';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
+import { MfaType } from '../../lib/types';
 import { Text, Button, TextInput, Spinner } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
-import { MfaType } from '../../lib/types';
 
 const TOTP_ISSUER = encodeURIComponent(WEBSITE_URL);
 

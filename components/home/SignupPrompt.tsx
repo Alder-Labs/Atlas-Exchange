@@ -3,9 +3,9 @@ import React from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { Button, Text, Title } from '../base';
-import { ModalState } from '../../lib/types/modalState';
 import { useModalState } from '../../hooks/useModalState';
+import { ModalState } from '../../lib/types/modalState';
+import { Button, Text, Title } from '../base';
 
 export const SignupPrompt = ({
   className,

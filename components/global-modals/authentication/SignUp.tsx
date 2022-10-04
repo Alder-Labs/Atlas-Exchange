@@ -17,11 +17,9 @@ import { useModalState } from '../../../hooks/useModalState';
 import { useUserState, SignupParams } from '../../../lib/auth-token-context';
 import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
+import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, TextButton, InputCheckbox, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-
-const FTX_RECAPTCHA_CREATE_USER_ACTION = 'REGISTER';
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);
@@ -169,7 +167,7 @@ const SignUpModal = (props: SignUpProps) => {
 
     let captchaToken: string;
     try {
-      captchaToken = await executeRecaptcha(FTX_RECAPTCHA_CREATE_USER_ACTION);
+      captchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
     } catch (e) {
       toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
