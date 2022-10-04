@@ -1,15 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
-import { useMutation } from 'react-query';
+import { useMutation } from "react-query";
 
-import { useLoginStatus } from '../../../../hooks/useLoginStatus';
-import { useModalState } from '../../../../hooks/useModalState';
-import { useUserState } from '../../../../lib/auth-token-context';
-import { useMutationFetcher } from '../../../../lib/mutation';
-import { toast } from '../../../../lib/toast';
-import { ModalState } from '../../../../lib/types/modalState';
-import { Button, Text, TextInput } from '../../../base';
-import { TitledModal } from '../../../modals/TitledModal';
+import { useCurrentDate } from "../../../../hooks/useCurrentDate";
+import { useLoginStatus } from "../../../../hooks/useLoginStatus";
+import { useModalState } from "../../../../hooks/useModalState";
+import { useUserState } from "../../../../lib/auth-token-context";
+import { useMutationFetcher } from "../../../../lib/mutation";
+import { toast } from "../../../../lib/toast";
+import { ModalState } from "../../../../lib/types/modalState";
+import { Button, Text, TextInput } from "../../../base";
+import { TitledModal } from "../../../modals/TitledModal";
+
+const SECONDS_BETWEEN_RESEND_CODE = 59;
 
 export const SmsAuth = () => {
   const userState = useUserState();
@@ -17,7 +20,18 @@ export const SmsAuth = () => {
   const { refetch: refetchLoginStatus } = useLoginStatus();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState("");
+
+  const currentDate = useCurrentDate();
+  const [codeLastSent, setCodeLastSent] = useState<Date | null>(null);
+
+  const secondsRemaining = Math.max(
+    0,
+    codeLastSent
+      ? SECONDS_BETWEEN_RESEND_CODE -
+          Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
+      : 0
+  );
 
   const onSignInWithMfa = useCallback(
     (smsCode: string) => {
@@ -33,7 +47,7 @@ export const SmsAuth = () => {
             toast.error(`Error: ${err.message}`);
           })
           .finally(() => {
-            setCode('');
+            setCode("");
             setIsLoggingIn(false);
           });
       } else {
@@ -46,7 +60,7 @@ export const SmsAuth = () => {
   const handleSubmit = useCallback(() => {
     if (code.length === 6) {
       onSignInWithMfa(code);
-      setCode('');
+      setCode("");
     }
   }, [code, onSignInWithMfa]);
 
@@ -60,7 +74,8 @@ export const SmsAuth = () => {
     ),
     {
       onSuccess: (data) => {
-        toast.success('Successfully requested phone verification');
+        toast.success("Successfully requested phone verification");
+        setCodeLastSent(new Date());
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
@@ -71,7 +86,7 @@ export const SmsAuth = () => {
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = useCallback(async () => {
     requestSms({
-      phoneNumber: '',
+      phoneNumber: "",
     });
   }, [requestSms]);
 
@@ -92,12 +107,7 @@ export const SmsAuth = () => {
           setModalState({ state: ModalState.SignIn });
         }
       }}
-      onClickCloseButton={() => {
-        if (userState.user) {
-          userState.signout();
-          setModalState({ state: ModalState.Closed });
-        }
-      }}
+      showCloseButton={false}
     >
       <div className="p-6">
         <Text>Please enter a 6-digit SMS code sent to your phone.</Text>
@@ -107,7 +117,7 @@ export const SmsAuth = () => {
           value={code}
           onChange={(e) => {
             // Digits only
-            setCode(e.target.value.replace(/\D/g, ''));
+            setCode(e.target.value.replace(/\D/g, ""));
           }}
           renderSuffix={() => (
             <Button
@@ -117,8 +127,13 @@ export const SmsAuth = () => {
               loading={requestSmsLoading}
               type="button"
               className="mr-2"
+              disabled={secondsRemaining > 0}
             >
-              {requestSmsLoading ? 'Sending...' : 'Resend SMS'}
+              {requestSmsLoading
+                ? "Sending..."
+                : secondsRemaining
+                ? `Resend (${secondsRemaining})`
+                : `Resend SMS`}
             </Button>
           )}
           className="w-full"
