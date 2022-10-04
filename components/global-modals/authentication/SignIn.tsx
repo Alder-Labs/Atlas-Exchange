@@ -3,29 +3,34 @@ import React, { useEffect, useState } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
 import { useModalState } from '../../../hooks/useModalState';
 import { useUserState } from '../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
 import { SignInResponse } from '../../../lib/types';
 import { ModalState } from '../../../lib/types/modalState';
+import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, TextButton, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
 interface SignInProps {}
 
-export function SignIn(props: SignInProps) {
+function SignIn(props: SignInProps) {
   const router = useRouter();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [modalState, setModalState] = useModalState();
 
   // Redirect to home if user is already logged in
-  const { data: loginStatus, refetch: refetchLoginStatus } = useLoginStatus();
   const userState = useUserState();
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   function handleMfa(signinRes: SignInResponse) {
     if (!signinRes.mfaRequired) {
@@ -64,11 +69,24 @@ export function SignIn(props: SignInProps) {
   });
 
   const onSignIn = () =>
-    handleSubmit((data) => {
+    handleSubmit(async (data) => {
+      if (!executeRecaptcha) {
+        toast.error('Error: reCAPTCHA not loaded.');
+        return;
+      }
+
+      let captchaToken: string;
+      try {
+        captchaToken = await executeRecaptcha(RecaptchaActions.LOGIN);
+      } catch (e) {
+        toast.error('Error: reCAPTCHA failed. Please contact Support.');
+        return;
+      }
+
       setIsLoggingIn(true);
       if (!userState.user) {
         userState
-          .signin({ ...data })
+          .signin({ ...data, captcha: { recaptcha_challenge: captchaToken } })
           .then((data) => {
             handleMfa(data);
           })
@@ -188,3 +206,13 @@ export function SignIn(props: SignInProps) {
     </TitledModal>
   );
 }
+
+const RecaptchaSignInWrapper = () => {
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+      <SignIn />
+    </GoogleReCaptchaProvider>
+  );
+};
+
+export default RecaptchaSignInWrapper;

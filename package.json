@@ -6,7 +6,8 @@
     "dev": "export NEXT_PUBLIC_API_URL=\"$(node scripts/get-ssm.js)\" && next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "next lint --fix"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",

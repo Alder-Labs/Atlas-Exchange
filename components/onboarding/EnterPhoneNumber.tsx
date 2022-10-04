@@ -13,6 +13,7 @@ import { Rifm } from 'rifm';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { KycPhone } from '../../lib/types/kyc';
+import { RecaptchaActions } from '../../lib/types/recaptcha';
 import { Text, TextInput, Button, Select } from '../base';
 
 import { OnboardingCardProps, OnboardingCard } from './OnboardingCard';
@@ -138,7 +139,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
       return;
     }
 
-    const token = await executeRecaptcha('SMS').catch(() => {
+    const token = await executeRecaptcha(RecaptchaActions.SMS).catch(() => {
       toast.error('Error: reCaptcha failed');
       return null;
     });
