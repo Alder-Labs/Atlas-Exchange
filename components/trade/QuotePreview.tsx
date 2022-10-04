@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { useBalances } from '../../hooks/useBalances';
-import { renderCurrency } from '../../lib/currency';
-import { Quote } from '../../lib/types';
-import { Button, Title, Text } from '../base';
-import { useUserState } from '../../lib/auth-token-context';
+import { useBalances } from "../../hooks/useBalances";
+import { useCurrentDate } from "../../hooks/useCurrentDate";
+import { useUserState } from "../../lib/auth-token-context";
+import { renderCurrency } from "../../lib/currency";
+import { Quote } from "../../lib/types";
+import { Button, Title, Text } from "../base";
 
 export interface QuotePreviewProps {
   quote: Quote;
@@ -38,8 +37,8 @@ export function QuotePreview(props: QuotePreviewProps) {
     actionLoading,
   } = props;
 
-  const toCoinId = quote.side === 'buy' ? quote.baseCoin : quote.quoteCoin;
-  const fromCoinId = quote.side === 'buy' ? quote.quoteCoin : quote.baseCoin;
+  const toCoinId = quote.side === "buy" ? quote.baseCoin : quote.quoteCoin;
+  const fromCoinId = quote.side === "buy" ? quote.quoteCoin : quote.baseCoin;
 
   const {
     balancesMap,
@@ -50,13 +49,7 @@ export function QuotePreview(props: QuotePreviewProps) {
     enabled: isLoggedIn,
   });
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const currentDate = useCurrentDate();
   const secondsBetweenDates = Math.floor(
     (quote.expiry * 1000 - currentDate.getTime()) / 1000
   );
@@ -94,13 +87,13 @@ export function QuotePreview(props: QuotePreviewProps) {
               amount: 1,
               minFixedDigits: 0,
               maxFixedDigits: 0,
-              showCoinId: toCoinId !== 'USD',
-            })}{' '}
-            ={' '}
+              showCoinId: toCoinId !== "USD",
+            })}{" "}
+            ={" "}
             {renderCurrency({
               coinId: fromCoinId,
-              amount: quote.side === 'buy' ? quote.price : 1 / quote.price,
-              showCoinId: fromCoinId !== 'USD',
+              amount: quote.side === "buy" ? quote.price : 1 / quote.price,
+              showCoinId: fromCoinId !== "USD",
             })}
           </Text>
         </div>
@@ -119,8 +112,8 @@ export function QuotePreview(props: QuotePreviewProps) {
             {renderCurrency({
               coinId: fromCoinId,
               amount: balancesMap?.[fromCoinId]?.total ?? 0,
-              showCoinId: fromCoinId !== 'USD',
-            })}{' '}
+              showCoinId: fromCoinId !== "USD",
+            })}{" "}
           </Text>
         </div>
         <div className="h-4"></div>
@@ -138,8 +131,8 @@ export function QuotePreview(props: QuotePreviewProps) {
             {renderCurrency({
               coinId: fromCoinId,
               amount: quote.cost ?? 0,
-              showCoinId: fromCoinId !== 'USD',
-            })}{' '}
+              showCoinId: fromCoinId !== "USD",
+            })}{" "}
           </Text>
         </div>
 
@@ -156,7 +149,7 @@ export function QuotePreview(props: QuotePreviewProps) {
             loadingWidth="4rem"
           >
             {renderCurrency({
-              coinId: quote.toCoin ?? '',
+              coinId: quote.toCoin ?? "",
               amount: quote.proceeds ?? 0,
             })}
           </Text>
