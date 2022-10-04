@@ -1,18 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-import { useRouter } from 'next/router';
-import { usePlaidLink } from 'react-plaid-link';
-import { useMutation } from 'react-query';
+import { useRouter } from "next/router";
+import { usePlaidLink } from "react-plaid-link";
+import { useMutation } from "react-query";
 
-import { useBankAccounts } from '../../../hooks/useBankAccounts';
-import { usePlaidLinkToken } from '../../../hooks/usePlaidLinkToken';
-import { useUserState } from '../../../lib/auth-token-context';
-import { BRAND_NAME } from '../../../lib/constants';
-import { useMutationFetcher } from '../../../lib/mutation';
-import { toast } from '../../../lib/toast';
-import { Text, Button, InputCheckbox, Spinner } from '../../base';
-import { SidePadding } from '../../layout/SidePadding';
-import { TitledModal } from '../../modals/TitledModal';
+import { useBankAccounts } from "../../../hooks/useBankAccounts";
+import { usePlaidLinkToken } from "../../../hooks/usePlaidLinkToken";
+import { useUserState } from "../../../lib/auth-token-context";
+import { BRAND_NAME } from "../../../lib/constants";
+import { useMutationFetcher } from "../../../lib/mutation";
+import { toast } from "../../../lib/toast";
+import { Text, Button, InputCheckbox, Spinner } from "../../base";
+import { SidePadding } from "../../layout/SidePadding";
+import { TitledModal } from "../../modals/TitledModal";
 
 interface ConnectBankAccountProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
     enabled: isLoggedIn,
   });
 
-  const linkTokenData = usePlaidLinkToken();
+  const { getLinkToken, plaidLinkTokenData } = usePlaidLinkToken();
 
   const { isLoading: createAchAccountLoading, mutate: createAchAccount } =
     useMutation(
@@ -52,7 +52,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
           pendingManualVerification: boolean;
         },
         {}
-      >('/proxy/api/ach/accounts', {
+      >("/proxy/api/ach/accounts", {
         onFetchSuccess: refetchBankAccounts,
       }),
       {
@@ -70,7 +70,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
   const { open, ready } = usePlaidLink(
     useMemo(
       () => ({
-        token: linkTokenData?.link_token ?? null,
+        token: plaidLinkTokenData?.link_token ?? null,
         onSuccess: (publicToken, metadata) => {
           const account = metadata.accounts[0];
           createAchAccount({
@@ -79,10 +79,10 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
             name: account.name,
             data: {
               mask: account.mask,
-              institutionName: metadata.institution?.name ?? '',
+              institutionName: metadata.institution?.name ?? "",
             },
             pendingManualVerification:
-              account.verification_status === 'pending_manual_verification',
+              account.verification_status === "pending_manual_verification",
           });
         },
         onExit: (err, metadata) => {
@@ -92,7 +92,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
           setLoading(false);
         },
       }),
-      [createAchAccount, linkTokenData?.link_token]
+      [createAchAccount, plaidLinkTokenData?.link_token]
     )
   );
 
@@ -140,12 +140,13 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
               <div className="text-center">
                 <Button
                   disabled={!agree}
-                  onClick={() => {
+                  onClick={async () => {
                     if (ready) {
                       setLoading(true);
+                      await getLinkToken();
                       open();
                     } else {
-                      toast.error('Plaid link is not ready');
+                      toast.error("Plaid link is not ready");
                     }
                   }}
                   className="w-full"
