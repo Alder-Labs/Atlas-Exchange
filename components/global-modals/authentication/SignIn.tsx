@@ -136,83 +136,77 @@ function SignIn(props: SignInProps) {
       onClose={() => setModalState({ state: ModalState.Closed })}
       renderWhenClosed={modalState.state === ModalState.Closed}
     >
-      <div className="px-4 pb-6">
-        <div className="h-8"></div>
-        <form onSubmit={onSignIn()} className="mx-auto w-full">
-          <TextInput
-            id="email-input"
-            placeholder={'Email'}
-            label="Email"
-            {...register('email', { required: true })}
-          />
-          <div className="h-6"></div>
-          <TextInput
-            label="Password"
-            placeholder={'Password'}
-            type={passwordIsShowing ? 'text' : 'password'}
-            id={'inline-password'}
-            renderSuffix={() => (
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+        <div className="px-4 pb-6">
+          <div className="h-8"></div>
+          <form onSubmit={onSignIn()} className="mx-auto w-full">
+            <TextInput
+              id="email-input"
+              placeholder={'Email'}
+              label="Email"
+              {...register('email', { required: true })}
+            />
+            <div className="h-6"></div>
+            <TextInput
+              label="Password"
+              placeholder={'Password'}
+              type={passwordIsShowing ? 'text' : 'password'}
+              id={'inline-password'}
+              renderSuffix={() => (
+                <TextButton
+                  onClick={toggleShowPassword}
+                  className="mx-3 duration-300 ease-in"
+                  size="md"
+                  type="button"
+                  variant="secondary"
+                >
+                  {passwordIsShowing ? (
+                    <FontAwesomeIcon icon={faEye} className="h-4 w-4" />
+                  ) : (
+                    <FontAwesomeIcon icon={faEyeSlash} className="h-4 w-4" />
+                  )}
+                </TextButton>
+              )}
+              {...register('password', { required: true })}
+            />
+            <div className="mt-2.5 flex w-full">
               <TextButton
-                onClick={toggleShowPassword}
-                className="mx-3 duration-300 ease-in"
-                size="md"
-                type="button"
-                variant="secondary"
+                variant={'primary'}
+                className="mr-1 ml-auto"
+                onClick={(e) => {
+                  setModalState({ state: ModalState.ForgotPassword });
+                }}
               >
-                {passwordIsShowing ? (
-                  <FontAwesomeIcon icon={faEye} className="h-4 w-4" />
-                ) : (
-                  <FontAwesomeIcon icon={faEyeSlash} className="h-4 w-4" />
-                )}
+                Forgot Password?
               </TextButton>
-            )}
-            {...register('password', { required: true })}
-          />
-          <div className="mt-2.5 flex w-full">
-            <TextButton
-              variant={'primary'}
-              className="mr-1 ml-auto"
-              onClick={(e) => {
-                setModalState({ state: ModalState.ForgotPassword });
-              }}
+            </div>
+            <div className="h-6"></div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isLoggingIn}
+              disabled={
+                watch('email').length === 0 || watch('password').length === 0
+              }
             >
-              Forgot Password?
+              Sign in
+            </Button>
+          </form>
+          <div className="w-fulsl mx-auto mt-4 flex items-center justify-center">
+            <Text>Don&apos;t have an account?&nbsp; </Text>
+            <TextButton
+              onClick={onSignUp}
+              className="text-textAccent"
+              type="button"
+            >
+              Sign up
             </TextButton>
           </div>
-          <div className="h-6"></div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            loading={isLoggingIn}
-            disabled={
-              watch('email').length === 0 || watch('password').length === 0
-            }
-          >
-            Sign in
-          </Button>
-        </form>
-        <div className="w-fulsl mx-auto mt-4 flex items-center justify-center">
-          <Text>Don&apos;t have an account?&nbsp; </Text>
-          <TextButton
-            onClick={onSignUp}
-            className="text-textAccent"
-            type="button"
-          >
-            Sign up
-          </TextButton>
         </div>
-      </div>
+      </GoogleReCaptchaProvider>
     </TitledModal>
   );
 }
 
-const RecaptchaSignInWrapper = () => {
-  return (
-    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <SignIn />
-    </GoogleReCaptchaProvider>
-  );
-};
-
-export default RecaptchaSignInWrapper;
+export default SignIn;

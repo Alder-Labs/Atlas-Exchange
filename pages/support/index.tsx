@@ -29,7 +29,7 @@ const Index: NextPage = () => {
     <SidePadding>
       <div className="sm:px-8">
         <div className="h-12" />
-        <div className="border-grayLight-60 dark:border-grayDark-60 mb-8 rounded-3xl border p-6 sm:w-1/2">
+        <div className="mb-8 rounded-3xl border border-grayLight-60 p-6 dark:border-grayDark-60 sm:w-1/2">
           <Title className="text-3xl">Support Ticket</Title>
           <div className="h-4" />
           <Text>
@@ -56,8 +56,8 @@ const Index: NextPage = () => {
           renderEmpty={() => {
             return (
               <div className="flex w-full flex-col items-center justify-center">
-                <div className="bg-brand-400/25 mt-16 mb-4 flex h-24 w-24 items-center justify-center rounded-full">
-                  <div className="text-brand-400 text-5xl font-bold">S</div>
+                <div className="mt-16 mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-brand-400/25">
+                  <div className="text-5xl font-bold text-brand-400">S</div>
                 </div>
                 <Text size="2xl">No Support Tickets</Text>
                 <div className="w-72 text-center">

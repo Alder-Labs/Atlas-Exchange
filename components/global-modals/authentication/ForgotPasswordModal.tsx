@@ -99,6 +99,7 @@ const ForgotPasswordModal = () => {
       renderWhenClosed={modalState.state === ModalState.Closed}
       onGoBack={handlers.goBack}
     >
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
       <form onSubmit={handleSubmit(onResetPassword)}>
         <div className="px-4 pb-6">
           <div className="h-6" />
@@ -122,16 +123,9 @@ const ForgotPasswordModal = () => {
           </Button>
         </div>
       </form>
+      </GoogleReCaptchaProvider>
     </TitledModal>
   );
 };
 
-const RecaptchaForgotPasswordWrapper = () => {
-  return (
-    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <ForgotPasswordModal />
-    </GoogleReCaptchaProvider>
-  );
-};
-
-export default RecaptchaForgotPasswordWrapper;
+export default ForgotPasswordModal;

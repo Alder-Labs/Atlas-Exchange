@@ -143,7 +143,7 @@ function ConnectABankAccount() {
 
 export const ConnectBankPage: NextPage = () => {
   return (
-    <div className="bg-grayLight-20 min-h-screen dark:bg-black">
+    <div className="min-h-screen bg-grayLight-20 dark:bg-black">
       <ConnectABankAccount />
     </div>
   );

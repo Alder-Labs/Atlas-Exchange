@@ -18,7 +18,7 @@ function Box({
 const DesignPage: CustomPage = () => {
   return (
     <div className="flex min-h-screen w-full flex-col items-center">
-      <div className="bg-grayLight-20 grid w-full max-w-7xl grid-cols-6 gap-2 p-4">
+      <div className="grid w-full max-w-7xl grid-cols-6 gap-2 bg-grayLight-20 p-4">
         <Box className="col-span-4" />
         <Box className="col-span-2" />
       </div>

@@ -205,6 +205,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
         title={'Setup SMS MFA'}
         onClose={handlers.close}
       >
+        <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <form onSubmit={handleSubmit(onSubmit)} className="p-4">
           <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
             Phone Number
@@ -283,6 +284,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
             Enable SMS MFA
           </Button>
         </form>
+        </GoogleReCaptchaProvider>
       </TitledModal>
     </>
   );
@@ -290,8 +292,6 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
 
 export function SetSmsModal(props: { mfa: MfaType }) {
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <SetSmsModalInside {...props} />
-    </GoogleReCaptchaProvider>
+    <SetSmsModalInside {...props} />
   );
 }

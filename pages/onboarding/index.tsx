@@ -120,7 +120,7 @@ const OnboardingPage: CustomPage = () => {
 
   return (
     <>
-      <SidePadding className="bg-grayLight-10 grow dark:bg-black">
+      <SidePadding className="grow bg-grayLight-10 dark:bg-black">
         <div className="h-8 sm:h-24"></div>
         <div className="grid-rows mb-32 grid w-full sm:grid-cols-3">
           <div className="hidden flex-none pr-20 dark:bg-black sm:col-span-1 sm:block sm:pt-24">

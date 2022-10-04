@@ -158,6 +158,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
 
   return (
     <OnboardingCard {...rest} title="Phone Number">
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
       <div className="h-6"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
@@ -265,14 +266,13 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
           Submit
         </Button>
       </form>
+      </GoogleReCaptchaProvider>
     </OnboardingCard>
   );
 }
 
 export function EnterPhoneNumber(props: EnterPhoneNumberProps) {
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <EnterPhoneNumberInside {...props} />
-    </GoogleReCaptchaProvider>
+    <EnterPhoneNumberInside {...props} />
   );
 }
