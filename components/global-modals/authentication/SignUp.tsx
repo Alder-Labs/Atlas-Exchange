@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import {
   GoogleReCaptchaProvider,
-  useGoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 
@@ -20,6 +19,7 @@ import { ModalState } from '../../../lib/types/modalState';
 import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, TextButton, InputCheckbox, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
+import { useReCaptcha } from '../../../hooks/useReCaptcha';
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);
@@ -121,7 +121,7 @@ const SignUpModal = (props: SignUpProps) => {
   const [modalState, setModalState] = useModalState();
 
   const [agreed, setAgreed] = useState(false);
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha, enabled: captchaEnabled } = useReCaptcha();
 
   const {
     watch,
@@ -160,23 +160,32 @@ const SignUpModal = (props: SignUpProps) => {
       return;
     }
 
-    if (!executeRecaptcha) {
-      toast.error('Error: reCAPTCHA not loaded.');
-      return;
+    let inputData = {
+        ...data,
+        captcha: {
+          recaptcha_challenge: '',
+        }
     }
 
-    let captchaToken: string;
-    try {
-      captchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
-    } catch (e) {
-      toast.error('Error: reCAPTCHA failed. Please contact Support.');
-      return;
+    if (captchaEnabled) {
+      if (!executeRecaptcha) {
+        toast.error('Error: reCAPTCHA not loaded.');
+        return;
+      }
+
+      try {
+        const captchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
+        inputData.captcha.recaptcha_challenge = captchaToken;
+      } catch (e) {
+        toast.error('Error: reCAPTCHA failed. Please contact Support.');
+        return;
+      }
     }
 
     if (!userState.user) {
       setIsSigningUp(true);
       userState
-        .signup({ ...data, captcha: { recaptcha_challenge: captchaToken } })
+        .signup(inputData)
         .then(() => {
           router.push('/onboarding').then(() => {
             setModalState({ state: ModalState.Closed });

@@ -3,10 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import {
   GoogleReCaptchaProvider,
-  useGoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
@@ -22,6 +20,7 @@ import { TitledModal } from '../modals/TitledModal';
 
 
 import { ExistingMfaInput } from './ExistingMfaInput';
+import { useReCaptcha } from '../../hooks/useReCaptcha';
 
 
 const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
@@ -53,7 +52,8 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
   const [open, handlers] = useModal(false);
   const [existingMfaCode, setExistingMfaCode] = useState('');
   const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
-  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const { executeRecaptcha, enabled: captchaEnabled } = useReCaptcha();
 
   const userState = useUserState();
 
@@ -139,25 +139,29 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
       return;
     }
 
-    if (!executeRecaptcha) {
-      toast.error('executeRecaptcha is null');
-      return;
-    }
 
-    const token = await executeRecaptcha(RecaptchaActions.SMS).catch(() => {
-      toast.error('Error: reCaptcha failed');
-      return null;
-    });
-    if (!token) {
-      return;
-    }
-
-    requestPhoneVerification({
+    let inputData = {
       phoneNumber: countryCode + phoneNumber,
       captcha: {
-        recaptcha_challenge: token,
+        recaptcha_challenge: '',
       },
-    });
+    }
+
+    if (captchaEnabled) {
+      if (!executeRecaptcha) {
+        toast.error('Error: reCAPTCHA not loaded.');
+        return;
+      }
+
+      try {
+        const captchaToken = await executeRecaptcha(RecaptchaActions.SMS);
+        inputData.captcha.recaptcha_challenge = captchaToken;
+      } catch (e) {
+        toast.error('Error: reCAPTCHA failed. Please contact Support.');
+        return;
+      }
+    }
+    requestPhoneVerification(inputData);
   };
 
   const onSubmit = (data: SetSmsMfaForm) => {
