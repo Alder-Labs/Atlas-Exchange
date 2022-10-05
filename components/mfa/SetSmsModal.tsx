@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
+import { faMobileScreenButton } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import { useRouter } from "next/router";
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
-} from 'react-google-recaptcha-v3';
-import { Controller, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+} from "react-google-recaptcha-v3";
+import { Controller, useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
-import { useModal } from '../../hooks/useModal';
-import { useUserState } from '../../lib/auth-token-context';
-import { useMutationFetcher } from '../../lib/mutation';
-import { toast } from '../../lib/toast';
-import { MfaType } from '../../lib/types';
-import { Text, Button, TextInput, Select } from '../base';
-import { TitledModal } from '../modals/TitledModal';
+import { useLoginStatus } from "../../hooks/useLoginStatus";
+import { useModal } from "../../hooks/useModal";
+import { useUserState } from "../../lib/auth-token-context";
+import { requireEnvVar } from "../../lib/env";
+import { useMutationFetcher } from "../../lib/mutation";
+import { toast } from "../../lib/toast";
+import { MfaType } from "../../lib/types";
+import { Text, Button, TextInput, Select } from "../base";
+import { TitledModal } from "../modals/TitledModal";
 
-import { ExistingMfaInput } from './ExistingMfaInput';
+import { ExistingMfaInput } from "./ExistingMfaInput";
 
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
-
+const RECAPTCHA_KEY = requireEnvVar("NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY");
 interface SetSmsMfaForm {
   countryCode: string;
   phoneNumber: string;
@@ -44,18 +44,18 @@ interface RequestPhoneVerification {
 }
 
 const countryCodeOption: { value: string; label: string }[] = [
-  { value: '+1', label: '+1' },
+  { value: "+1", label: "+1" },
 ];
 
 export function SetSmsModalInside(props: { mfa: MfaType }) {
   const router = useRouter();
   const [open, handlers] = useModal(false);
-  const [existingMfaCode, setExistingMfaCode] = useState('');
+  const [existingMfaCode, setExistingMfaCode] = useState("");
   const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
 
   const userState = useUserState();
 
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(localStorage.getItem("kycForm") || "{}");
   const {
     setValue,
     register,
@@ -68,7 +68,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
   } = useForm<SetSmsMfaForm>({ defaultValues: cachedForm });
 
   useEffect(() => {
-    setValue('countryCode', countryCodeOption[0].value);
+    setValue("countryCode", countryCodeOption[0].value);
   }, [setValue]);
 
   const { errors } = formState;
@@ -81,7 +81,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
     ),
     {
       onSuccess: (data) => {
-        toast.success('Successfully requested phone verification');
+        toast.success("Successfully requested phone verification");
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
@@ -94,7 +94,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
     mutate: verifyPhoneVerification,
   } = useMutation(
     useMutationFetcher<SetSmsMfaRequest, { token: string }>(
-      '/api/mfa/sms/setup/verify',
+      "/api/mfa/sms/setup/verify",
       {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
@@ -115,7 +115,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
     ),
     {
       onSuccess: (res) => {
-        toast.success('Successfully enabled SMS MFA');
+        toast.success("Successfully enabled SMS MFA");
         handlers.close();
       },
       onError: (err: Error) => {
@@ -129,23 +129,23 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = async () => {
     const { countryCode, phoneNumber } = getValues();
-    clearErrors('phoneNumber');
+    clearErrors("phoneNumber");
     if (!phoneNumber) {
-      setError('phoneNumber', { type: 'required' }, { shouldFocus: true });
+      setError("phoneNumber", { type: "required" }, { shouldFocus: true });
       return;
     }
     if (!countryCode) {
-      setError('countryCode', { type: 'required' }, { shouldFocus: true });
+      setError("countryCode", { type: "required" }, { shouldFocus: true });
       return;
     }
 
     if (!executeRecaptcha) {
-      toast.error('executeRecaptcha is null');
+      toast.error("executeRecaptcha is null");
       return;
     }
 
-    const token = await executeRecaptcha('SMS').catch(() => {
-      toast.error('Error: reCaptcha failed');
+    const token = await executeRecaptcha("SMS").catch(() => {
+      toast.error("Error: reCaptcha failed");
       return null;
     });
     if (!token) {
@@ -171,21 +171,21 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
 
   const btnText = (mfa: MfaType) => {
     switch (mfa) {
-      case 'sms':
-        return 'SMS (Enabled)';
+      case "sms":
+        return "SMS (Enabled)";
       case null:
-        return 'Enable SMS 2FA';
+        return "Enable SMS 2FA";
       default:
-        return 'Switch to SMS';
+        return "Switch to SMS";
     }
   };
 
-  const btnDisabled = props.mfa === 'sms';
+  const btnDisabled = props.mfa === "sms";
   const btnStyle = clsx({
-    ['flex justify-start items-center px-8 py-3.5 rounded-full duration-300']:
+    ["flex justify-start items-center px-8 py-3.5 rounded-full duration-300"]:
       true,
-    ['hover:bg-black/25 hover:dark:bg-white/25']: !btnDisabled,
-    ['bg-greenLight/50 dark:bg-greenDark/50']: btnDisabled,
+    ["hover:bg-black/25 hover:dark:bg-white/25"]: !btnDisabled,
+    ["bg-greenLight/50 dark:bg-greenDark/50"]: btnDisabled,
   });
 
   return (
@@ -202,7 +202,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
 
       <TitledModal
         isOpen={open}
-        title={'Setup SMS MFA'}
+        title={"Setup SMS MFA"}
         onClose={handlers.close}
       >
         <form onSubmit={handleSubmit(onSubmit)} className="p-4">
@@ -213,7 +213,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
 
           <div className="grid grid-cols-4 items-start gap-4 lg:items-center">
             <Controller
-              name={'countryCode'}
+              name={"countryCode"}
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
@@ -232,12 +232,12 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
                 />
               )}
             />
-            <div className={'col-span-3 flex flex-row items-end'}>
+            <div className={"col-span-3 flex flex-row items-end"}>
               <div className="w-full">
                 <div className="relative w-full">
                   <TextInput
-                    placeholder={'Phone Number'}
-                    {...register('phoneNumber', { required: true })}
+                    placeholder={"Phone Number"}
+                    {...register("phoneNumber", { required: true })}
                     className="w-full"
                   />
                   <div className="right-2 top-0 mt-2 flex h-full justify-end lg:absolute lg:mt-0 lg:items-center">
@@ -252,9 +252,9 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
                     </Button>
                   </div>
                 </div>
-                {errors.phoneNumber?.type === 'required' && (
+                {errors.phoneNumber?.type === "required" && (
                   <Text color="error" size="xs">
-                    {'required'}
+                    {"required"}
                   </Text>
                 )}
               </div>
@@ -262,9 +262,9 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
           </div>
           <div className="h-6"></div>
           <TextInput
-            label={'SMS Verification Code *'}
-            placeholder={'SMS Verification Code'}
-            {...register('code', { required: true })}
+            label={"SMS Verification Code *"}
+            placeholder={"SMS Verification Code"}
+            {...register("code", { required: true })}
           />
           <div className="h-6"></div>
           <ExistingMfaInput

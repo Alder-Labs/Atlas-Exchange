@@ -1,23 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
+import { useAtom } from "jotai";
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
-} from 'react-google-recaptcha-v3';
-import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+} from "react-google-recaptcha-v3";
+import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 
-import { useModalState } from '../../../hooks/useModalState';
-import { useMutationFetcher } from '../../../lib/mutation';
-import { toast } from '../../../lib/toast';
-import { ModalState } from '../../../lib/types/modalState';
-import { TextInput, Button, Text } from '../../base';
-import { TitledModal } from '../../modals/TitledModal';
-import { useAtom } from 'jotai';
-import { sardineDeviceIdAtom } from '../../../lib/jotai';
+import { useModalState } from "../../../hooks/useModalState";
+import { requireEnvVar } from "../../../lib/env";
+import { sardineDeviceIdAtom } from "../../../lib/jotai";
+import { useMutationFetcher } from "../../../lib/mutation";
+import { toast } from "../../../lib/toast";
+import { ModalState } from "../../../lib/types/modalState";
+import { TextInput, Button, Text } from "../../base";
+import { TitledModal } from "../../modals/TitledModal";
 
-const FTX_RECAPTCHA_CHANGE_PASSWORD_ACTION = 'CHANGEPASSWORD';
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
+const FTX_RECAPTCHA_CHANGE_PASSWORD_ACTION = "CHANGEPASSWORD";
+const RECAPTCHA_KEY = requireEnvVar("NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY");
 
 type PublicResetPasswordRequest = {
   deviceId?: string | null;
@@ -44,7 +45,7 @@ const ForgotPasswordModal = () => {
     formState: { errors },
   } = useForm<ForgotPasswordForm>({
     defaultValues: {
-      email: '',
+      email: "",
     },
   });
 
@@ -57,7 +58,7 @@ const ForgotPasswordModal = () => {
     ),
     {
       onSuccess: (data) => {
-        toast.success('Reset password email sent.');
+        toast.success("Reset password email sent.");
       },
       onError: (error) => {
         toast.error(`Error resetting password. Please contact support.`);
@@ -71,7 +72,7 @@ const ForgotPasswordModal = () => {
 
   const onResetPassword = async (data: ForgotPasswordForm) => {
     if (!executeRecaptcha) {
-      toast.error('Error: reCAPTCHA not loaded.');
+      toast.error("Error: reCAPTCHA not loaded.");
       return;
     }
 
@@ -81,7 +82,7 @@ const ForgotPasswordModal = () => {
         FTX_RECAPTCHA_CHANGE_PASSWORD_ACTION
       );
     } catch (e) {
-      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      toast.error("Error: reCAPTCHA failed. Please contact Support.");
       return;
     }
 
@@ -96,7 +97,7 @@ const ForgotPasswordModal = () => {
 
   return (
     <TitledModal
-      title={'Forgot Password'}
+      title={"Forgot Password"}
       darkenBackground={false}
       isOpen={modalState.state === ModalState.ForgotPassword}
       onClose={() => setModalState({ state: ModalState.Closed })}
@@ -106,21 +107,21 @@ const ForgotPasswordModal = () => {
       <form onSubmit={handleSubmit(onResetPassword)}>
         <div className="px-4 pb-6">
           <div className="h-6" />
-          <Text color={'secondary'}>
+          <Text color={"secondary"}>
             Please confirm you&apos;re using the official site.
           </Text>
           <div className="h-6" />
           <TextInput
             placeholder="Email"
-            label={'Email'}
-            {...register('email', { required: true })}
+            label={"Email"}
+            {...register("email", { required: true })}
           />
           <div className="h-6" />
           <Button
             type="submit"
             className="w-full"
             loading={requestPasswordResetIsLoading}
-            disabled={watch('email').length === 0}
+            disabled={watch("email").length === 0}
           >
             Reset Password
           </Button>
