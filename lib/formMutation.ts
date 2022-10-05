@@ -4,7 +4,8 @@ import { useUser, useUserState } from "./auth-token-context";
 import { requireEnvVar } from "./env";
 
 const API_URL = requireEnvVar("NEXT_PUBLIC_API_URL");
-export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
+
+export const createFormMutationFetcher = <TRequestData extends Record<string,string>, TQueryFnData>(
   path: string,
   authToken?: string
 ) => {
@@ -34,7 +35,7 @@ export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
   };
 };
 
-export function useFormMutationFetcher<TRequestData, TQueryFnData>(
+export function useFormMutationFetcher<TRequestData extends Record<string, string>, TQueryFnData>(
   path: string
 ) {
   const userState = useUserState();
