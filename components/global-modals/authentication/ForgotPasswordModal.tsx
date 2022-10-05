@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
 
 import { useAtom } from 'jotai';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
@@ -13,7 +16,6 @@ import { ModalState } from '../../../lib/types/modalState';
 import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { useReCaptcha } from '../../../hooks/useReCaptcha';
 
 type PublicResetPasswordRequest = {
   deviceId?: string | null;
@@ -29,7 +31,7 @@ type ForgotPasswordForm = {
 
 const ForgotPasswordModal = () => {
   const [sardineDeviceId] = useAtom(sardineDeviceIdAtom);
-  const { executeRecaptcha } = useReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const {
     watch,

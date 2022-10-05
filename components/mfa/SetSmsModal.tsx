@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
@@ -17,7 +20,6 @@ import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
-import { useReCaptcha } from '../../hooks/useReCaptcha';
 
 const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
@@ -50,7 +52,7 @@ export function SetSmsMfaForm() {
   const [existingMfaCode, setExistingMfaCode] = useState('');
   const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
 
-  const { executeRecaptcha } = useReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const userState = useUserState();
 
@@ -168,84 +170,84 @@ export function SetSmsMfaForm() {
   };
 
   return (
-  <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-    <label className="block text-sm font-medium text-black dark:text-grayDark-80">
-      Phone Number
-    </label>
-    <div className="h-1"></div>
+    <form onSubmit={handleSubmit(onSubmit)} className="p-4">
+      <label className="block text-sm font-medium text-black dark:text-grayDark-80">
+        Phone Number
+      </label>
+      <div className="h-1"></div>
 
-    <div className="grid grid-cols-4 items-start gap-4 lg:items-center">
-      <Controller
-        name={'countryCode'}
-        control={control}
-        rules={{ required: true }}
-        render={({ field }) => (
-          <Select
-            value={field.value}
-            onSelect={(value) => {
-              if (value) {
-                field.onChange(value);
-              }
-            }}
-            options={countryCodeOption.map((option) => ({
-              value: option.value,
-              label: option.label,
-            }))}
-            className="col-span-1 w-full items-center"
-          />
-        )}
-      />
-      <div className={'col-span-3 flex flex-row items-end'}>
-        <div className="w-full">
-          <div className="relative w-full">
-            <TextInput
-              placeholder={'Phone Number'}
-              {...register('phoneNumber', { required: true })}
-              className="w-full"
+      <div className="grid grid-cols-4 items-start gap-4 lg:items-center">
+        <Controller
+          name={'countryCode'}
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <Select
+              value={field.value}
+              onSelect={(value) => {
+                if (value) {
+                  field.onChange(value);
+                }
+              }}
+              options={countryCodeOption.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+              className="col-span-1 w-full items-center"
             />
-            <div className="right-2 top-0 mt-2 flex h-full justify-end lg:absolute lg:mt-0 lg:items-center">
-              <Button
-                size="sm"
-                rounded="md"
-                onClick={onRequestSmsCode}
-                loading={requestPhoneVerificationLoading}
-                type="button"
-              >
-                Send SMS
-              </Button>
-            </div>
-          </div>
-          {errors.phoneNumber?.type === 'required' && (
-            <Text color="error" size="xs">
-              {'required'}
-            </Text>
           )}
+        />
+        <div className={'col-span-3 flex flex-row items-end'}>
+          <div className="w-full">
+            <div className="relative w-full">
+              <TextInput
+                placeholder={'Phone Number'}
+                {...register('phoneNumber', { required: true })}
+                className="w-full"
+              />
+              <div className="right-2 top-0 mt-2 flex h-full justify-end lg:absolute lg:mt-0 lg:items-center">
+                <Button
+                  size="sm"
+                  rounded="md"
+                  onClick={onRequestSmsCode}
+                  loading={requestPhoneVerificationLoading}
+                  type="button"
+                >
+                  Send SMS
+                </Button>
+              </div>
+            </div>
+            {errors.phoneNumber?.type === 'required' && (
+              <Text color="error" size="xs">
+                {'required'}
+              </Text>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-    <div className="h-6"></div>
-    <TextInput
-      label={'SMS Verification Code *'}
-      placeholder={'SMS Verification Code'}
-      {...register('code', { required: true })}
-    />
-    <div className="h-6"></div>
-    <ExistingMfaInput
-      label="Existing MFA Code (you have SMS MFA enabled and code is required for this action)"
-      placeholder="Existing MFA Code"
-      value={existingMfaCode}
-      onChange={setExistingMfaCode}
-    />
+      <div className="h-6"></div>
+      <TextInput
+        label={'SMS Verification Code *'}
+        placeholder={'SMS Verification Code'}
+        {...register('code', { required: true })}
+      />
+      <div className="h-6"></div>
+      <ExistingMfaInput
+        label="Existing MFA Code (you have SMS MFA enabled and code is required for this action)"
+        placeholder="Existing MFA Code"
+        value={existingMfaCode}
+        onChange={setExistingMfaCode}
+      />
 
-    <div className="h-8"></div>
-    <Button
-      type="submit"
-      className="w-full"
-      loading={verifyPhoneVerificationLoading}
-    >
-      Enable SMS MFA
-    </Button>
-  </form>
+      <div className="h-8"></div>
+      <Button
+        type="submit"
+        className="w-full"
+        loading={verifyPhoneVerificationLoading}
+      >
+        Enable SMS MFA
+      </Button>
+    </form>
   );
 }
 
@@ -297,7 +299,5 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
 }
 
 export function SetSmsModal(props: { mfa: MfaType }) {
-  return (
-    <SetSmsModalInside {...props} />
-  );
+  return <SetSmsModalInside {...props} />;
 }

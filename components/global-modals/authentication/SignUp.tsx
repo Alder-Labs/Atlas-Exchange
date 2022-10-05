@@ -7,7 +7,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 
 import { useModalState } from '../../../hooks/useModalState';
@@ -17,7 +20,6 @@ import { ModalState } from '../../../lib/types/modalState';
 import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, TextButton, InputCheckbox, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { useReCaptcha } from '../../../hooks/useReCaptcha';
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);
@@ -119,7 +121,7 @@ const SignUpModal = (props: SignUpProps) => {
   const [modalState, setModalState] = useModalState();
 
   const [agreed, setAgreed] = useState(false);
-  const { executeRecaptcha } = useReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const {
     watch,

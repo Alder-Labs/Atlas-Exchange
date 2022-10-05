@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
@@ -16,7 +19,6 @@ import { ModalState } from '../../../lib/types/modalState';
 import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, TextButton, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { useReCaptcha } from '../../../hooks/useReCaptcha';
 
 interface SignInProps {}
 
@@ -28,7 +30,7 @@ export function SignIn(props: SignInProps) {
   // Redirect to home if user is already logged in
   const userState = useUserState();
 
-  const { executeRecaptcha } = useReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   function handleMfa(signinRes: SignInResponse) {
     if (!signinRes.mfaRequired) {
