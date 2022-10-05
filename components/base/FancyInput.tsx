@@ -45,7 +45,7 @@ export const FancyInput = forwardRef<HTMLInputElement, Props>(
           {label}
         </span>
         <input
-          className={`text-grayLight-110 bg-grayLight-10 w-full rounded-lg border bg-transparent px-4 pt-8 pb-5 text-sm `}
+          className={`w-full rounded-lg border bg-grayLight-10 bg-transparent px-4 pt-8 pb-5 text-sm text-grayLight-110 `}
           ref={ref}
           onChange={handleChange}
           onBlur={handleBlur}

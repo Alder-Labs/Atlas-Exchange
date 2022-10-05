@@ -21,7 +21,7 @@ export interface MenuItemProps {
 export const MenuIconLeft = (props: { icon: IconDefinition }) => {
   return (
     <div className="min-h-10 flex shrink-0 items-center">
-      <div className="dark:bg-grayDark-50 bg-grayLight-50 ml-3 mr-5 flex h-10 w-10 items-center justify-center rounded-full">
+      <div className="ml-3 mr-5 flex h-10 w-10 items-center justify-center rounded-full bg-grayLight-50 dark:bg-grayDark-50">
         <FontAwesomeIcon icon={props.icon} className="h-4" />
       </div>
     </div>

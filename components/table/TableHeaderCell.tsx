@@ -6,7 +6,7 @@ export function TableHeaderCell(props: React.ThHTMLAttributes<HTMLElement>) {
   const { className, scope = 'col', colSpan, ...rest } = props;
   return (
     <th
-      className={clsx('dark:bg-grayDark-20 bg-grayLight-10 py-3', className)}
+      className={clsx('bg-grayLight-10 py-3 dark:bg-grayDark-20', className)}
       scope={scope}
       colSpan={colSpan}
       {...rest}

@@ -101,7 +101,7 @@ export function SelectBankAccount(props: SelectBankAccountProps) {
   return (
     <div>
       <div className="flex justify-between">
-        <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+        <label className="block text-sm font-medium text-black dark:text-grayDark-80">
           Select an account
         </label>
         <TextButton

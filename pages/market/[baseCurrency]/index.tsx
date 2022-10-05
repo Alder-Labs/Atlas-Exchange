@@ -175,7 +175,7 @@ const Page: NextPage = () => {
                   {coinMarket && coinMarket.coin.name}
                 </Title>
                 <div className="w-4"></div>
-                <div className="dark:bg-grayDark-20 bg-grayLight-20 rounded-md px-2 py-0.5">
+                <div className="rounded-md bg-grayLight-20 px-2 py-0.5 dark:bg-grayDark-20">
                   <Text color="secondary" size="lg">
                     {coinMarket && `${coinMarket.market.baseCurrency}`}
                   </Text>
@@ -206,7 +206,7 @@ const Page: NextPage = () => {
                     <FontAwesomeIcon
                       icon={faArrowDown}
                       className={
-                        'text-redLight dark:text-redDark mr-2 w-3 -rotate-45 '
+                        'mr-2 w-3 -rotate-45 text-redLight dark:text-redDark '
                       }
                     />
                     <Text color={'red'}>
@@ -220,7 +220,7 @@ const Page: NextPage = () => {
                     <FontAwesomeIcon
                       icon={faArrowUp}
                       className={
-                        'text-greenLight dark:text-greenDark mr-2 w-3 rotate-45'
+                        'mr-2 w-3 rotate-45 text-greenLight dark:text-greenDark'
                       }
                     />
                     <Text color={'green'}>
@@ -282,7 +282,7 @@ const Page: NextPage = () => {
             </div>
           </div>
 
-          <div className="dark:bg-grayDark-50 bg-grayLight-10 my-8 hidden w-[2px] shrink-0 self-stretch sm:block"></div>
+          <div className="my-8 hidden w-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:block"></div>
 
           <div className="flex flex-col items-start py-8 sm:p-8">
             <BuySellConvert

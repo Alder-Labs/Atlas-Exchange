@@ -57,7 +57,7 @@ export const InputWithInlineLabel = React.forwardRef<HTMLInputElement, Props>(
         </span>
         <input
           type={'text'}
-          className={`bg-grayLight-10 h-3/4 w-full rounded-lg border px-4 
+          className={`h-3/4 w-full rounded-lg border bg-grayLight-10 px-4 
             pt-8 pb-5 text-sm ${
               isFocused ? '' : 'caret-primary-50 outline-none'
             }`}

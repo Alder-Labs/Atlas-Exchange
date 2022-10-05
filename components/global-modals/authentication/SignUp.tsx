@@ -17,11 +17,9 @@ import { useModalState } from '../../../hooks/useModalState';
 import { useUserState, SignupParams } from '../../../lib/auth-token-context';
 import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
+import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, TextButton, InputCheckbox, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-
-const FTX_RECAPTCHA_CREATE_USER_ACTION = 'REGISTER';
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);
@@ -61,14 +59,14 @@ function PasswordRequirement({
         <Text color="green">
           <FontAwesomeIcon
             icon={faCheckCircle}
-            className="mr-2 h-4 w-4 text-green-500"
+            className="text-green-500 mr-2 h-4 w-4"
           />
         </Text>
       ) : (
         <Text color="secondary">
           <FontAwesomeIcon
             icon={faCheckCircle}
-            className="mr-2 h-4 w-4 text-red-500"
+            className="text-red-500 mr-2 h-4 w-4"
           />
         </Text>
       )}
@@ -162,14 +160,21 @@ const SignUpModal = (props: SignUpProps) => {
       return;
     }
 
+    let inputData = {
+      ...data,
+      captcha: {
+        recaptcha_challenge: '',
+      },
+    };
+
     if (!executeRecaptcha) {
       toast.error('Error: reCAPTCHA not loaded.');
       return;
     }
 
-    let captchaToken: string;
     try {
-      captchaToken = await executeRecaptcha(FTX_RECAPTCHA_CREATE_USER_ACTION);
+      const captchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
+      inputData.captcha.recaptcha_challenge = captchaToken;
     } catch (e) {
       toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
@@ -178,7 +183,7 @@ const SignUpModal = (props: SignUpProps) => {
     if (!userState.user) {
       setIsSigningUp(true);
       userState
-        .signup({ ...data, captcha: { recaptcha_challenge: captchaToken } })
+        .signup(inputData)
         .then(() => {
           router.push('/onboarding').then(() => {
             setModalState({ state: ModalState.Closed });
@@ -237,7 +242,7 @@ const SignUpModal = (props: SignUpProps) => {
           {...register('password', { required: true })}
         />
         {watch('password') && (
-          <div className="animate-enter mt-3">
+          <div className="mt-3 animate-enter">
             <PasswordRequirements password={watch('password')} />
           </div>
         )}

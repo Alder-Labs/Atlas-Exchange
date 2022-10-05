@@ -7,8 +7,8 @@ export function TableHeader(props: React.HTMLAttributes<HTMLElement>) {
   return (
     <thead
       className={clsx(
-        `dark:text-grayDark-100 text-grayLight-80 text-xs 
-        uppercase`,
+        `text-xs uppercase text-grayLight-80 
+        dark:text-grayDark-100`,
         className
       )}
       {...rest}

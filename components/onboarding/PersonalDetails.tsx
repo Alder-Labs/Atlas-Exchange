@@ -161,7 +161,7 @@ export function PersonalDetails(props: PersonalDetailsProps) {
           </div>
 
           <div className="ml-4">
-            <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+            <label className="block text-sm font-medium text-black dark:text-grayDark-80">
               Year
             </label>
             <div className={'h-2'} />

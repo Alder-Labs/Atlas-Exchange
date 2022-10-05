@@ -83,7 +83,7 @@ export const WithdrawModal = () => {
         renderWhenClosed={modalState.state === ModalState.Closed}
         onClose={() => setModalState({ state: ModalState.Closed })}
       >
-        <div className="divide-grayLight-40 dark:divide-grayDark-40 divide-y overflow-hidden">
+        <div className="divide-y divide-grayLight-40 overflow-hidden dark:divide-grayDark-40">
           <MenuItem
             title={<Text size="xl">Bank Transfer (ACH)</Text>}
             disabled={authStatus < AuthStatus.KycLevel2}

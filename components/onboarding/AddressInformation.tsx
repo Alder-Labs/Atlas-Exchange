@@ -79,7 +79,7 @@ export function AddressInformation(props: AddressInformationProps) {
     <OnboardingCard {...rest} title={'Address Information'}>
       <div className="h-6"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+        <label className="block text-sm font-medium text-black dark:text-grayDark-80">
           Country
         </label>
         <div className="h-1"></div>
@@ -140,7 +140,7 @@ export function AddressInformation(props: AddressInformationProps) {
               rules={{ required: true }}
               render={({ field }) => (
                 <div>
-                  <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+                  <label className="block text-sm font-medium text-black dark:text-grayDark-80">
                     State, Province, Region
                   </label>
                   <div className="h-2" />

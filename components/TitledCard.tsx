@@ -23,12 +23,12 @@ export function TitledCard(props: TitledCardProps) {
   });
   return (
     <div className={cardStyles}>
-      <div className="dark:border-grayDark-40 border-grayLight-40 flex items-center justify-center gap-2 border-b p-4 py-6">
+      <div className="flex items-center justify-center gap-2 border-b border-grayLight-40 p-4 py-6 dark:border-grayDark-40">
         <div className="mx-4 flex flex-1 justify-start">
           {onGoBack && (
             <button
               onClick={onGoBack}
-              className="hover:text-grayLight-80 text-grayLight-50 flex h-4 w-4 items-center transition dark:hover:text-white"
+              className="flex h-4 w-4 items-center text-grayLight-50 transition hover:text-grayLight-80 dark:hover:text-white"
             >
               <FontAwesomeIcon icon={faArrowLeft} />
             </button>

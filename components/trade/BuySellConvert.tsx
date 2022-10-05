@@ -26,7 +26,7 @@ function CustomTab(props: CustomTabProps) {
             'translate-y-[2px] select-none border-b-4 py-1 px-3 text-lg font-bold':
               true,
             'border-textAccent text-textAccent': selected,
-            'text-grayLight-70 border-transparent': !selected,
+            'border-transparent text-grayLight-70': !selected,
           })}
         >
           {title}

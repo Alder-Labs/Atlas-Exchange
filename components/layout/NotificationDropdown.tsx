@@ -227,7 +227,7 @@ export function NotificationDropdown() {
     });
     return (
       <Menu.Button className="focus:outline-none">
-        <div className="text-md text-grayLight-90 dark:text-grayDark-120 flex items-center gap-2">
+        <div className="flex items-center gap-2 text-md text-grayLight-90 dark:text-grayDark-120">
           <div className={primaryIconStyles}>
             <FontAwesomeIcon icon={faBell} className="h-3.5 w-3.5" />
           </div>
@@ -255,14 +255,14 @@ export function NotificationDropdown() {
               leaveTo="transform opacity-0 scale-95"
             >
               <Menu.Items
-                className="dark:bg-grayDark-20 dark:shadow-grayDark-20 dark:border-grayDark-40 border-grayLight-20 absolute right-0
-                  top-full z-10 mt-2 w-96 origin-top-right
-                  overflow-hidden rounded-md border bg-white shadow-sm
-                  ring-1 ring-black ring-opacity-5 focus:outline-none"
+                className="absolute right-0 top-full z-10 mt-2 w-96
+                  origin-top-right overflow-hidden rounded-md border border-grayLight-20
+                  bg-white shadow-sm ring-1 ring-black ring-opacity-5
+                  focus:outline-none dark:border-grayDark-40 dark:bg-grayDark-20 dark:shadow-grayDark-20"
               >
                 {isLoggedIn ? (
                   <div className={'w-96'}>
-                    <div className="dark:border-grayDark-40 border-grayLight-30 flex flex-row justify-between border-b px-6 py-4">
+                    <div className="flex flex-row justify-between border-b border-grayLight-30 px-6 py-4 dark:border-grayDark-40">
                       <Title>Notifications</Title>
                       <Menu.Item>{renderMarkAllReadButton()}</Menu.Item>
                     </div>
