@@ -1,10 +1,12 @@
 import React from 'react';
 
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { useMutation } from 'react-query';
 
 import { useLoginStatus } from '../../hooks/useLoginStatus';
-import { useReCaptcha } from '../../hooks/useReCaptcha';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { RecaptchaActions } from '../../lib/types';
@@ -56,7 +58,7 @@ function SmsMfaInput(props: SmsMfaProps) {
     }
   );
 
-  const { executeRecaptcha } = useReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = async () => {

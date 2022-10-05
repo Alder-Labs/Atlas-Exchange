@@ -22,19 +22,19 @@ export type SignupParams = {
 
 type UserState =
   | {
-      user: null;
-      signin: (params: SigninParams) => Promise<SignInResponse>;
-      signup: (params: SignupParams) => Promise<SignInResponse>;
-    }
+    user: null;
+    signin: (params: SigninParams) => Promise<SignInResponse>;
+    signup: (params: SignupParams) => Promise<SignInResponse>;
+  }
   | {
-      user: User;
-      signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-      setAuthToken: (
-        token: string | null | undefined,
-        callback?: (token: string | null | undefined) => void
-      ) => void;
-      signout: () => void;
-    };
+    user: User;
+    signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
+    setAuthToken: (
+      token: string | null | undefined,
+      callback?: (token: string | null | undefined) => void
+    ) => void;
+    signout: () => void;
+  };
 
 const UserContext = createContext<UserState | undefined>(undefined);
 
@@ -116,9 +116,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         return signin({
           email: data.email,
           password: data.password,
-          captcha: {
-            recaptcha_challenge: data.captcha.recaptcha_challenge,
-          },
+          captcha: data.captcha,
         });
       });
   };
@@ -237,16 +235,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       value={
         authToken
           ? {
-              user: { token: authToken },
-              signinWithMfa: signinWithMfa,
-              signout: signout,
-              setAuthToken,
-            }
+            user: { token: authToken },
+            signinWithMfa: signinWithMfa,
+            signout: signout,
+            setAuthToken,
+          }
           : {
-              user: null,
-              signin,
-              signup,
-            }
+            user: null,
+            signin,
+            signup,
+          }
       }
     >
       {children}

@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { AsYouType } from 'libphonenumber-js';
 import { useRouter } from 'next/router';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
@@ -10,11 +13,10 @@ import { Rifm } from 'rifm';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { KycPhone } from '../../lib/types/kyc';
-import { RecaptchaActions } from '../../lib/types/recaptcha';
+import { RecaptchaActions, RecaptchaParams } from '../../lib/types/recaptcha';
 import { Text, TextInput, Button, Select } from '../base';
 
 import { OnboardingCardProps, OnboardingCard } from './OnboardingCard';
-import { useReCaptcha } from '../../hooks/useReCaptcha';
 
 const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
@@ -25,10 +27,9 @@ const formatPhone = (string: string) => {
   return new AsYouType('US').input(digits);
 };
 
-interface RequestPhoneVerification {
+type RequestPhoneVerification = {
   phoneNumber: string;
-  captcha: string;
-}
+} & RecaptchaParams;
 
 const countryCodeOption: { value: string; label: string }[] = [
   { value: '+1', label: '+1' },
@@ -117,7 +118,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     }
   );
 
-  const { executeRecaptcha } = useReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = async () => {
@@ -134,7 +135,9 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
 
     let inputData = {
       phoneNumber: countryCode + phoneNumber,
-      captcha: '',
+      captcha: {
+        recaptcha_challenge: '',
+      },
     };
     if (!executeRecaptcha) {
       toast.error('Error: reCAPTCHA not loaded.');
@@ -143,7 +146,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
 
     try {
       const captchaToken = await executeRecaptcha(RecaptchaActions.SMS);
-      inputData.captcha = captchaToken;
+      inputData.captcha.recaptcha_challenge = captchaToken;
     } catch (e) {
       toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
