@@ -121,7 +121,7 @@ export const AddCard = () => {
   };
 
   return (
-    <div className="text-textPrimary bg-grayLight-90 flex-col flex-wrap rounded-2xl p-6">
+    <div className="flex-col flex-wrap rounded-2xl bg-grayLight-90 p-6 text-textPrimary">
       <h2 className="text-2xl font-bold">Add a new card</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextInput

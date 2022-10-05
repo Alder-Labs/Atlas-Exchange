@@ -6,7 +6,7 @@ import clsx from 'clsx';
 const UpDownArrow: React.FC = () => {
   return (
     <svg
-      className="text-grayLight-60 h-5 w-5"
+      className="h-5 w-5 text-grayLight-60"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
@@ -94,11 +94,11 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
         }}
       >
         {({ open }) => (
-          <div className="text-md relative w-full">
+          <div className="relative w-full text-md">
             <Combobox.Input<'input', OptionType<T> | null>
               className={
                 (open ? 'dark:border-brand-500 ' : '') +
-                'dark:border-grayDark-40 dark:bg-grayDark-40 relative flex w-full cursor-pointer items-center justify-between rounded-lg border px-2 py-3 pl-3 text-left outline-none'
+                'relative flex w-full cursor-pointer items-center justify-between rounded-lg border px-2 py-3 pl-3 text-left outline-none dark:border-grayDark-40 dark:bg-grayDark-40'
               }
               displayValue={(item) => item?.label ?? ''}
               onChange={(event) => setQuery(event.target.value)}
@@ -122,14 +122,14 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
               afterLeave={() => setQuery('')}
             >
               <Combobox.Options
-                className="dark:bg-grayDark-10 dark:border-grayDark-40 border-grayLight-40 absolute z-10 mt-1 max-h-60
-              w-full overflow-auto rounded-md border
-              bg-white py-1
+                className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md
+              border border-grayLight-40 bg-white py-1
               text-black shadow-lg
-              ring-1 ring-black ring-opacity-5 focus:outline-none dark:text-white"
+              ring-1 ring-black
+              ring-opacity-5 focus:outline-none dark:border-grayDark-40 dark:bg-grayDark-10 dark:text-white"
               >
                 {filteredOptions.length === 0 && query !== '' ? (
-                  <div className="text-grayLight-80 relative cursor-default select-none py-3 px-3">
+                  <div className="relative cursor-default select-none py-3 px-3 text-grayLight-80">
                     Nothing found.
                   </div>
                 ) : (
@@ -138,7 +138,7 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
                       key={option.value}
                       className={({ active }) =>
                         `${
-                          active && 'dark:bg-grayDark-30 bg-grayLight-30'
+                          active && 'bg-grayLight-30 dark:bg-grayDark-30'
                         } relative cursor-pointer select-none py-3 px-3`
                       }
                       value={option}

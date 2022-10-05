@@ -15,7 +15,7 @@ export const DepositCard = (props: DepositCardProps) => {
   const router = useRouter();
 
   return (
-    <div className="bg-grayLight-20 grow dark:bg-black">
+    <div className="grow bg-grayLight-20 dark:bg-black">
       <SidePadding>
         <TitledCard
           onGoBack={router.back}

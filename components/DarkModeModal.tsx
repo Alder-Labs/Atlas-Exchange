@@ -21,7 +21,7 @@ const MenuItem = (props: MenuItemProps) => {
   return (
     <div className="max-w-full basis-full">
       <button
-        className="dark:hover:bg-grayDark-40 hover:bg-grayLight-30 w-full py-4 px-4 duration-300"
+        className="w-full py-4 px-4 duration-300 hover:bg-grayLight-30 dark:hover:bg-grayDark-40"
         onClick={onClick}
       >
         <div className="flex items-center justify-between">

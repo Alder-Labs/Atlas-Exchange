@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { faMobileScreenButton } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import clsx from "clsx";
-import { useRouter } from "next/router";
+import { faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import clsx from 'clsx';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
@@ -11,15 +10,15 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 
-import { useLoginStatus } from "../../hooks/useLoginStatus";
-import { useModal } from "../../hooks/useModal";
-import { useUserState } from "../../lib/auth-token-context";
+import { useLoginStatus } from '../../hooks/useLoginStatus';
+import { useModal } from '../../hooks/useModal';
+import { useUserState } from '../../lib/auth-token-context';
 import { requireEnvVar } from "../../lib/env";
-import { useMutationFetcher } from "../../lib/mutation";
-import { toast } from "../../lib/toast";
-import { MfaType } from "../../lib/types";
-import { Text, Button, TextInput, Select } from "../base";
-import { TitledModal } from "../modals/TitledModal";
+import { useMutationFetcher } from '../../lib/mutation';
+import { toast } from '../../lib/toast';
+import { MfaType, RecaptchaActions } from '../../lib/types';
+import { Text, Button, TextInput, Select } from '../base';
+import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from "./ExistingMfaInput";
 
@@ -47,11 +46,13 @@ const countryCodeOption: { value: string; label: string }[] = [
   { value: "+1", label: "+1" },
 ];
 
-export function SetSmsModalInside(props: { mfa: MfaType }) {
-  const router = useRouter();
+export function SetSmsMfaForm() {
   const [open, handlers] = useModal(false);
-  const [existingMfaCode, setExistingMfaCode] = useState("");
+
+  const [existingMfaCode, setExistingMfaCode] = useState('');
   const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const userState = useUserState();
 
@@ -124,8 +125,6 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
     }
   );
 
-  const { executeRecaptcha } = useGoogleReCaptcha();
-
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = async () => {
     const { countryCode, phoneNumber } = getValues();
@@ -139,25 +138,26 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
       return;
     }
 
-    if (!executeRecaptcha) {
-      toast.error("executeRecaptcha is null");
-      return;
-    }
-
-    const token = await executeRecaptcha("SMS").catch(() => {
-      toast.error("Error: reCaptcha failed");
-      return null;
-    });
-    if (!token) {
-      return;
-    }
-
-    requestPhoneVerification({
+    let inputData = {
       phoneNumber: countryCode + phoneNumber,
       captcha: {
-        recaptcha_challenge: token,
+        recaptcha_challenge: '',
       },
-    });
+    };
+
+    if (!executeRecaptcha) {
+      toast.error('Error: reCAPTCHA not loaded.');
+      return;
+    }
+
+    try {
+      const captchaToken = await executeRecaptcha(RecaptchaActions.SMS);
+      inputData.captcha.recaptcha_challenge = captchaToken;
+    } catch (e) {
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      return;
+    }
+    requestPhoneVerification(inputData);
   };
 
   const onSubmit = (data: SetSmsMfaForm) => {
@@ -168,6 +168,91 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
     };
     verifyPhoneVerification(reqData);
   };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="p-4">
+      <label className="block text-sm font-medium text-black dark:text-grayDark-80">
+        Phone Number
+      </label>
+      <div className="h-1"></div>
+
+      <div className="grid grid-cols-4 items-start gap-4 lg:items-center">
+        <Controller
+          name={'countryCode'}
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <Select
+              value={field.value}
+              onSelect={(value) => {
+                if (value) {
+                  field.onChange(value);
+                }
+              }}
+              options={countryCodeOption.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+              className="col-span-1 w-full items-center"
+            />
+          )}
+        />
+        <div className={'col-span-3 flex flex-row items-end'}>
+          <div className="w-full">
+            <div className="relative w-full">
+              <TextInput
+                placeholder={'Phone Number'}
+                {...register('phoneNumber', { required: true })}
+                className="w-full"
+              />
+              <div className="right-2 top-0 mt-2 flex h-full justify-end lg:absolute lg:mt-0 lg:items-center">
+                <Button
+                  size="sm"
+                  rounded="md"
+                  onClick={onRequestSmsCode}
+                  loading={requestPhoneVerificationLoading}
+                  type="button"
+                >
+                  Send SMS
+                </Button>
+              </div>
+            </div>
+            {errors.phoneNumber?.type === 'required' && (
+              <Text color="error" size="xs">
+                {'required'}
+              </Text>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="h-6"></div>
+      <TextInput
+        label={'SMS Verification Code *'}
+        placeholder={'SMS Verification Code'}
+        {...register('code', { required: true })}
+      />
+      <div className="h-6"></div>
+      <ExistingMfaInput
+        label="Existing MFA Code (you have SMS MFA enabled and code is required for this action)"
+        placeholder="Existing MFA Code"
+        value={existingMfaCode}
+        onChange={setExistingMfaCode}
+      />
+
+      <div className="h-8"></div>
+      <Button
+        type="submit"
+        className="w-full"
+        loading={verifyPhoneVerificationLoading}
+      >
+        Enable SMS MFA
+      </Button>
+    </form>
+  );
+}
+
+export function SetSmsModalInside(props: { mfa: MfaType }) {
+  const [open, handlers] = useModal(false);
 
   const btnText = (mfa: MfaType) => {
     switch (mfa) {
@@ -205,93 +290,14 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
         title={"Setup SMS MFA"}
         onClose={handlers.close}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-          <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
-            Phone Number
-          </label>
-          <div className="h-1"></div>
-
-          <div className="grid grid-cols-4 items-start gap-4 lg:items-center">
-            <Controller
-              name={"countryCode"}
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onSelect={(value) => {
-                    if (value) {
-                      field.onChange(value);
-                    }
-                  }}
-                  options={countryCodeOption.map((option) => ({
-                    value: option.value,
-                    label: option.label,
-                  }))}
-                  className="col-span-1 w-full items-center"
-                />
-              )}
-            />
-            <div className={"col-span-3 flex flex-row items-end"}>
-              <div className="w-full">
-                <div className="relative w-full">
-                  <TextInput
-                    placeholder={"Phone Number"}
-                    {...register("phoneNumber", { required: true })}
-                    className="w-full"
-                  />
-                  <div className="right-2 top-0 mt-2 flex h-full justify-end lg:absolute lg:mt-0 lg:items-center">
-                    <Button
-                      size="sm"
-                      rounded="md"
-                      onClick={onRequestSmsCode}
-                      loading={requestPhoneVerificationLoading}
-                      type="button"
-                    >
-                      Send SMS
-                    </Button>
-                  </div>
-                </div>
-                {errors.phoneNumber?.type === "required" && (
-                  <Text color="error" size="xs">
-                    {"required"}
-                  </Text>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="h-6"></div>
-          <TextInput
-            label={"SMS Verification Code *"}
-            placeholder={"SMS Verification Code"}
-            {...register("code", { required: true })}
-          />
-          <div className="h-6"></div>
-          <ExistingMfaInput
-            label="Existing MFA Code (you have SMS MFA enabled and code is required for this action)"
-            placeholder="Existing MFA Code"
-            value={existingMfaCode}
-            onChange={setExistingMfaCode}
-          />
-
-          <div className="h-8"></div>
-          <Button
-            type="submit"
-            className="w-full"
-            loading={verifyPhoneVerificationLoading}
-          >
-            Enable SMS MFA
-          </Button>
-        </form>
+        <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+          <SetSmsMfaForm />
+        </GoogleReCaptchaProvider>
       </TitledModal>
     </>
   );
 }
 
 export function SetSmsModal(props: { mfa: MfaType }) {
-  return (
-    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <SetSmsModalInside {...props} />
-    </GoogleReCaptchaProvider>
-  );
+  return <SetSmsModalInside {...props} />;
 }

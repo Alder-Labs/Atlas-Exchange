@@ -31,7 +31,7 @@ export function StageNavigator<TStageEnum extends string>(
   // const currStageItem = stages.find((stage) => stage.value === currentStage);
   return (
     <>
-      <div className="text-grayLight-80 flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-4 text-grayLight-80">
         {stages.map(({ value, label }, idx) => {
           const isCurrent = value === currentStage;
           // const isHovered = hoveredStage === value;

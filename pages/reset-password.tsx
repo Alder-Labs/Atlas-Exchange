@@ -130,13 +130,13 @@ const ResetPasswordPage: NextPage = (props: {}) => {
       <>
         {watch('newPasswordConfirm') &&
           (watch('newPasswordConfirm') !== watch('newPassword') ? (
-            <div className="animate-enter mt-3">
+            <div className="mt-3 animate-enter">
               <Text color="red" size="sm">
                 Passwords do not match
               </Text>
             </div>
           ) : watch('newPasswordConfirm') === watch('newPassword') ? (
-            <div className="animate-enter mt-3">
+            <div className="mt-3 animate-enter">
               <Text color="green" size="sm">
                 Passwords match
               </Text>
@@ -150,7 +150,7 @@ const ResetPasswordPage: NextPage = (props: {}) => {
     return (
       <>
         {watch('newPassword') && (
-          <div className="animate-enter mt-3">
+          <div className="mt-3 animate-enter">
             <PasswordRequirements password={watch('newPassword')} />
           </div>
         )}
@@ -159,15 +159,15 @@ const ResetPasswordPage: NextPage = (props: {}) => {
   }
 
   return (
-    <SidePadding className="bg-grayLight-10 flex dark:bg-black">
+    <SidePadding className="flex bg-grayLight-10 dark:bg-black">
       <div className="h-8 sm:h-24"></div>
 
       <div className="mx-auto max-h-[95vh] w-full max-w-md">
-        <div className="dark:bg-grayDark-20 box-border w-full rounded-md bg-white text-white shadow-md">
-          <div className="border-grayLight-40 dark:border-grayDark-40 flex w-full justify-center border-b p-4">
+        <div className="box-border w-full rounded-md bg-white text-white shadow-md dark:bg-grayDark-20">
+          <div className="flex w-full justify-center border-b border-grayLight-40 p-4 dark:border-grayDark-40">
             <Text size="lg">Reset Password</Text>
           </div>
-          <div className="dark:border-grayDark-40 border-grayLight-40 flex items-baseline justify-center gap-2 p-4 pb-4">
+          <div className="flex items-baseline justify-center gap-2 border-grayLight-40 p-4 pb-4 dark:border-grayDark-40">
             <form
               onSubmit={handleSubmit(resetPassword)}
               className="mx-auto w-full"
@@ -236,7 +236,7 @@ const ResetPasswordPage: NextPage = (props: {}) => {
                 {...register('code', { required: true })}
               />
               {errors.code && (
-                <div className="text-redLight dark:text-redDark text-sm">
+                <div className="text-sm text-redLight dark:text-redDark">
                   {errors.code.type === 'required'
                     ? 'Code is required'
                     : 'Invalid code'}

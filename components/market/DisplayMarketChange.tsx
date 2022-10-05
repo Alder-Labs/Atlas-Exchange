@@ -18,7 +18,7 @@ export function DisplayMarketChange(props: DisplayMarketChangeProps) {
       </Text>
       <FontAwesomeIcon
         icon={faArrowDown}
-        className={'text-redLight dark:text-redDark ml-1 w-2.5 -rotate-45'}
+        className={'ml-1 w-2.5 -rotate-45 text-redLight dark:text-redDark'}
       />
     </div>
   ) : (
@@ -28,7 +28,7 @@ export function DisplayMarketChange(props: DisplayMarketChangeProps) {
       </Text>
       <FontAwesomeIcon
         icon={faArrowUp}
-        className={'text-greenLight dark:text-greenDark ml-1 w-2.5 rotate-45'}
+        className={'ml-1 w-2.5 rotate-45 text-greenLight dark:text-greenDark'}
       />
     </div>
   );

@@ -1,6 +1,6 @@
-import { WithdrawCryptoInput } from "../../components/global-modals/send-receive/WithdrawCryptoConfirm";
+import { WithdrawCryptoInput } from '../../components/global-modals/send-receive/WithdrawCryptoConfirm';
 
-import { Coin } from "./coin";
+import { Coin } from './coin';
 
 export enum ModalState {
   Closed = "closed",
