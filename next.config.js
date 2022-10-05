@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require('@sentry/nextjs');
 
 // - prevent iframe embedding except from Plaid and Stripe
 // - only allow scripts from the same origin, Plaid, Stripe, or Sardine
@@ -19,35 +19,35 @@ const ContentSecurityPolicy = `
 const securityHeaders = [
   {
     // Enable HSTS - Http Strict Transport Security
-    key: "Strict-Transport-Security",
-    value: "max-age=63072000; includeSubDomains; preload",
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
     // Prevent Clickjacking by preventing the page from being loaded in an iframe
-    key: "X-Frame-Options",
-    value: "SAMEORIGIN",
+    key: 'X-Frame-Options',
+    value: 'SAMEORIGIN',
   },
   {
     // Prevent MIME type sniffing by telling the browser to only use the declared content type
-    key: "X-Content-Type-Options",
-    value: "nosniff",
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
   },
   {
     // CSP Header - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    key: "Content-Security-Policy",
-    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+    key: 'Content-Security-Policy',
+    value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
   },
   {
-    key: "Referrer-Policy",
-    value: "strict-origin-when-cross-origin",
+    key: 'Referrer-Policy',
+    value: 'strict-origin-when-cross-origin',
   },
   {
-    key: "X-Frame-Options",
-    value: "deny",
+    key: 'X-Frame-Options',
+    value: 'deny',
   },
   {
-    key: "X-XSS-Protection",
-    value: "1; mode=block",
+    key: 'X-XSS-Protection',
+    value: '1; mode=block',
   },
 ];
 
@@ -56,16 +56,12 @@ const nextConfig = {
   experimental: {
     legacyBrowsers: false,
     browsersListForSwc: true,
-    images: {
-      unoptimized: true,
-      allowFutureImage: true,
-    },
   },
   async headers() {
     return [
       {
         // Apply these headers to all routes in the application
-        source: "/:path*",
+        source: '/:path*',
         headers: securityHeaders,
       },
     ];
@@ -87,8 +83,8 @@ const nextConfig = {
   },
 };
 
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
 });
 
 const sentryWebpackPluginOptions = {

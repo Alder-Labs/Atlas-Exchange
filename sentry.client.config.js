@@ -2,17 +2,15 @@
 // The config you add here will be used whenever a page is visited.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
-import { requireEnvVar } from "./lib/env";
-
-const SENTRY_DSN = requireEnvVar("NEXT_PUBLIC_SENTRY_DSN");
-const SENTRY_ENVIRONMENT = requireEnvVar("NEXT_PUBLIC_ENVIRONMENT");
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const SENTRY_ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 
 Sentry.init({
   dsn: SENTRY_DSN,
   environment:
-    SENTRY_ENVIRONMENT === "production" ? "production" : "development",
+    SENTRY_ENVIRONMENT === 'production' ? 'production' : 'development',
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
   // ...
