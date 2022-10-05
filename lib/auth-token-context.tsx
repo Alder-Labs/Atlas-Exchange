@@ -5,6 +5,7 @@ import { useQueryClient } from "react-query";
 
 import { useStateCallback } from "../hooks/useStateCallback";
 
+import { requireEnvVar } from "./env";
 import { SignInResponse } from "./types";
 
 interface User {
@@ -49,6 +50,8 @@ type UserState =
     };
 
 const UserContext = createContext<UserState | undefined>(undefined);
+
+const API_URL = requireEnvVar("NEXT_PUBLIC_API_URL");
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
@@ -110,7 +113,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       },
     };
 
-    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+    return fetch(`${API_URL}/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(signupReq),
@@ -131,7 +134,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signin = (data: SigninParams) => {
     return new Promise<SignInResponse>((resolve, reject) => {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
+      fetch(`${API_URL}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -165,7 +168,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return new Promise<void>((resolve, reject) => {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login_with_mfa`, {
+      fetch(`${API_URL}/users/login_with_mfa`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -208,7 +211,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     // for expiring an individual session.
 
     // return new Promise<any>((resolve, reject) => {
-    //   fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxy/api/logout`, {
+    //   fetch(`${API_URL}/proxy/api/logout`, {
     //     method: 'POST',
     //     headers: {
     //       'Content-Type': 'application/json',

@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useUser, useUserState } from './auth-token-context';
+import { useUser, useUserState } from "./auth-token-context";
+import { requireEnvVar } from "./env";
 
+const API_URL = requireEnvVar("NEXT_PUBLIC_API_URL");
 export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
   path: string,
   authToken?: string
@@ -9,7 +11,7 @@ export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
   return async (body: TRequestData): Promise<TQueryFnData> => {
     const headers: Record<string, string> = {};
     if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
+      headers["Authorization"] = `Bearer ${authToken}`;
     }
 
     const formData = new FormData();
@@ -17,15 +19,15 @@ export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
       formData.append(key, value);
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
-      method: 'POST',
+    return fetch(`${API_URL}${path}`, {
+      method: "POST",
       headers: headers,
       body: formData,
     })
       .then((res) => res.json())
       .then((res) => {
         if (!res.success) {
-          throw new Error('Error ' + res.error);
+          throw new Error("Error " + res.error);
         }
         return res.result;
       });

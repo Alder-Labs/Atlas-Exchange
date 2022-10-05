@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { Text, Title } from '../components/base';
-import { Button, Modal, TextInput } from '../components/base';
-import { DarkModeButton } from '../components/DarkModeButton';
-import { TitledActionModal } from '../components/modals/TitledActionModal';
-import { TitledModal } from '../components/modals/TitledModal';
-import { Table } from '../components/table';
-import { useModal } from '../hooks/useModal';
-import { toast } from '../lib/toast';
-import { CustomPage } from '../lib/types';
+import { Text, Title } from "../components/base";
+import { Button, Modal, TextInput } from "../components/base";
+import { DarkModeButton } from "../components/DarkModeButton";
+import { TitledActionModal } from "../components/modals/TitledActionModal";
+import { TitledModal } from "../components/modals/TitledModal";
+import { Table } from "../components/table";
+import { useModal } from "../hooks/useModal";
+import { toast } from "../lib/toast";
+import { CustomPage } from "../lib/types";
 
 function ButtonsReference() {
-  const variants = ['primary', 'secondary', 'outline'] as const;
+  const variants = ["primary", "secondary", "outline"] as const;
   const propsets = [
-    { title: 'Normal', props: {} },
+    { title: "Normal", props: {} },
     {
-      title: 'Disabled',
+      title: "Disabled",
       props: { disabled: true },
     },
     {
-      title: 'Floating',
+      title: "Floating",
       props: { floating: true },
     },
     {
-      title: 'Loading',
+      title: "Loading",
       props: { loading: true },
     },
   ];
@@ -67,19 +67,19 @@ function ButtonsReference() {
 
 const DATA = [
   {
-    type: 'Deposit',
-    currency: 'BTC',
-    amount: '$0.00',
+    type: "Deposit",
+    currency: "BTC",
+    amount: "$0.00",
   },
   {
-    type: 'Deposit',
-    currency: 'ETH',
-    amount: '$0.00',
+    type: "Deposit",
+    currency: "ETH",
+    amount: "$0.00",
   },
   {
-    type: 'Withdraw',
-    currency: 'LTC',
-    amount: '$0.00',
+    type: "Withdraw",
+    currency: "LTC",
+    amount: "$0.00",
   },
 ];
 
@@ -88,21 +88,21 @@ function TableReference() {
     <Table
       columns={[
         {
-          label: 'Type',
-          type: 'string',
-          align: 'left',
+          label: "Type",
+          type: "string",
+          align: "left",
           getCellValue: (tx) => tx.type,
         },
         {
-          label: 'Currency',
-          type: 'string',
-          align: 'right',
+          label: "Currency",
+          type: "string",
+          align: "right",
           getCellValue: (tx) => tx.currency,
         },
         {
-          label: 'Amount',
-          type: 'string',
-          align: 'right',
+          label: "Amount",
+          type: "string",
+          align: "right",
           getCellValue: (tx) => tx.amount,
         },
       ]}
@@ -113,7 +113,7 @@ function TableReference() {
 }
 
 function InputReference() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   return (
     <div className="">
@@ -176,9 +176,9 @@ function ModalReference() {
         onClose={handlers3.close}
         actionText="Primary action"
         onAction={async () => {
-          toast.success('Primary action clicked');
+          toast.success("Primary action clicked");
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          toast.success('Modal closed');
+          toast.success("Modal closed");
           handlers3.close();
         }}
       >
@@ -206,7 +206,7 @@ function SectionTitle({ title }: { title: string }) {
     <Title
       order={2}
       className="section-title mb-12 w-full border-b pb-4 pt-16 text-3xl"
-      id={title.replace(' ', '-')}
+      id={title.replace(" ", "-")}
     >
       {title}
     </Title>
@@ -220,11 +220,11 @@ const DesignPage: CustomPage = () => {
 
   useEffect(() => {
     setHeaders(
-      Array.from(document.getElementsByTagName('h2')).map((el) => ({
+      Array.from(document.getElementsByTagName("h2")).map((el) => ({
         title: el.innerText,
         link: el.id,
         element: el,
-        show: el.className.includes('section-title'),
+        show: el.className.includes("section-title"),
       }))
     );
   }, []);
@@ -243,11 +243,11 @@ const DesignPage: CustomPage = () => {
             if (!show) return null;
             return (
               <div className="flex cursor-default gap-2" key={i}>
-                →{' '}
+                →{" "}
                 <div
                   className="cursor-pointer hover:underline"
                   onClick={() => {
-                    element.scrollIntoView({ behavior: 'smooth' });
+                    element.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
                   {title}
@@ -259,9 +259,9 @@ const DesignPage: CustomPage = () => {
       </div>
       <div className="h-screen w-full overflow-y-auto bg-white px-8 py-4 dark:bg-black">
         <SectionTitle title="Toast" />
-        <Button onClick={() => toast.success('Success toast')}>Success</Button>
+        <Button onClick={() => toast.success("Success toast")}>Success</Button>
         <div className="h-1"></div>
-        <Button onClick={() => toast.error('Error toast')}>Error</Button>
+        <Button onClick={() => toast.error("Error toast")}>Error</Button>
 
         <SectionTitle title="Title" />
         <Title order={1}>Heading 1</Title>

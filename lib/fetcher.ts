@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { useUserState } from './auth-token-context';
+import { useUserState } from "./auth-token-context";
+import { requireEnvVar } from "./env";
 
+const API_URL = requireEnvVar("NEXT_PUBLIC_API_URL");
 export const createFetcher = <TQueryFnData>(authToken?: string) => {
   return async ({
     queryKey,
@@ -9,14 +11,14 @@ export const createFetcher = <TQueryFnData>(authToken?: string) => {
     queryKey: [string];
   }): Promise<TQueryFnData | never> => {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
     if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
+      headers["Authorization"] = `Bearer ${authToken}`;
     }
-    const fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}${queryKey[0]}`;
+    const fetchUrl = `${API_URL}${queryKey[0]}`;
     return fetch(fetchUrl, {
-      method: 'GET',
+      method: "GET",
       headers: headers,
     })
       .then((res) => res.json())
