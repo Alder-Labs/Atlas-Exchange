@@ -31,7 +31,7 @@ export function TradeError(props: TradeErrorProps) {
     case 'not-enough-funds':
       if (type === 'buy') {
         return (
-          <div className="dark:bg-grayDark-20 bg-grayLight-20 mb-2 flex w-full flex-col items-center rounded-md p-4">
+          <div className="mb-2 flex w-full flex-col items-center rounded-md bg-grayLight-20 p-4 dark:bg-grayDark-20">
             <Text size="sm">Not enough funds.</Text>
             <div className="h-1"></div>
 
@@ -51,14 +51,14 @@ export function TradeError(props: TradeErrorProps) {
         );
       } else {
         return (
-          <div className="dark:bg-grayDark-20 bg-grayLight-20 mb-2 flex w-full flex-col items-center rounded-md p-4">
+          <div className="mb-2 flex w-full flex-col items-center rounded-md bg-grayLight-20 p-4 dark:bg-grayDark-20">
             <Text size="sm">Not enough {fromCoinId}.</Text>
           </div>
         );
       }
     case 'not-logged-in':
       return (
-        <div className="dark:bg-grayDark-20 bg-grayLight-20 mb-2 flex w-full flex-col items-center rounded-md p-4">
+        <div className="mb-2 flex w-full flex-col items-center rounded-md bg-grayLight-20 p-4 dark:bg-grayDark-20">
           <Text size="sm">Sign in to buy {toCoinId}.</Text>
           <div className="h-1"></div>
           <Link href="/signin">
@@ -68,7 +68,7 @@ export function TradeError(props: TradeErrorProps) {
       );
     case 'needs-mfa':
       return (
-        <div className="dark:bg-grayDark-20 bg-grayLight-20 mb-2 flex w-full flex-col items-center rounded-md p-4">
+        <div className="mb-2 flex w-full flex-col items-center rounded-md bg-grayLight-20 p-4 dark:bg-grayDark-20">
           <Text size="sm">Enable MFA in order to trade.</Text>
           <div className="h-1"></div>
           <Link href="/account">
@@ -78,7 +78,7 @@ export function TradeError(props: TradeErrorProps) {
       );
     case 'needs-kyc-2':
       return (
-        <div className="dark:bg-grayDark-20 bg-grayLight-20 mb-2 flex w-full flex-col items-center rounded-md p-4">
+        <div className="mb-2 flex w-full flex-col items-center rounded-md bg-grayLight-20 p-4 dark:bg-grayDark-20">
           <Text size="sm">Needs KYC Level 2.</Text>
           <div className="h-1"></div>
           <Link href="/account?tabIndex=1">
@@ -88,7 +88,7 @@ export function TradeError(props: TradeErrorProps) {
       );
     default:
       return (
-        <div className="dark:bg-grayDark-20 bg-grayLight-20 mb-2 flex w-full flex-col items-center rounded-md p-4">
+        <div className="mb-2 flex w-full flex-col items-center rounded-md bg-grayLight-20 p-4 dark:bg-grayDark-20">
           <Text size="sm">{tradeError?.message ?? 'Unknown error'}</Text>
         </div>
       );

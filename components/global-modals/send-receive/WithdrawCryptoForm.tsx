@@ -136,7 +136,7 @@ export const WithdrawCryptoForm = (props: {
                     <Text>Network</Text>
                   </label>
                   <Select
-                    className="text-textPrimary text-label mb-4 block font-medium"
+                    className="mb-4 block text-label font-medium text-textPrimary"
                     value={field.value ?? ''}
                     onSelect={(value) => {
                       if (typeof value === 'string') {

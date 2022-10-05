@@ -89,18 +89,18 @@ const Home: NextPage = () => {
             <Responsive showIfLargerThan="lg">
               <div className="py-8 sm:p-8">{renderHomePrompt}</div>
             </Responsive>
-            <div className="dark:bg-grayDark-50 bg-grayLight-10 h-[2px] shrink-0 self-stretch sm:ml-8"></div>
+            <div className="h-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:ml-8"></div>
             <div className="flex-1 py-8 sm:p-8">
               <MarketWatchlist updateTradeProps={updateTradeProps} />
             </div>
           </div>
 
-          <div className="dark:bg-grayDark-50 bg-grayLight-10 my-8 hidden w-[2px] shrink-0 self-stretch sm:block"></div>
+          <div className="my-8 hidden w-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:block"></div>
 
           <div className="w-full shrink-0 lg:w-80">
             <Responsive showIfSmallerThan="lg">
               <div className="w-full py-8 sm:p-8">{renderHomePrompt}</div>
-              <div className="dark:bg-grayDark-50 bg-grayLight-10 h-[2px] shrink-0 self-stretch"></div>
+              <div className="h-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50"></div>
             </Responsive>
             <div className="flex flex-col items-start py-8 sm:p-8">
               {/* <Trade
@@ -115,7 +115,7 @@ const Home: NextPage = () => {
               <BuySellConvert />
             </div>
 
-            <div className="dark:bg-grayDark-50 bg-grayLight-10 h-[2px] shrink-0 self-stretch sm:mr-8"></div>
+            <div className="h-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:mr-8"></div>
 
             <div className="w-full flex-1 py-8 sm:p-8">
               <TopMovers

@@ -178,7 +178,7 @@ export const MarketWatchlist = ({
                 <FontAwesomeIcon
                   icon={faArrowDown}
                   className={
-                    'text-redLight dark:text-redDark mr-2 w-3 -rotate-45'
+                    'mr-2 w-3 -rotate-45 text-redLight dark:text-redDark'
                   }
                 />
                 <Text color={'red'}>{(item.change24h * 100).toFixed(2)}%</Text>
@@ -188,7 +188,7 @@ export const MarketWatchlist = ({
                 <FontAwesomeIcon
                   icon={faArrowUp}
                   className={
-                    'text-greenLight dark:text-greenDark mr-2 w-3 rotate-45'
+                    'mr-2 w-3 rotate-45 text-greenLight dark:text-greenDark'
                   }
                 />
                 <Text color={'green'}>
@@ -221,7 +221,7 @@ export const MarketWatchlist = ({
               }}
               renderHitSlop={() => {
                 return (
-                  <div className="dark:group-hover:bg-grayDark-40 group-hover:bg-grayLight-20 absolute -top-2 -bottom-2 -left-4 -right-4 rounded-md transition"></div>
+                  <div className="absolute -top-2 -bottom-2 -left-4 -right-4 rounded-md transition group-hover:bg-grayLight-20 dark:group-hover:bg-grayDark-40"></div>
                 );
               }}
             >
@@ -241,7 +241,7 @@ export const MarketWatchlist = ({
             >
               <FontAwesomeIcon
                 icon={filter === FilterType.None ? faStarRegular : faStar}
-                className="dark:text-grayDark-80 text-grayLight-60 h-3.5"
+                className="h-3.5 text-grayLight-60 dark:text-grayDark-80"
               />
             </TextButton>
           </div>
@@ -257,7 +257,7 @@ export const MarketWatchlist = ({
                 <TextButton
                   renderHitSlop={() => {
                     return (
-                      <div className="dark:group-hover:bg-grayDark-40 group-hover:bg-grayLight-20 absolute -top-2 -bottom-2 -left-2 -right-2 z-0 rounded-md transition"></div>
+                      <div className="absolute -top-2 -bottom-2 -left-2 -right-2 z-0 rounded-md transition group-hover:bg-grayLight-20 dark:group-hover:bg-grayDark-40"></div>
                     );
                   }}
                   onClick={(e) => {
@@ -271,12 +271,12 @@ export const MarketWatchlist = ({
                     {inWatchlist ? (
                       <FontAwesomeIcon
                         icon={faStar}
-                        className="dark:text-grayDark-80 text-grayLight-60 h-3.5"
+                        className="h-3.5 text-grayLight-60 dark:text-grayDark-80"
                       />
                     ) : (
                       <FontAwesomeIcon
                         icon={faStarRegular}
-                        className="dark:text-grayDark-80 text-grayLight-60 h-3.5"
+                        className="h-3.5 text-grayLight-60 dark:text-grayDark-80"
                       />
                     )}
                   </div>
@@ -305,7 +305,7 @@ export const MarketWatchlist = ({
           Market Trends
         </Title>
         <div className="flex flex-row justify-between">
-          <div className="text-md hidden md:block">
+          <div className="hidden text-md md:block">
             <TextInput
               type="text"
               placeholder="Search"

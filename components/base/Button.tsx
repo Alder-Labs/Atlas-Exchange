@@ -15,7 +15,7 @@ function Spinner({
     <svg
       role="status"
       className={clsx({
-        'text-grayLight-110 fill-grayLight-40 mb-[1px] inline animate-spin':
+        'mb-[1px] inline animate-spin fill-grayLight-40 text-grayLight-110':
           true,
         '-ml-0.5 mr-1 h-2 w-2': size === 'xs',
         '-ml-2 mr-2 h-3 w-3 ': size === 'md',

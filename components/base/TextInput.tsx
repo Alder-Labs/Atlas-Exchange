@@ -49,7 +49,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       >
         {label && (
           <>
-            <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+            <label className="block text-sm font-medium text-black dark:text-grayDark-80">
               {label}
             </label>
             <div className="h-2" />

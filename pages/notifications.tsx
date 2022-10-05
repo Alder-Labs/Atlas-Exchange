@@ -77,7 +77,7 @@ const Notifications: NextPage = () => {
               },
               renderCell: (row: Notification) => {
                 return (
-                  <div className={'border-b-grayLight-90 border-b'}>
+                  <div className={'border-b border-b-grayLight-90'}>
                     <div className="h-4" />
                     <div className="flex flex-row items-center justify-between">
                       <Text className="" weight="bold">

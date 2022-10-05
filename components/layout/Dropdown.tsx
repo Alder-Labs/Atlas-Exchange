@@ -76,9 +76,9 @@ export function Dropdown() {
               leaveTo="transform opacity-0 scale-95"
             >
               <Menu.Items
-                className={`dark:bg-grayDark-20 dark:shadow-grayDark-20 dark:border-grayDark-40 border-grayLight-20 absolute right-0 top-full z-10 mt-2 
-                  w-56  origin-top-right rounded-md border bg-white py-2
-                  shadow-sm ring-1 ring-black ring-opacity-5 focus:outline-none`}
+                className={`absolute right-0 top-full z-10 mt-2 w-56 origin-top-right rounded-md border 
+                  border-grayLight-20  bg-white py-2 shadow-sm ring-1 ring-black
+                  ring-opacity-5 focus:outline-none dark:border-grayDark-40 dark:bg-grayDark-20 dark:shadow-grayDark-20`}
               >
                 {isLoggedIn ? (
                   <>
@@ -105,7 +105,7 @@ export function Dropdown() {
                       }}
                     />
 
-                    <div className="dark:bg-grayDark-50 bg-grayLight-20 my-0.5 h-px w-full"></div>
+                    <div className="my-0.5 h-px w-full bg-grayLight-20 dark:bg-grayDark-50"></div>
                     <Menu.Item>
                       {({ active }) => {
                         const styles = clsx({
@@ -133,11 +133,11 @@ export function Dropdown() {
             </Transition>
 
             <Menu.Button className="focus:outline-none">
-              <div className="dark:hover:bg-grayDark-40 border-grayLight-50 hover:bg-grayLight-20 rounded-full px-3 py-1.5 transition ">
-                <div className="text-md dark:text-grayDark-120 text-grayLight-70 flex items-center gap-2">
+              <div className="rounded-full border-grayLight-50 px-3 py-1.5 transition hover:bg-grayLight-20 dark:hover:bg-grayDark-40 ">
+                <div className="flex items-center gap-2 text-md text-grayLight-70 dark:text-grayDark-120">
                   <FontAwesomeIcon
                     icon={faUser}
-                    className="dark:text-grayDark-80 h-3.5 w-3.5"
+                    className="h-3.5 w-3.5 dark:text-grayDark-80"
                   />
                   <Text isLoading={loadingLoginStatusData} loadingWidth="8rem">
                     {loginStatusData?.loggedIn

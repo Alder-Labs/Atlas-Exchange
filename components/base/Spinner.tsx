@@ -5,7 +5,7 @@ export function Spinner({ className }: { className?: string }) {
     <svg
       role="status"
       className={clsx(
-        'text-grayLight-110 fill-grayLight-40 inline h-4 w-4 animate-spin',
+        'inline h-4 w-4 animate-spin fill-grayLight-40 text-grayLight-110',
         className
       )}
       viewBox="0 0 100 100"

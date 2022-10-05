@@ -180,7 +180,7 @@ export const UserTransactions = (props: { coinId?: string }) => {
 const TransactionCard = (props: { children: React.ReactNode }) => {
   return (
     <div
-      className={`dark:hover:bg-grayDark-20 hover:bg-grayLight-20 flex flex-col px-2 py-4 duration-300 lg:p-4`}
+      className={`flex flex-col px-2 py-4 duration-300 hover:bg-grayLight-20 dark:hover:bg-grayDark-20 lg:p-4`}
     >
       {props.children}
     </div>

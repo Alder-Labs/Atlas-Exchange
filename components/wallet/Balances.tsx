@@ -462,7 +462,7 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                       ]}
                     >
                       <Menu.Button className="focus:outline-none">
-                        <div className="dark:hover:bg-grayDark-40 hover:bg-grayLight-20 flex h-7 w-7 flex-row items-center justify-center rounded-full transition">
+                        <div className="flex h-7 w-7 flex-row items-center justify-center rounded-full transition hover:bg-grayLight-20 dark:hover:bg-grayDark-40">
                           <FontAwesomeIcon
                             icon={faEllipsisH}
                             className="w-3 font-bold text-black dark:text-white"

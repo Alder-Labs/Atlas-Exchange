@@ -37,7 +37,7 @@ export function ContentCard(props: ContentCardProps) {
         {onBack && (
           <button
             onClick={onBack}
-            className="hover:text-grayLight-80 text-grayLight-50 mr-4 flex h-4 w-4 items-center overflow-hidden transition dark:hover:text-white"
+            className="mr-4 flex h-4 w-4 items-center overflow-hidden text-grayLight-50 transition hover:text-grayLight-80 dark:hover:text-white"
           >
             <FontAwesomeIcon icon={faArrowLeft} />
           </button>

@@ -41,7 +41,7 @@ const MoverItem = (props: MoverItemProps) => {
       }}
       className="group relative flex cursor-pointer justify-between rounded-sm py-4 transition"
     >
-      <div className="dark:group-hover:bg-grayDark-20 group-hover:bg-grayLight-10 absolute -top-0 -bottom-0 -left-4 -right-4 transition"></div>
+      <div className="absolute -top-0 -bottom-0 -left-4 -right-4 transition group-hover:bg-grayLight-10 dark:group-hover:bg-grayDark-20"></div>
       <div className="flex items-center gap-3 overflow-hidden ">
         <div style={{ zIndex: 1 }} className="shrink-0">
           <CryptoIcon coinId={market.baseCurrency} className="h-8 w-8" />

@@ -5,16 +5,11 @@ import { useQueryClient } from 'react-query';
 
 import { useStateCallback } from '../hooks/useStateCallback';
 
-import { SignInResponse } from './types';
+import { RecaptchaParams, SigninParams, SignInResponse, SigninWithMfaParams } from './types';
 
 interface User {
   token: string;
 }
-
-type SigninParams = {
-  email: string;
-  password: string;
-};
 
 export type SignupParams = {
   email: string;
@@ -23,30 +18,23 @@ export type SignupParams = {
   clientUserId?: string;
   acceptedWhitelabelTos: boolean;
   password: string;
-  captcha: {
-    recaptcha_challenge: string;
-  };
-};
-
-export type SigninWithMfaParams = {
-  code: string;
-};
+} & RecaptchaParams;
 
 type UserState =
   | {
-      user: null;
-      signin: (params: SigninParams) => Promise<SignInResponse>;
-      signup: (params: SignupParams) => Promise<SignInResponse>;
-    }
+    user: null;
+    signin: (params: SigninParams) => Promise<SignInResponse>;
+    signup: (params: SignupParams) => Promise<SignInResponse>;
+  }
   | {
-      user: User;
-      signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-      setAuthToken: (
-        token: string | null | undefined,
-        callback?: (token: string | null | undefined) => void
-      ) => void;
-      signout: () => void;
-    };
+    user: User;
+    signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
+    setAuthToken: (
+      token: string | null | undefined,
+      callback?: (token: string | null | undefined) => void
+    ) => void;
+    signout: () => void;
+  };
 
 const UserContext = createContext<UserState | undefined>(undefined);
 
@@ -125,7 +113,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         return res.result;
       })
       .then((res) => {
-        return signin({ email: data.email, password: data.password });
+        return signin({
+          email: data.email,
+          password: data.password,
+          captcha: data.captcha,
+        });
       });
   };
 
@@ -134,10 +126,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
+        body: JSON.stringify(data),
       })
         .then((res) => {
           return res.json();
@@ -246,16 +235,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       value={
         authToken
           ? {
-              user: { token: authToken },
-              signinWithMfa: signinWithMfa,
-              signout: signout,
-              setAuthToken,
-            }
+            user: { token: authToken },
+            signinWithMfa: signinWithMfa,
+            signout: signout,
+            setAuthToken,
+          }
           : {
-              user: null,
-              signin,
-              signup,
-            }
+            user: null,
+            signin,
+            signup,
+          }
       }
     >
       {children}

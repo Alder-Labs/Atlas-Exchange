@@ -51,7 +51,7 @@ function ButtonsReference() {
             <>
               {variants.map((variant) => (
                 <div key={`${variant}-${title}`}>
-                  <Text className="text-grayLight-110 mb-1">{title}</Text>
+                  <Text className="mb-1 text-grayLight-110">{title}</Text>
                   <Button variant={variant} {...props}>
                     Button
                   </Button>
@@ -163,7 +163,7 @@ function ModalReference() {
         onGoBack={handlers2.close}
         onClose={handlers2.close}
       >
-        <div className="border-grayLight-10 border-4">
+        <div className="border-4 border-grayLight-10">
           Modal content
           <Modal.Description>
             Description goes in this tag for accessibility
@@ -182,7 +182,7 @@ function ModalReference() {
           handlers3.close();
         }}
       >
-        <div className="border-grayLight-10 border-4">
+        <div className="border-4 border-grayLight-10">
           Modal content
           <Modal.Description>
             Description goes in this tag for accessibility
@@ -231,7 +231,7 @@ const DesignPage: CustomPage = () => {
 
   return (
     <div className="flex h-screen w-full">
-      <div className="bg-grayLight-90 h-full flex-none p-4 pr-8 text-white">
+      <div className="h-full flex-none bg-grayLight-90 p-4 pr-8 text-white">
         <div className="flex items-center gap-4">
           <div className="text-xl font-bold">Components</div>
           <DarkModeButton />
