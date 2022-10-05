@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -34,19 +34,19 @@ export function SignIn(props: SignInProps) {
 
   function handleMfa(signinRes: SignInResponse) {
     if (!signinRes.mfaRequired) {
-      router.push("/onboarding");
+      router.push('/onboarding');
       return;
     }
     switch (signinRes.mfaMethod) {
-      case "email":
+      case 'email':
         // setAuthModalState(AuthModalState.EmailAuth);
         // Note: This should never happen, since email mfa is not used.
         setModalState({ state: ModalState.Closed });
         break;
-      case "sms":
+      case 'sms':
         setModalState({ state: ModalState.SmsAuth });
         break;
-      case "totp":
+      case 'totp':
         setModalState({ state: ModalState.TotpAuth });
         break;
       default:
@@ -63,8 +63,8 @@ export function SignIn(props: SignInProps) {
     formState: { errors },
   } = useForm<{ email: string; password: string }>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -113,7 +113,7 @@ export function SignIn(props: SignInProps) {
       useMutationFetcher<{}, {}>(`/proxy/api/users/public_change_password`),
       {
         onSuccess: (data) => {
-          toast.success("Reset password email sent.");
+          toast.success('Reset password email sent.');
         },
         onError: (error) => {
           toast.error(`Error resetting password. Please contact support.`);
@@ -168,7 +168,7 @@ export function SignIn(props: SignInProps) {
           )}
           {...register('password', { required: true })}
         />
-        <div className="mt-2.5 flex w-full">
+        <div className="mt-4 mb-2 flex w-full">
           <TextButton
             variant={'primary'}
             className="mr-1 ml-auto"
