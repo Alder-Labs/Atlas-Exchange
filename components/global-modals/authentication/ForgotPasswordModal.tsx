@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import {
   GoogleReCaptchaProvider,
-  useGoogleReCaptcha,
 } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
@@ -16,6 +15,7 @@ import { ModalState } from '../../../lib/types/modalState';
 import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
 import { TextInput, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
+import { useReCaptcha } from '../../../hooks/useReCaptcha';
 
 type PublicResetPasswordRequest = {
   deviceId?: string | null;
@@ -30,9 +30,10 @@ type ForgotPasswordForm = {
 };
 
 const ForgotPasswordModal = () => {
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [sardineDeviceId] = useAtom(sardineDeviceIdAtom);
   const [modalState, setModalState, handlers] = useModalState();
+
+  const { executeRecaptcha, enabled: captchaEnabled } = useReCaptcha();
 
   const {
     watch,
@@ -68,25 +69,31 @@ const ForgotPasswordModal = () => {
   }, [reset]);
 
   const onResetPassword = async (data: ForgotPasswordForm) => {
-    if (!executeRecaptcha) {
-      toast.error('Error: reCAPTCHA not loaded.');
-      return;
+    let inputData = {
+        ...data,
+        captcha: {
+          recaptcha_challenge: '',
+        }
     }
 
-    let captchaToken: string;
-    try {
-      captchaToken = await executeRecaptcha(RecaptchaActions.CHANGEPASSWORD);
-    } catch (e) {
-      toast.error('Error: reCAPTCHA failed. Please contact Support.');
-      return;
+    if (captchaEnabled) {
+      if (!executeRecaptcha) {
+        toast.error('Error: reCAPTCHA not loaded.');
+        return;
+      }
+
+      try {
+        const captchaToken = await executeRecaptcha(RecaptchaActions.CHANGEPASSWORD);
+        inputData.captcha.recaptcha_challenge = captchaToken;
+      } catch (e) {
+        toast.error('Error: reCAPTCHA failed. Please contact Support.');
+        return;
+      }
     }
 
     requestPasswordReset({
       deviceId: sardineDeviceId,
-      email: data.email,
-      captcha: {
-        recaptcha_challenge: captchaToken,
-      },
+      ...inputData,
     });
   };
 
