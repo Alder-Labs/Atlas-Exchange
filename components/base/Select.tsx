@@ -103,16 +103,6 @@ export const Select = <T extends string | Date | number>({
           <div className="relative text-md">
             <Listbox.Button
               className={clsx({
-<<<<<<< HEAD
-                "dark:border-brand-500 border-brand-300": open,
-                "dark:border-grayDark-40 border-grayLight-40": !open,
-                "relative flex w-full cursor-pointer items-center justify-between rounded-md border bg-white":
-                  true,
-                "py-3 pl-3 pr-1": size === "md",
-                "py-1 pl-2 text-sm": size === "sm",
-                "text-grayLight-90 text-left ": true,
-                "dark:bg-grayDark-40 dark:text-grayDark-100": true,
-=======
                 'border-brand-300 dark:border-brand-500': open,
                 'border-grayLight-40 dark:border-grayDark-40': !open,
                 'relative flex w-full cursor-pointer items-center justify-between rounded-md border bg-white':
@@ -121,7 +111,6 @@ export const Select = <T extends string | Date | number>({
                 'py-1 pl-2 text-sm': size === 'sm',
                 'text-left text-grayLight-90 ': true,
                 'dark:bg-grayDark-40 dark:text-grayDark-100': true,
->>>>>>> origin/dev
               })}
             >
               {renderSelected ? (
@@ -164,17 +153,10 @@ export const Select = <T extends string | Date | number>({
                       key={i}
                       className={({ active }) =>
                         clsx({
-<<<<<<< HEAD
-                          "dark:bg-grayDark-30 bg-grayLight-20": active,
-                          "relative cursor-pointer select-none": true,
-                          "px-3 py-3": size === "md",
-                          "px-2 py-1 text-sm": size === "sm",
-=======
                           'bg-grayLight-20 dark:bg-grayDark-30': active,
                           'relative cursor-pointer select-none': true,
                           'px-3 py-3': size === 'md',
                           'px-2 py-1 text-sm': size === 'sm',
->>>>>>> origin/dev
                         })
                       }
                       value={option.value}
@@ -196,13 +178,8 @@ export const Select = <T extends string | Date | number>({
                   );
                 })}
                 {filteredOptions.length === 0 && (
-<<<<<<< HEAD
-                  <div className="text-grayLight-70 px-3 py-3 text-sm">
-                    <Text color="secondary">No {value && "other "}options</Text>
-=======
                   <div className="px-3 py-3 text-sm text-grayLight-70">
-                    <Text>No options</Text>
->>>>>>> origin/dev
+                    <Text color="secondary">No {value && "other "}options</Text>
                   </div>
                 )}
               </Listbox.Options>
