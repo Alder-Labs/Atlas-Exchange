@@ -200,7 +200,7 @@ const DepositWireInstruction = (props: {
             )}
             {wireInst.shortMemo && (
               <div
-                className="text-textAccent cursor-pointer"
+                className="cursor-pointer text-textAccent"
                 onClick={() => setShowShortMemo(!showShortMemo)}
               >
                 (Click here if shorter memo is needed)

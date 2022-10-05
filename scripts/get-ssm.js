@@ -1,14 +1,12 @@
-const AWS = require("aws-sdk");
+const { SSM } = require('@aws-sdk/client-ssm');
 
 const REGION = "us-west-2";
 
-(async () => {
-  const ssm = new AWS.SSM({ region: REGION });
-  const parameter = await ssm
-    .getParameter({
-      Name: "/api/url",
-      WithDecryption: true,
+(async() => {
+    const client = new SSM({ region: REGION });
+    const parameter = await client.getParameter({
+        Name: '/api/url',
+        WithDecryption: true
     })
-    .promise();
-  console.log(parameter.Parameter.Value);
+    console.log(parameter.Parameter.Value);
 })();

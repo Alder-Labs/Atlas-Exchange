@@ -114,7 +114,7 @@ export function Table<T>(props: TableProps<T>) {
     <div className={clsx('relative overflow-x-visible', className)}>
       <table
         className={clsx(
-          'dark:text-grayDark-110 text-grayLight-60 w-full text-left',
+          'w-full text-left text-grayLight-60 dark:text-grayDark-110',
           tableClassName
         )}
         {...rest}
@@ -122,7 +122,7 @@ export function Table<T>(props: TableProps<T>) {
         <TableHeader>
           <tr className="relative h-11">
             {!noHeader && (
-              <TableHeaderCell className="dark:bg-grayDark-20 bg-grayLight-10 h-11 w-3 rounded-tl-2xl"></TableHeaderCell>
+              <TableHeaderCell className="h-11 w-3 rounded-tl-2xl bg-grayLight-10 dark:bg-grayDark-20"></TableHeaderCell>
             )}
 
             {columns.map((column, idx) => {
@@ -149,7 +149,7 @@ export function Table<T>(props: TableProps<T>) {
               }
             })}
             {!noHeader && (
-              <TableHeaderCell className="dark:bg-grayDark-20 bg-grayLight-10 h-11 w-3 rounded-tr-2xl"></TableHeaderCell>
+              <TableHeaderCell className="h-11 w-3 rounded-tr-2xl bg-grayLight-10 dark:bg-grayDark-20"></TableHeaderCell>
             )}
           </tr>
         </TableHeader>
@@ -202,7 +202,7 @@ export function Table<T>(props: TableProps<T>) {
                 key={idx}
                 className={clsx({
                   [`${rowHeightClassName}`]: true,
-                  'dark:hover:bg-grayDark-20 hover:bg-grayLight-10 transition':
+                  'transition hover:bg-grayLight-10 dark:hover:bg-grayDark-20':
                     true,
                   'cursor-pointer': onRowClick !== undefined,
                 })}
@@ -269,8 +269,8 @@ export function Table<T>(props: TableProps<T>) {
                 onClick={decreasePage}
                 disabled={page === 0}
                 className={clsx({
-                  'text-md p-2': true,
-                  'dark:text-grayDark-50 text-grayLight-50 cursor-not-allowed':
+                  'p-2 text-md': true,
+                  'cursor-not-allowed text-grayLight-50 dark:text-grayDark-50':
                     page === 0,
                   'dark:text-grayDark-80 dark:hover:text-white': page !== 0,
                 })}
@@ -291,8 +291,8 @@ export function Table<T>(props: TableProps<T>) {
                 onClick={increasePage}
                 disabled={page === totalPages - 1}
                 className={clsx({
-                  'text-md p-2': true,
-                  'dark:text-grayDark-50 text-grayLight-50 cursor-not-allowed':
+                  'p-2 text-md': true,
+                  'cursor-not-allowed text-grayLight-50 dark:text-grayDark-50':
                     page === totalPages - 1,
                   'dark:text-grayDark-80 dark:hover:text-white':
                     page !== totalPages - 1,

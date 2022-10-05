@@ -16,7 +16,7 @@ export const InputCheckbox = React.forwardRef<HTMLInputElement, Props>(
           type="checkbox"
           ref={ref}
           className={clsx(
-            'focus:border-primary-500 focus:ring-primary-500 border-grayLight-40 bg-grayLight-10 block rounded-lg border p-2.5 text-sm',
+            'focus:border-primary-500 focus:ring-primary-500 block rounded-lg border border-grayLight-40 bg-grayLight-10 p-2.5 text-sm',
             className
           )}
           {...rest}

@@ -103,9 +103,9 @@ export const WithdrawCryptoConfirm = (props: {
             <Text>{coin.name}</Text>
           </div>
           <div
-            className="dark:bg-grayDark-40
-                border-grayLight-80 my-4 flex flex-col
-                justify-center rounded-xl border"
+            className="my-4
+                flex flex-col justify-center rounded-xl
+                border border-grayLight-80 dark:bg-grayDark-40"
           >
             <div className="flex flex-col px-6 py-4">
               <Entry
@@ -114,11 +114,11 @@ export const WithdrawCryptoConfirm = (props: {
                   <AddressText className="ml-8">{input.address}</AddressText>
                 }
               />
-              <div className="dark:bg-grayDark-60 bg-grayLight-80 h-px" />
+              <div className="h-px bg-grayLight-80 dark:bg-grayDark-60" />
               <Entry left="Amount" right={`${input.size} ${input.coin}`} />
-              <div className="dark:bg-grayDark-60 bg-grayLight-80 h-px" />
+              <div className="h-px bg-grayLight-80 dark:bg-grayDark-60" />
               <Entry left="Method" right={input.method.toUpperCase()} />
-              <div className="dark:bg-grayDark-60 bg-grayLight-80 h-px" />
+              <div className="h-px bg-grayLight-80 dark:bg-grayDark-60" />
               <Entry
                 isLoading={feeLoading || !withdrawalFee}
                 loadingWidth={128}

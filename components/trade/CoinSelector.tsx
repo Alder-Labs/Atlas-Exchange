@@ -145,17 +145,17 @@ export const CoinSelector = forwardRef<HTMLDivElement, CoinSelectorProps>(
         }}
       >
         <div className={clsx('flex flex-col', className)}>
-          <div className="text-md px-3">
+          <div className="px-3 text-md">
             <Combobox.Input
               ref={inputRef}
               type="text"
               className={clsx({
                 'w-full': true,
-                'text-md text-grayLight-70 rounded-lg border outline-none transition dark:text-white':
+                'rounded-lg border text-md text-grayLight-70 outline-none transition dark:text-white':
                   true,
                 'py-3 px-4': true,
-                'focus:border-brand-500 text-black': true,
-                'dark:focus:border-brand-500 dark:border-grayDark-40 dark:bg-grayDark-40 dark:placeholder:text-grayDark-80 dark:text-grayDark-120':
+                'text-black focus:border-brand-500': true,
+                'dark:border-grayDark-40 dark:bg-grayDark-40 dark:text-grayDark-120 dark:placeholder:text-grayDark-80 dark:focus:border-brand-500':
                   true,
                 [`${className}`]: true,
               })}
@@ -199,7 +199,7 @@ export const CoinSelector = forwardRef<HTMLDivElement, CoinSelectorProps>(
                       rightIcon={
                         <div className="flex w-24 items-center justify-end">
                           <FontAwesomeIcon
-                            className="dark:text-grayDark-80 text-grayLight-70 w-2"
+                            className="w-2 text-grayLight-70 dark:text-grayDark-80"
                             icon={faAngleRight}
                           />
                         </div>

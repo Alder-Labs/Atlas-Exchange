@@ -60,7 +60,7 @@ const IdentityVerification: NextPage = () => {
   }, [data, router, error, updateKycState]);
 
   return (
-    <div className={'bg-grayLight-20 grow dark:bg-black'}>
+    <div className={'grow bg-grayLight-20 dark:bg-black'}>
       <SidePadding>
         <div className={'mt-24 flex justify-center'}>
           {isLoading && <Spinner />}

@@ -77,7 +77,7 @@ const AccountOption = ({
   return (
     <div
       className={clsx({
-        ['text-md flex flex-col items-start gap-4 sm:flex-row sm:items-center']:
+        ['flex flex-col items-start gap-4 text-md sm:flex-row sm:items-center']:
           true,
         [`${className}`]: className,
       })}
@@ -329,13 +329,13 @@ const IdentityTabContent = () => {
                       </Text>
                     ) : authStatus === AuthStatus.KycLevel1 &&
                       status.level2AppStatus === 'pending' ? (
-                      <span className={'text-warning text-2xl'}>
+                      <span className={'text-2xl text-warning'}>
                         &nbsp;(Pending)
                       </span>
                     ) : authStatus === AuthStatus.KycLevel1 &&
                       status.level2AppStatus === 'actions-needed' ? (
                       <>
-                        <span className={'text-error text-2xl'}>
+                        <span className={'text-2xl text-error'}>
                           &nbsp;(Action Needed)
                         </span>
                       </>
@@ -402,7 +402,7 @@ const AccountNavbar = ({
       }}
       {...(controlledTabIndex && { selectedIndex: controlledTabIndex })}
     >
-      <Tab.List className="dark:border-grayDark-50 border-grayLight-30 flex w-full flex-nowrap gap-6 border-b-2 pb-4">
+      <Tab.List className="flex w-full flex-nowrap gap-6 border-b-2 border-grayLight-30 pb-4 dark:border-grayDark-50">
         {tabs.map((t) => (
           <Tab key={Object.keys(t)[0]} className="outline-none">
             {({ selected }) => (

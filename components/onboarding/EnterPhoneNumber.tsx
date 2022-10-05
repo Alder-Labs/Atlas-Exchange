@@ -11,10 +11,11 @@ import { useMutation } from "react-query";
 import { Rifm } from "rifm";
 
 import { requireEnvVar } from "../../lib/env";
-import { useMutationFetcher } from "../../lib/mutation";
-import { toast } from "../../lib/toast";
-import { KycPhone } from "../../lib/types/kyc";
-import { Text, TextInput, Button, Select } from "../base";
+import { useMutationFetcher } from '../../lib/mutation';
+import { toast } from '../../lib/toast';
+import { KycPhone } from '../../lib/types/kyc';
+import { RecaptchaActions, RecaptchaParams } from '../../lib/types/recaptcha';
+import { Text, TextInput, Button, Select } from '../base';
 
 import { OnboardingCardProps, OnboardingCard } from "./OnboardingCard";
 
@@ -27,10 +28,9 @@ const formatPhone = (string: string) => {
   return new AsYouType("US").input(digits);
 };
 
-interface RequestPhoneVerification {
+type RequestPhoneVerification = {
   phoneNumber: string;
-  captcha: string;
-}
+} & RecaptchaParams;
 
 const countryCodeOption: { value: string; label: string }[] = [
   { value: "+1", label: "+1" },
@@ -134,33 +134,32 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
       return;
     }
 
-    if (!executeRecaptcha) {
-      toast.error("executeRecaptcha is null");
-      return;
-    }
-
-    const token = await executeRecaptcha("SMS").catch(() => {
-      toast.error("Error: reCaptcha failed");
-      return null;
-    });
-    if (!token) {
-      return;
-    }
-
-    requestPhoneVerification({
+    let inputData = {
       phoneNumber: countryCode + phoneNumber,
-      // captcha: {
-      //   recaptcha_challenge: token,
-      // },
-      captcha: token,
-    });
+      captcha: {
+        recaptcha_challenge: '',
+      },
+    };
+    if (!executeRecaptcha) {
+      toast.error('Error: reCAPTCHA not loaded.');
+      return;
+    }
+
+    try {
+      const captchaToken = await executeRecaptcha(RecaptchaActions.SMS);
+      inputData.captcha.recaptcha_challenge = captchaToken;
+    } catch (e) {
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      return;
+    }
+    requestPhoneVerification(inputData);
   };
 
   return (
     <OnboardingCard {...rest} title="Phone Number">
       <div className="h-6"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+        <label className="block text-sm font-medium text-black dark:text-grayDark-80">
           Phone Number
         </label>
         <div className="h-1"></div>

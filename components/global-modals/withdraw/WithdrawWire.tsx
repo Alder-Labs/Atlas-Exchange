@@ -141,14 +141,14 @@ export const WithdrawWire = ({ onSuccess }: { onSuccess: () => void }) => {
 
   return (
     <div>
-      <div className="bg-warning/30 rounded-md py-2 px-4">
+      <div className="rounded-md bg-warning/30 py-2 px-4">
         <Text>
           Please double-check before sending that your bank will be able to
           facilitate this transfer.
         </Text>
       </div>
       <div className="h-2"></div>
-      <div className="bg-warning/30 rounded-md py-2 px-4">
+      <div className="rounded-md bg-warning/30 py-2 px-4">
         <Text>
           Please make sure to enter your ABA/routing number for wires, and not
           for ACH!

@@ -15,7 +15,7 @@ export function CryptoIcon(props: CryptoIcon) {
     return (
       <div
         className={clsx(
-          'dark:bg-grayDark-50 bg-grayLight-40 shrink-0 select-none rounded-full',
+          'shrink-0 select-none rounded-full bg-grayLight-40 dark:bg-grayDark-50',
           className
         )}
       />

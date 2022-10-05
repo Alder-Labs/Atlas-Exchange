@@ -38,7 +38,7 @@ export const Title = forwardRef<HTMLHeadingElement, TitleProps>(
     return (
       <Heading
         className={clsx(
-          `dark:text-grayDark-120 text-grayLight-100 relative font-light`,
+          `relative font-light text-grayLight-100 dark:text-grayDark-120`,
           styles,
           className
         )}

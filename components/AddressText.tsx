@@ -11,7 +11,7 @@ export const AddressText = React.forwardRef<HTMLDivElement, Props>(
     return (
       <span
         className={clsx(
-          'dark:bg-grayDark-50 bg-grayLight-30 block break-all rounded-md px-1.5 py-1 text-left text-black dark:text-white',
+          'block break-all rounded-md bg-grayLight-30 px-1.5 py-1 text-left text-black dark:bg-grayDark-50 dark:text-white',
           className
         )}
         {...rest}
