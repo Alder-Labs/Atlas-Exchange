@@ -44,7 +44,7 @@ export const Message = ({
               Attached Filename:{' '}
               {uploadedFileName.length > 40
                 ? `${uploadedFileName.substring(0, 40)}...`
-                : ''}
+                : `${uploadedFileName}`}
             </Text>
           )}
           <Text size="sm" color="secondary" className="block">
