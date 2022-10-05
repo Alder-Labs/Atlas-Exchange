@@ -29,7 +29,7 @@ type ForgotPasswordForm = {
 
 const ForgotPasswordModal = () => {
   const [sardineDeviceId] = useAtom(sardineDeviceIdAtom);
-  const { executeRecaptcha, enabled: captchaEnabled } = useReCaptcha();
+  const { executeRecaptcha } = useReCaptcha();
 
   const {
     watch,
@@ -72,21 +72,19 @@ const ForgotPasswordModal = () => {
       },
     };
 
-    if (captchaEnabled) {
-      if (!executeRecaptcha) {
-        toast.error('Error: reCAPTCHA not loaded.');
-        return;
-      }
+    if (!executeRecaptcha) {
+      toast.error('Error: reCAPTCHA not loaded.');
+      return;
+    }
 
-      try {
-        const captchaToken = await executeRecaptcha(
-          RecaptchaActions.CHANGEPASSWORD
-        );
-        inputData.captcha.recaptcha_challenge = captchaToken;
-      } catch (e) {
-        toast.error('Error: reCAPTCHA failed. Please contact Support.');
-        return;
-      }
+    try {
+      const captchaToken = await executeRecaptcha(
+        RecaptchaActions.CHANGEPASSWORD
+      );
+      inputData.captcha.recaptcha_challenge = captchaToken;
+    } catch (e) {
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      return;
     }
 
     requestPasswordReset({

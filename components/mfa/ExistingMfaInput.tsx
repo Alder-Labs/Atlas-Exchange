@@ -56,7 +56,7 @@ function SmsMfaInput(props: SmsMfaProps) {
     }
   );
 
-  const { executeRecaptcha, enabled: captchaEnabled } = useReCaptcha();
+  const { executeRecaptcha } = useReCaptcha();
 
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = async () => {
@@ -67,19 +67,17 @@ function SmsMfaInput(props: SmsMfaProps) {
       },
     };
 
-    if (captchaEnabled) {
-      if (!executeRecaptcha) {
-        toast.error('Error: reCAPTCHA not loaded.');
-        return;
-      }
+    if (!executeRecaptcha) {
+      toast.error('Error: reCAPTCHA not loaded.');
+      return;
+    }
 
-      try {
-        const captchaToken = await executeRecaptcha(RecaptchaActions.SMS);
-        inputData.captcha.recaptcha_challenge = captchaToken;
-      } catch (e) {
-        toast.error('Error: reCAPTCHA failed. Please contact Support.');
-        return;
-      }
+    try {
+      const captchaToken = await executeRecaptcha(RecaptchaActions.SMS);
+      inputData.captcha.recaptcha_challenge = captchaToken;
+    } catch (e) {
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      return;
     }
     requestSms(inputData);
   };
