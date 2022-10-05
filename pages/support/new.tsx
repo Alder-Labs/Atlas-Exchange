@@ -74,11 +74,10 @@ const NewTicketPage: NextPage = () => {
     }
   );
 
-  const submitNewTicket = (data: SupportTicketCreate) => {
-    console.log('test');
+  const submitNewTicket = (data: Omit<SupportTicketCreate, 'document'>) => {
     const formData = {
       ...data,
-      document: supportingDocument.length > 0 && supportingDocument[0].file,
+      supportFile: supportingDocument.length > 0 && supportingDocument[0].file,
     } as SupportTicketCreate;
     submitTicket(formData);
   };
