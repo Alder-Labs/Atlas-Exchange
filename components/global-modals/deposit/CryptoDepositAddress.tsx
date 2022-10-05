@@ -17,7 +17,7 @@ import { Warning } from '../../Warning';
 
 function GrayQRCodeContainer(props: { children: React.ReactNode }) {
   return (
-    <div className="dark:bg-grayDark-50 bg-grayLight-30 rounded-3xl p-6 shadow-xl">
+    <div className="rounded-3xl bg-grayLight-30 p-6 shadow-xl dark:bg-grayDark-50">
       {props.children}
     </div>
   );
@@ -64,7 +64,7 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
           <Text size="4xl">{coin.id}</Text>
         </div>
         <div className="h-4" />
-        <div className="dark:bg-grayDark-40 bg-grayLight-30 rounded-2xl">
+        <div className="rounded-2xl bg-grayLight-30 dark:bg-grayDark-40">
           <Select
             value={depositMethod}
             onSelect={onChangeDepositMethod}
@@ -77,9 +77,9 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
         <div className="h-4"></div>
       </div>
       <div
-        className="dark:border-grayDark-50
-          border-grayLight-50 flex flex-col
-          justify-center rounded-xl border"
+        className="flex
+          flex-col justify-center rounded-xl
+          border border-grayLight-50 dark:border-grayDark-50"
       >
         <div className="mb-6 flex flex-row justify-center pt-8">
           {isLoading && (
@@ -93,7 +93,7 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
             <GrayQRCodeContainer>
               <div className="flex h-48 w-48 items-center justify-center">
                 <FontAwesomeIcon
-                  className="text-grayLight-90 w-12"
+                  className="w-12 text-grayLight-90"
                   icon={faBan}
                 />
               </div>
@@ -105,7 +105,7 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
             </div>
           )}
         </div>
-        <div className="dark:bg-grayDark-50 bg-grayLight-50 h-px" />
+        <div className="h-px bg-grayLight-50 dark:bg-grayDark-50" />
         <div className="justify-left mb-4 flex w-full flex-row items-center justify-center px-4 pt-4">
           {(isLoading || !data) && (
             <div className="mr-4 w-4/5">
@@ -114,7 +114,7 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
           )}
           {data && <AddressText className="m-2">{data.address}</AddressText>}
           <button
-            className="dark:text-grayDark-90/75 hover:dark:text-grayDark-90 text-grayLight-90/75 hover:text-grayLight-90 ml-2 cursor-pointer duration-300"
+            className="ml-2 cursor-pointer text-grayLight-90/75 duration-300 hover:text-grayLight-90 dark:text-grayDark-90/75 hover:dark:text-grayDark-90"
             onClick={copyAddressToClipboard}
           >
             <FontAwesomeIcon className="h-6" icon={faCopy} />

@@ -3,9 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
-import {
-  GoogleReCaptchaProvider,
-} from 'react-google-recaptcha-v3';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
@@ -18,10 +16,8 @@ import { MfaType, RecaptchaActions } from '../../lib/types';
 import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
-
 import { ExistingMfaInput } from './ExistingMfaInput';
 import { useReCaptcha } from '../../hooks/useReCaptcha';
-
 
 const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
@@ -139,13 +135,12 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
       return;
     }
 
-
     let inputData = {
       phoneNumber: countryCode + phoneNumber,
       captcha: {
         recaptcha_challenge: '',
       },
-    }
+    };
 
     if (captchaEnabled) {
       if (!executeRecaptcha) {
@@ -209,9 +204,8 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
         title={'Setup SMS MFA'}
         onClose={handlers.close}
       >
-        <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-          <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+          <label className="block text-sm font-medium text-black dark:text-grayDark-80">
             Phone Number
           </label>
           <div className="h-1"></div>
@@ -288,7 +282,6 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
             Enable SMS MFA
           </Button>
         </form>
-        </GoogleReCaptchaProvider>
       </TitledModal>
     </>
   );
@@ -296,6 +289,8 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
 
 export function SetSmsModal(props: { mfa: MfaType }) {
   return (
-    <SetSmsModalInside {...props} />
+    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+      <SetSmsModalInside {...props} />
+    </GoogleReCaptchaProvider>
   );
 }

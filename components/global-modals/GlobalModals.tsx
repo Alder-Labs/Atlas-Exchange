@@ -9,7 +9,7 @@ import { Kyc1Required } from './authentication/Kyc1Required';
 import { Kyc2Required } from './authentication/Kyc2Required';
 import { SmsAuth } from './authentication/mfa/SmsAuth';
 import { TotpAuth } from './authentication/mfa/TotpAuth';
-import SignIn from './authentication/SignIn';
+import { SignInWrapper } from './authentication/SignIn';
 import SignUpModal from './authentication/SignUp';
 import { ConnectBankAccount } from './deposit/ConnectBankAccount';
 import DepositModal from './deposit/DepositModal';
@@ -28,7 +28,7 @@ export const GlobalModals = () => {
       )}
 
       {/* Auth */}
-      <SignIn />
+      <SignInWrapper />
       <SignUpModal />
       <ForgotPasswordModal />
       <SmsAuth />

@@ -133,7 +133,7 @@ export function Navbar({ children }: NavbarProps) {
   return (
     <>
       <Responsive showIfSmallerThan="lg" className="sticky top-0 z-40 w-full">
-        <div className="dark:bg-grayDark-20 bg-grayLight-20 flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between bg-grayLight-20 dark:bg-grayDark-20">
           <Link href="/">
             <a className="flex items-center pl-4">
               {/* <img src="/favicon.ico" className="mr-3 h-6 sm:h-9" alt="Logo" /> */}
@@ -166,7 +166,7 @@ export function Navbar({ children }: NavbarProps) {
             setDrawerOpen(false);
           }}
         >
-          <div className="dark:bg-grayDark-40 h-full w-full">
+          <div className="h-full w-full dark:bg-grayDark-40">
             <div className="flex w-full items-center justify-end">
               <button
                 className="flex items-center p-4"
@@ -279,7 +279,7 @@ export function Navbar({ children }: NavbarProps) {
         </Drawer>
       </Responsive>
       <Responsive showIfLargerThan="lg" className="z-40 w-full">
-        <div className="dark:bg-grayDark-10 dark:border-grayDark-10 border-grayLight-20 sticky top-0 w-full border-b-2 bg-white">
+        <div className="sticky top-0 w-full border-b-2 border-grayLight-20 bg-white dark:border-grayDark-10 dark:bg-grayDark-10">
           <SidePadding as="nav" className="w-full py-4">
             <div className="flex w-full flex-wrap items-center justify-between px-8">
               <div className="flex flex-wrap items-center">
@@ -360,7 +360,7 @@ export function Navbar({ children }: NavbarProps) {
                       Send / Receive
                     </Button>
                     <NotificationDropdown />
-                    <div className="dark:bg-grayDark-50 w-0.5 self-stretch"></div>
+                    <div className="w-0.5 self-stretch dark:bg-grayDark-50"></div>
                   </>
                 )}
                 {signedIn && <Dropdown />}

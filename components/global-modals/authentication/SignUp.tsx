@@ -7,9 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import {
-  GoogleReCaptchaProvider,
-} from 'react-google-recaptcha-v3';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 
 import { useModalState } from '../../../hooks/useModalState';
@@ -59,14 +57,14 @@ function PasswordRequirement({
         <Text color="green">
           <FontAwesomeIcon
             icon={faCheckCircle}
-            className="mr-2 h-4 w-4 text-green-500"
+            className="text-green-500 mr-2 h-4 w-4"
           />
         </Text>
       ) : (
         <Text color="secondary">
           <FontAwesomeIcon
             icon={faCheckCircle}
-            className="mr-2 h-4 w-4 text-red-500"
+            className="text-red-500 mr-2 h-4 w-4"
           />
         </Text>
       )}
@@ -161,11 +159,11 @@ const SignUpModal = (props: SignUpProps) => {
     }
 
     let inputData = {
-        ...data,
-        captcha: {
-          recaptcha_challenge: '',
-        }
-    }
+      ...data,
+      captcha: {
+        recaptcha_challenge: '',
+      },
+    };
 
     if (captchaEnabled) {
       if (!executeRecaptcha) {
@@ -244,7 +242,7 @@ const SignUpModal = (props: SignUpProps) => {
           {...register('password', { required: true })}
         />
         {watch('password') && (
-          <div className="animate-enter mt-3">
+          <div className="mt-3 animate-enter">
             <PasswordRequirements password={watch('password')} />
           </div>
         )}

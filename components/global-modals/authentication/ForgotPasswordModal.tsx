@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { useAtom } from 'jotai';
-import {
-  GoogleReCaptchaProvider,
-} from 'react-google-recaptcha-v3';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
@@ -31,8 +29,6 @@ type ForgotPasswordForm = {
 
 const ForgotPasswordModal = () => {
   const [sardineDeviceId] = useAtom(sardineDeviceIdAtom);
-  const [modalState, setModalState, handlers] = useModalState();
-
   const { executeRecaptcha, enabled: captchaEnabled } = useReCaptcha();
 
   const {
@@ -70,11 +66,11 @@ const ForgotPasswordModal = () => {
 
   const onResetPassword = async (data: ForgotPasswordForm) => {
     let inputData = {
-        ...data,
-        captcha: {
-          recaptcha_challenge: '',
-        }
-    }
+      ...data,
+      captcha: {
+        recaptcha_challenge: '',
+      },
+    };
 
     if (captchaEnabled) {
       if (!executeRecaptcha) {
@@ -83,7 +79,9 @@ const ForgotPasswordModal = () => {
       }
 
       try {
-        const captchaToken = await executeRecaptcha(RecaptchaActions.CHANGEPASSWORD);
+        const captchaToken = await executeRecaptcha(
+          RecaptchaActions.CHANGEPASSWORD
+        );
         inputData.captcha.recaptcha_challenge = captchaToken;
       } catch (e) {
         toast.error('Error: reCAPTCHA failed. Please contact Support.');
@@ -98,6 +96,36 @@ const ForgotPasswordModal = () => {
   };
 
   return (
+    <form onSubmit={handleSubmit(onResetPassword)}>
+      <div className="px-4 pb-6">
+        <div className="h-6" />
+        <Text color={'secondary'}>
+          Please confirm you&apos;re using the official site.
+        </Text>
+        <div className="h-6" />
+        <TextInput
+          placeholder="Email"
+          label={'Email'}
+          {...register('email', { required: true })}
+        />
+        <div className="h-6" />
+        <Button
+          type="submit"
+          className="w-full"
+          loading={requestPasswordResetIsLoading}
+          disabled={watch('email').length === 0}
+        >
+          Reset Password
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+const ForgotPasswordModalWrapper = () => {
+  const [modalState, setModalState, handlers] = useModalState();
+
+  return (
     <TitledModal
       title={'Forgot Password'}
       darkenBackground={false}
@@ -107,32 +135,10 @@ const ForgotPasswordModal = () => {
       onGoBack={handlers.goBack}
     >
       <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <form onSubmit={handleSubmit(onResetPassword)}>
-        <div className="px-4 pb-6">
-          <div className="h-6" />
-          <Text color={'secondary'}>
-            Please confirm you&apos;re using the official site.
-          </Text>
-          <div className="h-6" />
-          <TextInput
-            placeholder="Email"
-            label={'Email'}
-            {...register('email', { required: true })}
-          />
-          <div className="h-6" />
-          <Button
-            type="submit"
-            className="w-full"
-            loading={requestPasswordResetIsLoading}
-            disabled={watch('email').length === 0}
-          >
-            Reset Password
-          </Button>
-        </div>
-      </form>
+        <ForgotPasswordModal />
       </GoogleReCaptchaProvider>
     </TitledModal>
   );
 };
 
-export default ForgotPasswordModal;
+export default ForgotPasswordModalWrapper;

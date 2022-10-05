@@ -100,16 +100,16 @@ export const Select = <T extends string | Date | number>({
         }}
       >
         {({ open }) => (
-          <div className="text-md relative">
+          <div className="relative text-md">
             <Listbox.Button
               className={clsx({
-                'dark:border-brand-500 border-brand-300': open,
-                'dark:border-grayDark-40 border-grayLight-40': !open,
+                'border-brand-300 dark:border-brand-500': open,
+                'border-grayLight-40 dark:border-grayDark-40': !open,
                 'relative flex w-full cursor-pointer items-center justify-between rounded-md border bg-white':
                   true,
                 'py-3 pl-3 pr-1': size === 'md',
                 'py-1 pl-2 text-sm': size === 'sm',
-                'text-grayLight-90 text-left ': true,
+                'text-left text-grayLight-90 ': true,
                 'dark:bg-grayDark-40 dark:text-grayDark-100': true,
               })}
             >
@@ -140,12 +140,12 @@ export const Select = <T extends string | Date | number>({
               show={open}
             >
               <Listbox.Options
-                className="dark:bg-grayDark-10 dark:border-grayDark-40 border-grayLight-20
-              absolute z-10 mt-1 max-h-60 w-full
-              overflow-auto rounded-md border bg-white
-              py-1 text-black shadow-lg
-              ring-1 ring-black
-              ring-opacity-5 focus:outline-none dark:text-white"
+                className="absolute z-10 mt-1
+              max-h-60 w-full overflow-auto rounded-md border
+              border-grayLight-20 bg-white py-1 text-black
+              shadow-lg ring-1 ring-black
+              ring-opacity-5 focus:outline-none
+              dark:border-grayDark-40 dark:bg-grayDark-10 dark:text-white"
               >
                 {filteredOptions.map((option, i) => {
                   return (
@@ -153,7 +153,7 @@ export const Select = <T extends string | Date | number>({
                       key={i}
                       className={({ active }) =>
                         clsx({
-                          'dark:bg-grayDark-30 bg-grayLight-20': active,
+                          'bg-grayLight-20 dark:bg-grayDark-30': active,
                           'relative cursor-pointer select-none': true,
                           'px-3 py-3': size === 'md',
                           'px-2 py-1 text-sm': size === 'sm',
@@ -178,7 +178,7 @@ export const Select = <T extends string | Date | number>({
                   );
                 })}
                 {filteredOptions.length === 0 && (
-                  <div className="text-grayLight-70 px-3 py-3 text-sm">
+                  <div className="px-3 py-3 text-sm text-grayLight-70">
                     <Text>No options</Text>
                   </div>
                 )}

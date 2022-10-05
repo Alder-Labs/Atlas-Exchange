@@ -67,7 +67,7 @@ export function QuotePreview(props: QuotePreviewProps) {
       <div className="flex w-full items-center justify-between gap-4">
         <button
           onClick={onBack}
-          className="hover:text-grayLight-80 text-grayLight-50 h-4 w-4 transition dark:hover:text-white"
+          className="h-4 w-4 text-grayLight-50 transition hover:text-grayLight-80 dark:hover:text-white"
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
@@ -143,7 +143,7 @@ export function QuotePreview(props: QuotePreviewProps) {
           </Text>
         </div>
 
-        <div className="bg-grayLight-70 my-4 h-px w-full"></div>
+        <div className="my-4 h-px w-full bg-grayLight-70"></div>
 
         <div className="flex w-full justify-between">
           <Text size="md" className="font-medium" color="secondary">
