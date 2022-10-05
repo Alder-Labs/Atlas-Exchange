@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { AsYouType } from 'libphonenumber-js';
 import { useRouter } from 'next/router';
-import {
-  GoogleReCaptchaProvider,
-} from 'react-google-recaptcha-v3';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
@@ -136,7 +134,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
 
     let inputData = {
       phoneNumber: countryCode + phoneNumber,
-      captcha: ''
+      captcha: '',
     };
     if (captchaEnabled) {
       if (!executeRecaptcha) {
@@ -157,10 +155,9 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
 
   return (
     <OnboardingCard {...rest} title="Phone Number">
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
       <div className="h-6"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label className="dark:text-grayDark-80 block text-sm font-medium text-black">
+        <label className="block text-sm font-medium text-black dark:text-grayDark-80">
           Phone Number
         </label>
         <div className="h-1"></div>
@@ -265,13 +262,14 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
           Submit
         </Button>
       </form>
-      </GoogleReCaptchaProvider>
     </OnboardingCard>
   );
 }
 
 export function EnterPhoneNumber(props: EnterPhoneNumberProps) {
   return (
-    <EnterPhoneNumberInside {...props} />
+    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+      <EnterPhoneNumberInside {...props} />
+    </GoogleReCaptchaProvider>
   );
 }

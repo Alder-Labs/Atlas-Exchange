@@ -24,7 +24,7 @@ export function CoinButton(props: CoinButtonProps) {
 
   return (
     <div {...rest} className={primaryButtonStyle}>
-      <div className="dark:text-grayDark-100 flex items-center justify-between text-black">
+      <div className="flex items-center justify-between text-black dark:text-grayDark-100">
         <div className="flex items-center">
           <CryptoIcon coinId={coinId} className="mr-2 h-5 w-5"></CryptoIcon>
           <Text size="sm" isLoading={!coinId} loadingWidth="2rem">

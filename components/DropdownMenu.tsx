@@ -63,11 +63,11 @@ export function DropdownMenu(props: DropdownMenuProps) {
             >
               <Menu.Items
                 className={clsx(
-                  `border-grayLight-20 dark:bg-grayDark-20 dark:border-grayDark-40 absolute right-0 top-full
-                  z-10 mt-2 origin-top-right rounded-md 
-                border bg-white py-2
-                  shadow-md ring-1 ring-black
-                  ring-opacity-5 focus:outline-none`,
+                  `absolute right-0 top-full z-10 mt-2 origin-top-right
+                  rounded-md border border-grayLight-20 bg-white 
+                py-2 shadow-md ring-1
+                  ring-black ring-opacity-5 focus:outline-none
+                  dark:border-grayDark-40 dark:bg-grayDark-20`,
                   menuItemsClassName
                 )}
               >

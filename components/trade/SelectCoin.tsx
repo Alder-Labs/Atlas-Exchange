@@ -27,7 +27,7 @@ export function SelectCoin(props: SelectCoinAltProps) {
   const renderPanel = useCallback(
     ({ close }: { close: () => void }) => {
       return (
-        <div className="dark:bg-grayDark-20 absolute left-0 flex w-full flex-col rounded-xl bg-white py-4 shadow-lg">
+        <div className="absolute left-0 flex w-full flex-col rounded-xl bg-white py-4 shadow-lg dark:bg-grayDark-20">
           <CoinSelector
             className="w-full shrink-0"
             filter={(coin) => !coin.fiat && coin.canConvert}

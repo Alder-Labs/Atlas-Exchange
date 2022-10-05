@@ -7,7 +7,7 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"components/**/*.ts\" \"hooks/**/*.ts\" \"lib/**/*.ts\" \"pages/**/{*.ts,*.tsx}\""
+    "format": "prettier --write \"components/**/*.{ts,tsx}\" \"hooks/**/*.ts\" \"lib/**/*.ts\" \"pages/**/*.{ts,tsx}\""
   },
   "prettier": {
     "singleQuote": true

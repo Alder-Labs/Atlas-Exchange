@@ -49,7 +49,7 @@ const Drawer = ({
   return createPortal(
     <Transition
       show={isOpen}
-      className={`dark:bg-grayDark-40 fixed top-0 z-40 h-screen overflow-y-auto shadow-md ${widthClassName} ${closedClassName}`}
+      className={`fixed top-0 z-40 h-screen overflow-y-auto shadow-md dark:bg-grayDark-40 ${widthClassName} ${closedClassName}`}
       enter="ease-out duration-200"
       enterFrom={closedClassName}
       enterTo={openClassName}
