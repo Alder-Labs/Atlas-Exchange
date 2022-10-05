@@ -1,16 +1,16 @@
-import { Fragment } from "react";
+import { Fragment } from 'react';
 
-import { Listbox, Transition } from "@headlessui/react";
-import clsx from "clsx";
-import { isEqual } from "date-fns";
+import { Listbox, Transition } from '@headlessui/react';
+import clsx from 'clsx';
+import { isEqual } from 'date-fns';
 
-import { Text } from "./Text";
+import { Text } from './Text';
 
 const UpDownArrow = (props: { className?: string }) => {
   const { className } = props;
 
   const styles = clsx({
-    "text-grayLight-60": true,
+    'text-grayLight-60': true,
     [`${className}`]: true,
   });
 
@@ -44,7 +44,7 @@ interface SelectProps<T> {
   ) => React.ReactNode;
   renderSelected?: (value: T) => React.ReactNode;
   renderPlaceholder?: () => React.ReactNode;
-  size?: "sm" | "md";
+  size?: 'sm' | 'md';
   hideSelectedFromList?: boolean;
 }
 export const Select = <T extends string | Date | number>({
@@ -57,12 +57,12 @@ export const Select = <T extends string | Date | number>({
   onBlur,
   className,
   placeholder,
-  size = "md",
+  size = 'md',
   hideSelectedFromList = false,
 }: SelectProps<T>) => {
   const valueToLabel = (value: T | null) => {
     if (value === null) {
-      return "";
+      return '';
     }
 
     return options.find((x) =>
@@ -73,13 +73,13 @@ export const Select = <T extends string | Date | number>({
   };
 
   const styles = clsx({
-    "w-auto": !className,
+    'w-auto': !className,
     [`${className}`]: className,
   });
 
   const placeholderStyles = clsx({
-    "block truncate": true,
-    "text-grayLight-70": !value,
+    'block truncate': true,
+    'text-grayLight-70': !value,
   });
 
   const filteredOptions = hideSelectedFromList
@@ -127,8 +127,8 @@ export const Select = <T extends string | Date | number>({
 
               <UpDownArrow
                 className={clsx({
-                  "h-5 w-5": size === "md",
-                  "ml-px h-4 w-4": size === "sm",
+                  'h-5 w-5': size === 'md',
+                  'ml-px h-4 w-4': size === 'sm',
                 })}
               />
             </Listbox.Button>
@@ -167,7 +167,7 @@ export const Select = <T extends string | Date | number>({
                         ) : (
                           <span
                             className={`${
-                              props.selected ? "font-medium" : "font-normal"
+                              props.selected ? 'font-medium' : 'font-normal'
                             } block truncate`}
                           >
                             {option.label}
@@ -179,7 +179,7 @@ export const Select = <T extends string | Date | number>({
                 })}
                 {filteredOptions.length === 0 && (
                   <div className="px-3 py-3 text-sm text-grayLight-70">
-                    <Text color="secondary">No {value && "other "}options</Text>
+                    <Text color="secondary">No {value && 'other '}options</Text>
                   </div>
                 )}
               </Listbox.Options>
