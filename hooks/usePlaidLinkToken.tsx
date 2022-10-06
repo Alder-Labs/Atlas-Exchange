@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from 'react';
 
-import { useMutation } from "react-query";
+import { useMutation } from 'react-query';
 
-import { useUserState } from "../lib/auth-token-context";
-import { useMutationFetcher } from "../lib/mutation";
+import { useUserState } from '../lib/auth-token-context';
+import { useMutationFetcher } from '../lib/mutation';
 
 export function usePlaidLinkToken() {
   const userState = useUserState();
@@ -23,31 +23,29 @@ export function usePlaidLinkToken() {
         link_token: string;
         request_id: string;
       }
-    >("/proxy/api/ach/accounts/link_token")
+    >('/proxy/api/ach/accounts/link_token')
   );
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && userState?.user?.token) {
       mutate({
-        products: ["auth"],
+        products: ['auth'],
       });
     }
-  }, [mutate, isLoggedIn]);
+  }, [mutate, isLoggedIn, userState?.user?.token]);
 
   const getLinkToken = useCallback(async () => {
     if (plaidLinkTokenData) {
       // Check if expired
       const expiration = new Date(plaidLinkTokenData.expiration);
       const now = new Date();
-      console.log("expiration", expiration);
-      console.log("now", now);
       if (expiration > now) {
         return plaidLinkTokenData.link_token;
       }
     }
 
     return mutateAsync({
-      products: ["auth"],
+      products: ['auth'],
     }).then((data) => data.link_token);
   }, [mutateAsync, plaidLinkTokenData]);
 

@@ -1,26 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import moment from "moment";
-import { useRouter } from "next/router";
-import { useMutation } from "react-query";
+import moment from 'moment';
+import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
 
-import { SidePadding } from "../../components/layout/SidePadding";
-import { AddressInformation } from "../../components/onboarding/AddressInformation";
-import { EnterPhoneNumber } from "../../components/onboarding/EnterPhoneNumber";
-import { PersonalDetails } from "../../components/onboarding/PersonalDetails";
-import { SocialSecurity } from "../../components/onboarding/SocialSecurity";
-import { StageNavigator } from "../../components/onboarding/StageNavigator";
-import { FadeTransition } from "../../components/transitions/FadeTransition";
-import { useLoginStatus } from "../../hooks/useLoginStatus";
-import { useModalState } from "../../hooks/useModalState";
-import { useUserState } from "../../lib/auth-token-context";
-import { useMutationFetcher } from "../../lib/mutation";
-import { toast } from "../../lib/toast";
-import { CustomPage } from "../../lib/types";
-import { AuthLevel } from "../../lib/types/auth-level";
-import { ModalState } from "../../lib/types/modalState";
+import { SidePadding } from '../../components/layout/SidePadding';
+import { AddressInformation } from '../../components/onboarding/AddressInformation';
+import { EnterPhoneNumber } from '../../components/onboarding/EnterPhoneNumber';
+import { PersonalDetails } from '../../components/onboarding/PersonalDetails';
+import { SocialSecurity } from '../../components/onboarding/SocialSecurity';
+import { StageNavigator } from '../../components/onboarding/StageNavigator';
+import { FadeTransition } from '../../components/transitions/FadeTransition';
+import { useLoginStatus } from '../../hooks/useLoginStatus';
+import { useModalState } from '../../hooks/useModalState';
+import { useUserState } from '../../lib/auth-token-context';
+import { useMutationFetcher } from '../../lib/mutation';
+import { toast } from '../../lib/toast';
+import { CustomPage } from '../../lib/types';
+import { AuthLevel } from '../../lib/types/auth-level';
+import { ModalState } from '../../lib/types/modalState';
 
-import type { KycForm, KycRawForm } from "../../lib/types/kyc";
+import type { KycForm, KycRawForm } from '../../lib/types/kyc';
 
 function useUpdateQueryParams() {
   const router = useRouter();
@@ -41,17 +41,17 @@ function useUpdateQueryParams() {
 }
 
 enum OnboardingStage {
-  PERSONAL_DETAILS = "PERSONAL_DETAILS",
-  ADDRESS_INFORMATION = "ADDRESS_INFORMATION",
-  SOCIAL_SECURITY = "SOCIAL_SECURITY",
-  PHONE_NUMBER = "PHONE_NUMBER",
+  PERSONAL_DETAILS = 'PERSONAL_DETAILS',
+  ADDRESS_INFORMATION = 'ADDRESS_INFORMATION',
+  SOCIAL_SECURITY = 'SOCIAL_SECURITY',
+  PHONE_NUMBER = 'PHONE_NUMBER',
 }
 
 const MAP_STAGE_TO_LABEL: Record<OnboardingStage, string> = {
-  [OnboardingStage.PERSONAL_DETAILS]: "Personal Details",
-  [OnboardingStage.ADDRESS_INFORMATION]: "Address Information",
-  [OnboardingStage.PHONE_NUMBER]: "Phone Number",
-  [OnboardingStage.SOCIAL_SECURITY]: "Social Security",
+  [OnboardingStage.PERSONAL_DETAILS]: 'Personal Details',
+  [OnboardingStage.ADDRESS_INFORMATION]: 'Address Information',
+  [OnboardingStage.PHONE_NUMBER]: 'Phone Number',
+  [OnboardingStage.SOCIAL_SECURITY]: 'Social Security',
 };
 
 const ENABLED_STAGES = new Set(Object.values(OnboardingStage));
@@ -174,9 +174,9 @@ const OnboardingPage: CustomPage = () => {
               <EnterPhoneNumber
                 onFinish={async () => {
                   const prevRawKycFormData: string | null =
-                    localStorage.getItem("kycForm");
+                    localStorage.getItem('kycForm');
                   if (!prevRawKycFormData) {
-                    toast.error("No kyc data...");
+                    toast.error('No kyc data...');
                     return;
                   }
 
@@ -189,23 +189,23 @@ const OnboardingPage: CustomPage = () => {
                   );
 
                   if (!dob) {
-                    toast.error("Invalid date of birth...");
+                    toast.error('Invalid date of birth...');
                     return;
                   }
 
                   const kycLevel1Data: KycForm = {
                     ...rawKycData,
-                    dateOfBirth: moment(dob).format("YYYY-MM-DD").toString(),
+                    dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
                     phoneNumber: `${rawKycData.countryCode}${rawKycData.phoneNumber}`,
                   };
 
                   return submitKycLevel1(kycLevel1Data)
-                    .then(() => {
+                    .then((res) => {
                       localStorage.clear();
                       setModalState({
-                        state: ModalState.Closed,
+                        state: ModalState.Kyc1Complete,
                       });
-                      router.push("/");
+                      router.push('/');
                     })
                     .catch((err: Error) => {
                       toast.error(`Error: ${err.message}`);
