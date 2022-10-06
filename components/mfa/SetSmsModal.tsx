@@ -21,6 +21,7 @@ import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
+import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 interface SetSmsMfaForm {
@@ -42,10 +43,6 @@ interface RequestPhoneVerification {
   };
 }
 
-const countryCodeOption: { value: string; label: string }[] = [
-  { value: '+1', label: '+1' },
-];
-
 export function SetSmsMfaForm() {
   const [open, handlers] = useModal(false);
 
@@ -58,7 +55,6 @@ export function SetSmsMfaForm() {
 
   const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
   const {
-    setValue,
     register,
     clearErrors,
     setError,
@@ -67,10 +63,6 @@ export function SetSmsMfaForm() {
     control,
     formState,
   } = useForm<SetSmsMfaForm>({ defaultValues: cachedForm });
-
-  useEffect(() => {
-    setValue('countryCode', countryCodeOption[0].value);
-  }, [setValue]);
 
   const { errors } = formState;
   const {
@@ -189,10 +181,7 @@ export function SetSmsMfaForm() {
                   field.onChange(value);
                 }
               }}
-              options={countryCodeOption.map((option) => ({
-                value: option.value,
-                label: option.label,
-              }))}
+              options={countryPhoneNumberCodes}
               className="col-span-1 w-full items-center"
             />
           )}
