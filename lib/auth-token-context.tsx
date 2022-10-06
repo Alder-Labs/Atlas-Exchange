@@ -12,6 +12,7 @@ import {
   SignInResponse,
   SigninWithMfaParams,
 } from './types';
+import { SignUpResponse } from './types/signup';
 
 interface User {
   token: string;
@@ -30,7 +31,7 @@ type UserState =
   | {
       user: null;
       signin: (params: SigninParams) => Promise<SignInResponse>;
-      signup: (params: SignupParams) => Promise<SignInResponse>;
+      signup: (params: SignupParams) => Promise<SignUpResponse>;
     }
   | {
       user: User;
@@ -106,27 +107,30 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       },
     };
 
-    return fetch(`${API_URL}/users`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(signupReq),
-    })
-      .then((res) => {
-        return res.json();
+    return new Promise<SignUpResponse>((resolve, reject) => {
+      fetch(`${API_URL}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signupReq),
       })
-      .then((res) => {
-        if (!res.success) {
-          throw new Error(res.error);
-        }
-        return res.result;
-      })
-      .then((res) => {
-        return signin({
-          email: data.email,
-          password: data.password,
-          captcha: data.captcha,
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          if (!res.success) {
+            throw new Error(res.error);
+          }
+          return res.result;
+        })
+        .then((res) => {
+          setAuthToken(res.token, () => {
+            resolve(res);
+          });
+        })
+        .catch((err) => {
+          reject(err);
         });
-      });
+    });
   };
 
   const signin = (data: SigninParams) => {
