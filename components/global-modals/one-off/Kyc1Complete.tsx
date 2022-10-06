@@ -1,8 +1,8 @@
-import { useModalState } from "../../../hooks/useModalState";
-import { renderCurrency } from "../../../lib/currency";
-import { ModalState } from "../../../lib/types/modalState";
-import { Button, Text } from "../../base";
-import { TitledModal } from "../../modals/TitledModal";
+import { useModalState } from '../../../hooks/useModalState';
+import { renderCurrency } from '../../../lib/currency';
+import { ModalState } from '../../../lib/types/modalState';
+import { Button, Text } from '../../base';
+import { TitledModal } from '../../modals/TitledModal';
 
 export function Kyc1Complete() {
   const [modalState, setModalState] = useModalState();

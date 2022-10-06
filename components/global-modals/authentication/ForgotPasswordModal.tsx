@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 import { useAtom } from 'jotai';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
-} from "react-google-recaptcha-v3";
-import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+} from 'react-google-recaptcha-v3';
+import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 
 import { useModalState } from '../../../hooks/useModalState';
 import { sardineDeviceIdAtom } from '../../../lib/jotai';
@@ -41,7 +41,7 @@ const ForgotPasswordModal = () => {
     formState: { errors },
   } = useForm<ForgotPasswordForm>({
     defaultValues: {
-      email: "",
+      email: '',
     },
   });
 
@@ -54,7 +54,7 @@ const ForgotPasswordModal = () => {
     ),
     {
       onSuccess: (data) => {
-        toast.success("Reset password email sent.");
+        toast.success('Reset password email sent.');
       },
       onError: (error) => {
         toast.error(`Error resetting password. Please contact support.`);
@@ -75,7 +75,7 @@ const ForgotPasswordModal = () => {
     };
 
     if (!executeRecaptcha) {
-      toast.error("Error: reCAPTCHA not loaded.");
+      toast.error('Error: reCAPTCHA not loaded.');
       return;
     }
 
@@ -85,7 +85,7 @@ const ForgotPasswordModal = () => {
       );
       inputData.captcha.recaptcha_challenge = captchaToken;
     } catch (e) {
-      toast.error("Error: reCAPTCHA failed. Please contact Support.");
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
     }
 
@@ -127,7 +127,7 @@ const ForgotPasswordModalWrapper = () => {
 
   return (
     <TitledModal
-      title={"Forgot Password"}
+      title={'Forgot Password'}
       darkenBackground={false}
       isOpen={modalState.state === ModalState.ForgotPassword}
       onClose={() => setModalState({ state: ModalState.Closed })}

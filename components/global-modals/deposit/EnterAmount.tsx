@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { useRouter } from "next/router";
-import { useMutation } from "react-query";
-import { Rifm } from "rifm";
+import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
+import { Rifm } from 'rifm';
 
-import { useBankAccounts } from "../../../hooks/useBankAccounts";
-import { useDepositLimits } from "../../../hooks/useDepositLimits";
-import { useModal } from "../../../hooks/useModal";
-import { useModalState } from "../../../hooks/useModalState";
-import { useUserState } from "../../../lib/auth-token-context";
-import { BRAND_NAME } from "../../../lib/constants";
-import { renderCurrency } from "../../../lib/currency";
-import { useMutationFetcher } from "../../../lib/mutation";
-import { toast } from "../../../lib/toast";
-import { CustomPage } from "../../../lib/types";
-import { AuthLevel } from "../../../lib/types/auth-level";
-import { ModalState } from "../../../lib/types/modalState";
-import { Text, TextInput, Button, TextButton } from "../../base";
-import { SidePadding } from "../../layout/SidePadding";
-import { TitledModal } from "../../modals/TitledModal";
-import { SelectBankAccount } from "../../SelectBankAccount";
-import { TitledCard } from "../../TitledCard";
-import { BigNumberInput } from "../../trade/BigNumberInput";
+import { useBankAccounts } from '../../../hooks/useBankAccounts';
+import { useDepositLimits } from '../../../hooks/useDepositLimits';
+import { useModal } from '../../../hooks/useModal';
+import { useModalState } from '../../../hooks/useModalState';
+import { useUserState } from '../../../lib/auth-token-context';
+import { BRAND_NAME } from '../../../lib/constants';
+import { renderCurrency } from '../../../lib/currency';
+import { useMutationFetcher } from '../../../lib/mutation';
+import { toast } from '../../../lib/toast';
+import { CustomPage } from '../../../lib/types';
+import { AuthLevel } from '../../../lib/types/auth-level';
+import { ModalState } from '../../../lib/types/modalState';
+import { Text, TextInput, Button, TextButton } from '../../base';
+import { SidePadding } from '../../layout/SidePadding';
+import { TitledModal } from '../../modals/TitledModal';
+import { SelectBankAccount } from '../../SelectBankAccount';
+import { TitledCard } from '../../TitledCard';
+import { BigNumberInput } from '../../trade/BigNumberInput';
 
 interface EnterAmountProps {
   onClose: () => void;
@@ -48,7 +48,7 @@ export function EnterAmount(props: EnterAmountProps) {
     : 0;
 
   const [accountId, setAccountId] = useState<number | null>(null);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState('');
 
   useEffect(() => {
     if (bankAccounts) {
@@ -67,7 +67,7 @@ export function EnterAmount(props: EnterAmountProps) {
           achAccountId: string;
         },
         {}
-      >("/proxy/api/wallet/circle_ach_deposit"),
+      >('/proxy/api/wallet/circle_ach_deposit'),
       {
         onError: (err: Error) => {
           toast.error(`Error: ${err.message}`);
@@ -78,7 +78,7 @@ export function EnterAmount(props: EnterAmountProps) {
   const modalTitle =
     state.state === ModalState.DepositAch && state.title
       ? state.title
-      : "Deposit";
+      : 'Deposit';
   const showBackButton =
     state.state === ModalState.DepositAch && state.showBackButton === false
       ? false
@@ -94,15 +94,15 @@ export function EnterAmount(props: EnterAmountProps) {
       >
         <div className="flex flex-col items-center px-6 py-8">
           <Text size="2xl" className="text-center">
-            Instantly trade with{" "}
+            Instantly trade with{' '}
             <Text color="brand" size="2xl">
-              {renderCurrency({ amount: amount, coinId: "USD" })}
+              {renderCurrency({ amount: amount, coinId: 'USD' })}
             </Text>
           </Text>
           <div className="h-4"></div>
           <Text>
-            Please make sure to have{" "}
-            {renderCurrency({ amount: amount, coinId: "USD" })} in your bank
+            Please make sure to have{' '}
+            {renderCurrency({ amount: amount, coinId: 'USD' })} in your bank
             account until the funds are deducted to prevent frozen withdrawal
           </Text>
           <div className="h-6"></div>
@@ -133,7 +133,7 @@ export function EnterAmount(props: EnterAmountProps) {
               <BigNumberInput
                 className="w-full"
                 onKeyDown={(e) => {
-                  if (e.key === ",") {
+                  if (e.key === ',') {
                     e.preventDefault();
                   }
                 }}
@@ -196,15 +196,15 @@ export function EnterAmount(props: EnterAmountProps) {
               disabled={!amount || !accountId || parseFloat(amount) === 0}
               onClick={() => {
                 if (accountId === null) {
-                  toast.error("Please select an account");
+                  toast.error('Please select an account');
                   return;
                 }
                 if (!amount) {
-                  toast.error("Please enter an amount");
+                  toast.error('Please enter an amount');
                   return;
                 }
                 requestAchDeposit({
-                  coin: "USD",
+                  coin: 'USD',
                   size: amount,
                   achAccountId: accountId.toString(),
                 });

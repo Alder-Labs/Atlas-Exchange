@@ -1,21 +1,21 @@
-import React from "react";
+import React from 'react';
 
 import {
   faBuildingColumns,
   faNetworkWired,
-} from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/router";
+} from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/router';
 
-import { AuthStatus, useAuthStatus } from "../../../hooks/useKycLevel";
-import { useModalState } from "../../../hooks/useModalState";
-import { ModalState } from "../../../lib/types/modalState";
-import { Text } from "../../base";
-import { DisabledMenuItemOverlay, MenuItem } from "../../modals/MenuModalItem";
-import { TitledModal } from "../../modals/TitledModal";
+import { AuthStatus, useAuthStatus } from '../../../hooks/useKycLevel';
+import { useModalState } from '../../../hooks/useModalState';
+import { ModalState } from '../../../lib/types/modalState';
+import { Text } from '../../base';
+import { DisabledMenuItemOverlay, MenuItem } from '../../modals/MenuModalItem';
+import { TitledModal } from '../../modals/TitledModal';
 
-import { EnterAmount } from "./EnterAmount";
-import { MenuIconLeft } from "./Menu";
-import DepositWire, { DepositWireConfirm } from "./Wire";
+import { EnterAmount } from './EnterAmount';
+import { MenuIconLeft } from './Menu';
+import DepositWire, { DepositWireConfirm } from './Wire';
 
 const DepositModal = () => {
   const router = useRouter();
@@ -71,7 +71,7 @@ const DepositModal = () => {
         <div className="divide-y divide-grayLight-40 overflow-hidden dark:divide-grayDark-40">
           <MenuItem
             title={<Text size="xl">Bank Transfer (ACH)</Text>}
-            subtitle={"$2000 limit per transaction"}
+            subtitle={'$2000 limit per transaction'}
             disabled={authStatus < AuthStatus.KycLevel1}
             description={
               <Text color="secondary" className="text-start">
@@ -83,18 +83,18 @@ const DepositModal = () => {
             disabledDescription={
               <DisabledMenuItemOverlay>
                 <Text color="secondary" className="text-start">
-                  Please{" "}
+                  Please{' '}
                   <span
                     className="cursor-pointer hover:brightness-110"
                     onClick={async () => {
-                      await router.push("/account?tabIndex=1");
+                      await router.push('/account?tabIndex=1');
                       setModalState({ state: ModalState.Closed });
                     }}
                   >
                     <Text color="brand" weight="bold">
                       verify your information
                     </Text>
-                  </span>{" "}
+                  </span>{' '}
                   (Level 2) to use <b>ACH Bank Transfers</b>
                 </Text>
               </DisabledMenuItemOverlay>
@@ -116,18 +116,18 @@ const DepositModal = () => {
             disabledDescription={
               <DisabledMenuItemOverlay>
                 <Text color="secondary" className="text-start">
-                  Please{" "}
+                  Please{' '}
                   <span
                     className="cursor-pointer hover:brightness-110"
                     onClick={async () => {
-                      await router.push("/account?tabIndex=1");
+                      await router.push('/account?tabIndex=1');
                       setModalState({ state: ModalState.Closed });
                     }}
                   >
                     <Text color="brand" weight="bold">
                       verify your information
                     </Text>
-                  </span>{" "}
+                  </span>{' '}
                   (Level 2) to use <b>Wire Transfers</b>
                 </Text>
               </DisabledMenuItemOverlay>

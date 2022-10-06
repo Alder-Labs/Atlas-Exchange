@@ -1,22 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
-import { useLoginStatus } from "../../../../hooks/useLoginStatus";
-import { useModalState } from "../../../../hooks/useModalState";
-import { useUserState } from "../../../../lib/auth-token-context";
-import { toast } from "../../../../lib/toast";
-import { ModalState } from "../../../../lib/types/modalState";
-import { Button, Text, TextInput } from "../../../base";
-import { TitledModal } from "../../../modals/TitledModal";
-import { TitledCard } from "../../../TitledCard";
+import { useLoginStatus } from '../../../../hooks/useLoginStatus';
+import { useModalState } from '../../../../hooks/useModalState';
+import { useUserState } from '../../../../lib/auth-token-context';
+import { toast } from '../../../../lib/toast';
+import { ModalState } from '../../../../lib/types/modalState';
+import { Button, Text, TextInput } from '../../../base';
+import { TitledModal } from '../../../modals/TitledModal';
+import { TitledCard } from '../../../TitledCard';
 
 export const TotpAuth = () => {
   const userState = useUserState();
   const router = useRouter();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [mfaCode, setMfaCode] = useState("");
+  const [mfaCode, setMfaCode] = useState('');
 
   const [authModalState, setAuthModalState] = useModalState();
   const { refetch: refetchLoginStatus } = useLoginStatus();
@@ -47,7 +47,7 @@ export const TotpAuth = () => {
   const handleSubmit = useCallback(() => {
     if (mfaCode.length === 6) {
       onSignInWithMfa(mfaCode);
-      setMfaCode("");
+      setMfaCode('');
     }
   }, [mfaCode, onSignInWithMfa]);
 
@@ -80,7 +80,7 @@ export const TotpAuth = () => {
           value={mfaCode}
           onChange={(e) => {
             // Digits only
-            setMfaCode(e.target.value.replace(/\D/g, ""));
+            setMfaCode(e.target.value.replace(/\D/g, ''));
           }}
         />
         <div className="h-4"></div>
