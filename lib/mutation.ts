@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 
 import { useUser, useUserState } from './auth-token-context';
+import { requireEnvVar } from './env';
 
 interface MutationFetcherOptions {
   method?: 'POST' | 'DELETE';
   onFetchSuccess?: (data: any) => Promise<unknown>;
 }
+
+const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 
 export const createMutationFetcher = <TRequestData, TQueryFnData>(
   path: string,
@@ -19,7 +22,7 @@ export const createMutationFetcher = <TRequestData, TQueryFnData>(
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
-    let promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+    let promise = fetch(`${API_URL}${path}`, {
       method: options.method ?? 'POST',
       headers: headers,
       body: JSON.stringify(body),

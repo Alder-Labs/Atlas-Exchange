@@ -1,8 +1,14 @@
 import { useMemo } from 'react';
 
 import { useUser, useUserState } from './auth-token-context';
+import { requireEnvVar } from './env';
 
-export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
+const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
+
+export const createFormMutationFetcher = <
+  TRequestData extends Record<string, string | File>,
+  TQueryFnData
+>(
   path: string,
   authToken?: string
 ) => {
@@ -17,7 +23,7 @@ export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
       formData.append(key, value);
     }
 
-    return fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+    return fetch(`${API_URL}${path}`, {
       method: 'POST',
       headers: headers,
       body: formData,
@@ -32,9 +38,10 @@ export const createFormMutationFetcher = <TRequestData, TQueryFnData>(
   };
 };
 
-export function useFormMutationFetcher<TRequestData, TQueryFnData>(
-  path: string
-) {
+export function useFormMutationFetcher<
+  TRequestData extends Record<string, string | File>,
+  TQueryFnData
+>(path: string) {
   const userState = useUserState();
 
   return useMemo(
