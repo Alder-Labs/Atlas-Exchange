@@ -66,12 +66,7 @@ export const TotpAuth = () => {
           setAuthModalState({ state: ModalState.SignIn });
         }
       }}
-      onClickCloseButton={() => {
-        if (userState.user) {
-          userState.signout();
-          setAuthModalState({ state: ModalState.Closed });
-        }
-      }}
+      showCloseButton={false}
     >
       <div className="p-6">
         <Text>

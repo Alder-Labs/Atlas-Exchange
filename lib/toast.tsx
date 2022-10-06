@@ -19,8 +19,8 @@ export const toast: ToastHandlers = {
         <div
           className={`${
             toast.visible ? 'animate-enter' : 'animate-leave'
-          } dark:bg-grayDark-40 pointer-events-auto flex w-full max-w-md rounded-lg 
-           bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
+          } pointer-events-auto flex w-full max-w-md rounded-lg bg-white 
+           shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-grayDark-40`}
         >
           <div className="flex items-center gap-3 p-4">
             <ToastIcon toast={{ ...toast, type: 'success' }} />
@@ -36,8 +36,8 @@ export const toast: ToastHandlers = {
         <div
           className={`${
             toast.visible ? 'animate-enter' : 'animate-leave'
-          } dark:bg-grayDark-40 pointer-events-auto flex w-full max-w-md rounded-lg 
-           bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
+          } pointer-events-auto flex w-full max-w-md rounded-lg bg-white 
+           shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-grayDark-40`}
         >
           <div className="flex items-center gap-3 p-4">
             <ToastIcon toast={{ ...toast, type: 'error' }} />

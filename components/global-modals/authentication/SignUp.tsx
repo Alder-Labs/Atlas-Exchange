@@ -206,14 +206,14 @@ const SignUpModal = (props: SignUpProps) => {
   };
 
   return (
-    <div className="px-6 pb-6 pt-8">
+    <div className="px-4 pb-6 pt-8">
       <form onSubmit={handleSubmit(onSignUp)}>
         <TextInput
           label="Email"
           placeholder={'Email'}
           {...register('email', { required: true })}
         />
-        <div className="h-4"></div>
+        <div className="h-6"></div>
 
         <TextInput
           label="Password"
