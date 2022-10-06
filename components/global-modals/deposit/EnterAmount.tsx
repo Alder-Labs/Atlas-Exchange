@@ -9,6 +9,7 @@ import { useDepositLimits } from '../../../hooks/useDepositLimits';
 import { useModal } from '../../../hooks/useModal';
 import { useModalState } from '../../../hooks/useModalState';
 import { useUserState } from '../../../lib/auth-token-context';
+import { BRAND_NAME } from '../../../lib/constants';
 import { renderCurrency } from '../../../lib/currency';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
@@ -213,8 +214,8 @@ export function EnterAmount(props: EnterAmountProps) {
             </Button>
             <div className="h-2"></div>
             <Text color="secondary" size="xs">
-              FTX US uses Plaid and Circle to allow you to safely and securely
-              deposit funds from your bank account.
+              {BRAND_NAME} uses Plaid and Circle to allow you to safely and
+              securely deposit funds from your bank account.
             </Text>
           </div>
         </div>

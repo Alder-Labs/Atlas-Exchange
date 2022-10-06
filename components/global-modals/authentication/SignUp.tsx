@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   faCheckCircle,
@@ -14,11 +14,11 @@ import {
 import { useForm } from 'react-hook-form';
 
 import { useModalState } from '../../../hooks/useModalState';
-import { useUserState, SignupParams } from '../../../lib/auth-token-context';
+import { SignupParams, useUserState } from '../../../lib/auth-token-context';
 import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
-import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
-import { TextInput, TextButton, InputCheckbox, Button, Text } from '../../base';
+import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
+import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
 function validatePassword(password: string) {
@@ -160,25 +160,23 @@ const SignUpModal = (props: SignUpProps) => {
       return;
     }
 
-    let inputData = {
-      ...data,
-      captcha: {
-        recaptcha_challenge: '',
-      },
-    };
-
     if (!executeRecaptcha) {
       toast.error('Error: reCAPTCHA not loaded.');
       return;
     }
 
+    let recaptchaToken: string;
     try {
-      const captchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
-      inputData.captcha.recaptcha_challenge = captchaToken;
+      recaptchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
     } catch (e) {
       toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
     }
+
+    const inputData = {
+      ...data,
+      captcha: { recaptcha_challenge: recaptchaToken },
+    };
 
     if (!userState.user) {
       setIsSigningUp(true);
@@ -208,14 +206,14 @@ const SignUpModal = (props: SignUpProps) => {
   };
 
   return (
-    <div className="px-6 pb-6 pt-8">
+    <div className="px-4 pb-6 pt-8">
       <form onSubmit={handleSubmit(onSignUp)}>
         <TextInput
           label="Email"
           placeholder={'Email'}
           {...register('email', { required: true })}
         />
-        <div className="h-4"></div>
+        <div className="h-6"></div>
 
         <TextInput
           label="Password"

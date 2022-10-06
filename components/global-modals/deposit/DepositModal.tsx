@@ -72,7 +72,7 @@ const DepositModal = () => {
           <MenuItem
             title={<Text size="xl">Bank Transfer (ACH)</Text>}
             subtitle={'$2000 limit per transaction'}
-            disabled={authStatus < AuthStatus.KycLevel2}
+            disabled={authStatus < AuthStatus.KycLevel1}
             description={
               <Text color="secondary" className="text-start">
                 Transfers via ACH are free if you deposit more than $100 or
@@ -106,7 +106,7 @@ const DepositModal = () => {
           />
           <MenuItem
             title={<Text size="xl">Wire Transfer</Text>}
-            disabled={authStatus < AuthStatus.KycLevel2}
+            disabled={authStatus < AuthStatus.KycLevel1}
             description={
               <Text color="secondary" className="text-start">
                 Each transfer is $10. Funds will typically arrive within 1
