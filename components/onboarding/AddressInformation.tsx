@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import { countryRegionsAlpha3 } from '../../lib/country-codes';
+import { countryCodesAlpha3, countryRegionsAlpha3 } from '../../lib/country-codes';
 import { KycAddress } from '../../lib/types/kyc';
 import { Text, TextInput, Button, Select } from '../base';
 import { SelectAutocomplete } from '../base/SelectAutocomplete';
@@ -21,6 +21,8 @@ export function AddressInformation(props: AddressInformationProps) {
   const {
     register,
     control,
+    getValues,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<KycAddress>({ defaultValues: cachedForm });
@@ -71,9 +73,7 @@ export function AddressInformation(props: AddressInformationProps) {
     );
   }, [vals]);
 
-  // TODO: supported countries
-  const countryOptions = [{ value: 'USA', label: 'United States' }];
-  const countryRegions = countryRegionsAlpha3['USA'];
+  const countryRegions = getValues("country") ? countryRegionsAlpha3[getValues("country")] ?? [] : [];
 
   return (
     <OnboardingCard {...rest} title={'Address Information'}>
@@ -93,9 +93,10 @@ export function AddressInformation(props: AddressInformationProps) {
               onSelect={(e) => {
                 if (typeof e === 'string') {
                   field.onChange(e);
+                  setValue("stateProvinceRegion", '');
                 }
               }}
-              options={countryOptions}
+              options={countryCodesAlpha3}
               className="w-full"
             />
           )}
