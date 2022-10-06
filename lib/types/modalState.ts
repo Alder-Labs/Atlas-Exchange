@@ -14,6 +14,9 @@ export enum ModalState {
   Kyc1Required = 'Kyc1Required',
   Kyc2Required = 'Kyc2Required',
 
+  // One-off modals
+  Kyc1Complete = 'Kyc1Complete',
+
   // Actions
   DepositFiat = 'DepositFiat',
   DepositWire = 'DepositWire1',

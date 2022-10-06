@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "export NEXT_PUBLIC_API_URL=\"$(node scripts/get-ssm.js)\" && next dev",
+    "dev": "next dev",
     "build": "next build && next export",
+    "dev-with-ssm": "export NEXT_PUBLIC_API_URL=$(node scripts/get-ssm.js) && npm run dev",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"components/**/*.{ts,tsx}\" \"hooks/**/*.ts\" \"lib/**/*.ts\" \"pages/**/*.{ts,tsx}\""
+    "format": "prettier --write \"components/**/*.{ts,tsx}\" \"hooks/**/*.ts\" \"lib/**/*.{ts,tsx}\" \"pages/**/*.{ts,tsx}\""
   },
   "prettier": {
     "singleQuote": true
@@ -20,6 +21,7 @@
     "@headlessui/react": "^1.6.6",
     "@next/bundle-analyzer": "^12.2.5",
     "@radix-ui/react-scroll-area": "^1.0.0",
+    "@sentry/nextjs": "^7.14.1",
     "@stripe/react-stripe-js": "^1.10.0",
     "@stripe/stripe-js": "^1.35.0",
     "@tailwindcss/line-clamp": "^0.4.0",

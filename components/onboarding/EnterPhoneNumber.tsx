@@ -10,6 +10,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
+import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { KycPhone } from '../../lib/types/kyc';
@@ -18,7 +19,7 @@ import { Text, TextInput, Button, Select } from '../base';
 
 import { OnboardingCardProps, OnboardingCard } from './OnboardingCard';
 
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
+const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 
 const parseDigits = (string: string) => (string?.match(/\d+/g) || []).join('');
 

@@ -200,9 +200,11 @@ const OnboardingPage: CustomPage = () => {
                   };
 
                   return submitKycLevel1(kycLevel1Data)
-                    .then(() => {
+                    .then((res) => {
                       localStorage.clear();
-                      toast.success('Successfully submitted KYC Level 1');
+                      setModalState({
+                        state: ModalState.Kyc1Complete,
+                      });
                       router.push('/');
                     })
                     .catch((err: Error) => {
