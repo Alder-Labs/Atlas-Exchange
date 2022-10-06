@@ -17,6 +17,7 @@ import { RecaptchaActions, RecaptchaParams } from '../../lib/types/recaptcha';
 import { Text, TextInput, Button, Select } from '../base';
 
 import { OnboardingCardProps, OnboardingCard } from './OnboardingCard';
+import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
 
 const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
 
@@ -30,10 +31,6 @@ const formatPhone = (string: string) => {
 type RequestPhoneVerification = {
   phoneNumber: string;
 } & RecaptchaParams;
-
-const countryCodeOption: { value: string; label: string }[] = [
-  { value: '+1', label: '+1' },
-];
 
 interface EnterPhoneNumberProps
   extends Omit<OnboardingCardProps, 'children' | 'title'> {
@@ -55,10 +52,6 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     control,
     formState,
   } = useForm<KycPhone>({ defaultValues: cachedForm });
-
-  useEffect(() => {
-    setValue('countryCode', countryCodeOption[0].value);
-  }, [setValue]);
 
   const { errors } = formState;
 
@@ -173,10 +166,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
                 <Select
                   value={field.value}
                   onSelect={(value) => field.onChange(value)}
-                  options={countryCodeOption.map((option) => ({
-                    value: option.value,
-                    label: option.label,
-                  }))}
+                  options={countryPhoneNumberCodes}
                   className="col-span-1 w-full items-center"
                   placeholder="none"
                 />
@@ -200,8 +190,8 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
                     // do not jump after ) until see number before
                     mask={
                       !field.value ||
-                      (field?.value?.length < 6 &&
-                        /[^\d]+/.test(field.value[3]))
+                        (field?.value?.length < 6 &&
+                          /[^\d]+/.test(field.value[3]))
                         ? undefined
                         : field.value.length >= 14
                     }
