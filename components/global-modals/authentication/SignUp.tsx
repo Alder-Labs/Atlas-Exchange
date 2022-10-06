@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 import {
   faCheckCircle,
   faEye,
   faEyeSlash,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/router";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
-} from "react-google-recaptcha-v3";
-import { useForm } from "react-hook-form";
+} from 'react-google-recaptcha-v3';
+import { useForm } from 'react-hook-form';
 
 import { useModalState } from '../../../hooks/useModalState';
 import { useUserState, SignupParams } from '../../../lib/auth-token-context';
@@ -70,7 +70,7 @@ function PasswordRequirement({
           />
         </Text>
       )}
-      <Text size="sm" color={satisfied ? "normal" : "secondary"}>
+      <Text size="sm" color={satisfied ? 'normal' : 'secondary'}>
         {errorMessage}
       </Text>
     </div>
@@ -131,8 +131,8 @@ const SignUpModal = (props: SignUpProps) => {
     formState: { errors },
   } = useForm<SignupParams>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -142,21 +142,21 @@ const SignUpModal = (props: SignUpProps) => {
     setAgreed(false);
   }, [modalState, reset]);
 
-  const onSignUp = async (data: Omit<SignupParams, "captcha">) => {
+  const onSignUp = async (data: Omit<SignupParams, 'captcha'>) => {
     if (!agreed) {
-      toast.error("You must agree to the terms and conditions");
+      toast.error('You must agree to the terms and conditions');
       return;
     }
 
     const password: string = data.password;
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
+      toast.error('Password must be at least 8 characters long');
       return;
     }
 
     const isValid = validatePassword(password).isValid;
     if (!isValid) {
-      toast.error("Invalid password");
+      toast.error('Invalid password');
       return;
     }
 
@@ -168,7 +168,7 @@ const SignUpModal = (props: SignUpProps) => {
     };
 
     if (!executeRecaptcha) {
-      toast.error("Error: reCAPTCHA not loaded.");
+      toast.error('Error: reCAPTCHA not loaded.');
       return;
     }
 
@@ -176,7 +176,7 @@ const SignUpModal = (props: SignUpProps) => {
       const captchaToken = await executeRecaptcha(RecaptchaActions.REGISTER);
       inputData.captcha.recaptcha_challenge = captchaToken;
     } catch (e) {
-      toast.error("Error: reCAPTCHA failed. Please contact Support.");
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
     }
 
@@ -185,7 +185,7 @@ const SignUpModal = (props: SignUpProps) => {
       userState
         .signup(inputData)
         .then(() => {
-          router.push("/onboarding").then(() => {
+          router.push('/onboarding').then(() => {
             setModalState({ state: ModalState.Closed });
           });
         })
@@ -212,16 +212,16 @@ const SignUpModal = (props: SignUpProps) => {
       <form onSubmit={handleSubmit(onSignUp)}>
         <TextInput
           label="Email"
-          placeholder={"Email"}
-          {...register("email", { required: true })}
+          placeholder={'Email'}
+          {...register('email', { required: true })}
         />
         <div className="h-6"></div>
 
         <TextInput
           label="Password"
-          placeholder={"Password"}
-          type={passwordIsShowing ? "text" : "password"}
-          id={"inline-password"}
+          placeholder={'Password'}
+          type={passwordIsShowing ? 'text' : 'password'}
+          id={'inline-password'}
           renderSuffix={() => (
             <div>
               <TextButton
@@ -239,7 +239,7 @@ const SignUpModal = (props: SignUpProps) => {
               </TextButton>
             </div>
           )}
-          {...register("password", { required: true })}
+          {...register('password', { required: true })}
         />
         {watch('password') && (
           <div className="mt-3 animate-enter">

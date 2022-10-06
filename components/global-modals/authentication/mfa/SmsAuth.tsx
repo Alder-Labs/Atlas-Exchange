@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { useMutation } from "react-query";
+import { useMutation } from 'react-query';
 
-import { useCurrentDate } from "../../../../hooks/useCurrentDate";
-import { useLoginStatus } from "../../../../hooks/useLoginStatus";
-import { useModalState } from "../../../../hooks/useModalState";
-import { useUserState } from "../../../../lib/auth-token-context";
-import { useMutationFetcher } from "../../../../lib/mutation";
-import { toast } from "../../../../lib/toast";
-import { ModalState } from "../../../../lib/types/modalState";
-import { Button, Text, TextInput } from "../../../base";
-import { TitledModal } from "../../../modals/TitledModal";
+import { useCurrentDate } from '../../../../hooks/useCurrentDate';
+import { useLoginStatus } from '../../../../hooks/useLoginStatus';
+import { useModalState } from '../../../../hooks/useModalState';
+import { useUserState } from '../../../../lib/auth-token-context';
+import { useMutationFetcher } from '../../../../lib/mutation';
+import { toast } from '../../../../lib/toast';
+import { ModalState } from '../../../../lib/types/modalState';
+import { Button, Text, TextInput } from '../../../base';
+import { TitledModal } from '../../../modals/TitledModal';
 
 const SECONDS_BETWEEN_RESEND_CODE = 59;
 
@@ -20,7 +20,7 @@ export const SmsAuth = () => {
   const { refetch: refetchLoginStatus } = useLoginStatus();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
 
   const currentDate = useCurrentDate();
   const [codeLastSent, setCodeLastSent] = useState<Date | null>(null);
@@ -47,7 +47,7 @@ export const SmsAuth = () => {
             toast.error(`Error: ${err.message}`);
           })
           .finally(() => {
-            setCode("");
+            setCode('');
             setIsLoggingIn(false);
           });
       } else {
@@ -60,7 +60,7 @@ export const SmsAuth = () => {
   const handleSubmit = useCallback(() => {
     if (code.length === 6) {
       onSignInWithMfa(code);
-      setCode("");
+      setCode('');
     }
   }, [code, onSignInWithMfa]);
 
@@ -74,7 +74,7 @@ export const SmsAuth = () => {
     ),
     {
       onSuccess: (data) => {
-        toast.success("Successfully requested phone verification");
+        toast.success('Successfully requested phone verification');
         setCodeLastSent(new Date());
       },
       onError: (err: Error) => {
@@ -86,7 +86,7 @@ export const SmsAuth = () => {
   // Request SMS verification code is sent to phone
   const onRequestSmsCode = useCallback(async () => {
     requestSms({
-      phoneNumber: "",
+      phoneNumber: '',
     });
   }, [requestSms]);
 
@@ -117,7 +117,7 @@ export const SmsAuth = () => {
           value={code}
           onChange={(e) => {
             // Digits only
-            setCode(e.target.value.replace(/\D/g, ""));
+            setCode(e.target.value.replace(/\D/g, ''));
           }}
           renderSuffix={() => (
             <Button
@@ -130,7 +130,7 @@ export const SmsAuth = () => {
               disabled={secondsRemaining > 0}
             >
               {requestSmsLoading
-                ? "Sending..."
+                ? 'Sending...'
                 : secondsRemaining
                 ? `Resend (${secondsRemaining})`
                 : `Resend SMS`}

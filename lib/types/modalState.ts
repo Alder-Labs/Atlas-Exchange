@@ -3,44 +3,44 @@ import { WithdrawCryptoInput } from '../../components/global-modals/send-receive
 import { Coin } from './coin';
 
 export enum ModalState {
-  Closed = "closed",
+  Closed = 'closed',
 
   // Auth
-  SignIn = "SignIn",
-  SignUp = "SignUp",
-  ForgotPassword = "ForgotPassword",
-  TotpAuth = "TotpAuth",
-  SmsAuth = "SmsAuth",
-  Kyc1Required = "Kyc1Required",
-  Kyc2Required = "Kyc2Required",
+  SignIn = 'SignIn',
+  SignUp = 'SignUp',
+  ForgotPassword = 'ForgotPassword',
+  TotpAuth = 'TotpAuth',
+  SmsAuth = 'SmsAuth',
+  Kyc1Required = 'Kyc1Required',
+  Kyc2Required = 'Kyc2Required',
 
   // One-off modals
-  Kyc1Complete = "Kyc1Complete",
+  Kyc1Complete = 'Kyc1Complete',
 
   // Actions
-  DepositFiat = "DepositFiat",
-  DepositWire = "DepositWire1",
-  DepositWireConfirm = "WithdrawWire2",
-  DepositAch = "DepositAch",
-  DepositAchSuccess = "DepositAchSuccess",
+  DepositFiat = 'DepositFiat',
+  DepositWire = 'DepositWire1',
+  DepositWireConfirm = 'WithdrawWire2',
+  DepositAch = 'DepositAch',
+  DepositAchSuccess = 'DepositAchSuccess',
 
-  AchConnectAccount = "AchConnectBankAccount",
+  AchConnectAccount = 'AchConnectBankAccount',
 
-  WithdrawFiat = "WithdawFiat",
-  WithdrawWire = "WithdrawWire",
-  WithdrawWireSuccess = "WithdrawWireSuccess",
-  WithdrawAch = "WithdrawAch",
-  WithdrawAchSuccess = "WithdrawAchSuccess",
+  WithdrawFiat = 'WithdawFiat',
+  WithdrawWire = 'WithdrawWire',
+  WithdrawWireSuccess = 'WithdrawWireSuccess',
+  WithdrawAch = 'WithdrawAch',
+  WithdrawAchSuccess = 'WithdrawAchSuccess',
 
   // Send receive
-  SendReceiveCrypto = "SendReceive",
+  SendReceiveCrypto = 'SendReceive',
 
-  ReceiveCryptoSelect = "Receive1",
-  ReceiveCryptoAddress = "Receive2",
-  SendCryptoSelect = "Send1",
-  SendCryptoForm = "Send2",
-  SendCryptoConfirm = "Send3",
-  SendCryptoSuccess = "Send4",
+  ReceiveCryptoSelect = 'Receive1',
+  ReceiveCryptoAddress = 'Receive2',
+  SendCryptoSelect = 'Send1',
+  SendCryptoForm = 'Send2',
+  SendCryptoConfirm = 'Send3',
+  SendCryptoSuccess = 'Send4',
 }
 
 type ModalStateWithPayload =
@@ -70,7 +70,7 @@ type ModalStateWithPayload =
 export type ModalStateDetailed =
   | ModalStateWithPayload
   | {
-      state: Exclude<ModalState, ModalStateWithPayload["state"]>;
+      state: Exclude<ModalState, ModalStateWithPayload['state']>;
     };
 
 const ALL_MODAL_STATES = Object.values(ModalState);

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import {
   GoogleReCaptchaProvider,
@@ -7,13 +7,13 @@ import {
 import { useMutation } from 'react-query';
 
 import { useLoginStatus } from '../../hooks/useLoginStatus';
-import { requireEnvVar } from "../../lib/env";
+import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { RecaptchaActions } from '../../lib/types';
 import { Button, TextInput } from '../base';
 
-const RECAPTCHA_KEY = requireEnvVar("NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY");
+const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 
 interface ExistingMfaProps {
   label?: string;
@@ -36,7 +36,7 @@ function TotpMfaInput(props: TotpMfaInput) {
       value={value}
       onChange={(e) => {
         // Digits only
-        onChange(e.target.value.replace(/[^0-9]/g, ""));
+        onChange(e.target.value.replace(/[^0-9]/g, ''));
       }}
     />
   );
@@ -51,7 +51,7 @@ function SmsMfaInput(props: SmsMfaProps) {
     ),
     {
       onSuccess: (data) => {
-        toast.success("Successfully sent MFA code via SMS");
+        toast.success('Successfully sent MFA code via SMS');
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);

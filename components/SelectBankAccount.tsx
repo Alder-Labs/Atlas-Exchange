@@ -1,25 +1,25 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
 import {
   faCheck,
   faInfo,
   faInfoCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/router";
-import { useMutation } from "react-query";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
 
 import {
   BankAccount,
   BankAccountStatus,
   useBankAccounts,
-} from "../hooks/useBankAccounts";
-import { useUserState } from "../lib/auth-token-context";
-import { useMutationFetcher } from "../lib/mutation";
-import { toast } from "../lib/toast";
+} from '../hooks/useBankAccounts';
+import { useUserState } from '../lib/auth-token-context';
+import { useMutationFetcher } from '../lib/mutation';
+import { toast } from '../lib/toast';
 
-import { Text, Button, Select, TextButton } from "./base";
-import { Tooltip } from "./Tooltip";
+import { Text, Button, Select, TextButton } from './base';
+import { Tooltip } from './Tooltip';
 
 interface RenderBankAccountProps {
   accountId: number;
@@ -39,12 +39,12 @@ function RenderBankAccount(props: RenderBankAccountProps) {
   const { isLoading: loadingDeleteAchAccount, mutateAsync: deleteAchAccount } =
     useMutation(
       useMutationFetcher(`/proxy/api/ach/accounts/${accountId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         onFetchSuccess: refetchBankAccounts,
       }),
       {
         onSuccess: () => {
-          toast.success("Bank account deleted.");
+          toast.success('Bank account deleted.');
         },
       }
     );
@@ -62,11 +62,11 @@ function RenderBankAccount(props: RenderBankAccountProps) {
             </Text>
             <Tooltip
               placement="bottom"
-              content={"Your bank account is pending verification from Plaid."}
+              content={'Your bank account is pending verification from Plaid.'}
             >
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                className="ml-1 outline-none h-3 w-3 inline"
+                className="ml-1 inline h-3 w-3 outline-none"
               />
             </Tooltip>
           </span>
@@ -79,11 +79,11 @@ function RenderBankAccount(props: RenderBankAccountProps) {
             </Text>
             <Tooltip
               placement="bottom"
-              content={"Your bank account has been rejected from Plaid."}
+              content={'Your bank account has been rejected from Plaid.'}
             >
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                className="ml-1 outline-none h-3 w-3 inline"
+                className="ml-1 inline h-3 w-3 outline-none"
               />
             </Tooltip>
           </span>
@@ -114,7 +114,7 @@ function RenderBankAccount(props: RenderBankAccountProps) {
                 e.preventDefault();
                 if (
                   window.confirm(
-                    "Are you sure you want to delete this account?"
+                    'Are you sure you want to delete this account?'
                   )
                 ) {
                   deleteAchAccount(account.id);
@@ -161,7 +161,7 @@ export function SelectBankAccount(props: SelectBankAccountProps) {
             if (onClickConnect) {
               onClickConnect();
             } else {
-              router.push("/connect-bank");
+              router.push('/connect-bank');
             }
           }}
         >

@@ -1,6 +1,6 @@
-import { requireEnvVar } from "../env";
+import { requireEnvVar } from '../env';
 
-export const RECAPTCHA_KEY = requireEnvVar("NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY")
+export const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 
 export enum RecaptchaActions {
   LOGIN = 'LOGIN',

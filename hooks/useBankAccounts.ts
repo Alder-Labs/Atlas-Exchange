@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-import { useQuery } from "react-query";
+import { useQuery } from 'react-query';
 
-import { useFetcher } from "../lib/fetcher";
-import { QueryProps } from "../lib/queryProps";
+import { useFetcher } from '../lib/fetcher';
+import { QueryProps } from '../lib/queryProps';
 
 export interface Owner {
   addresses: Address[];
@@ -60,11 +60,11 @@ export interface Balances {
 }
 
 export enum BankAccountStatus {
-  REQUESTED = "requested",
-  APPROVED = "approved",
-  REJECTED = "rejected",
-  NEEDS_DEPOSIT_VERIFICATION = "needs_deposit_verification",
-  PENDING_PLAID_VERIFICATION = "pending_plaid_verification",
+  REQUESTED = 'requested',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  NEEDS_DEPOSIT_VERIFICATION = 'needs_deposit_verification',
+  PENDING_PLAID_VERIFICATION = 'pending_plaid_verification',
 }
 
 export interface BankAccount {
@@ -90,7 +90,7 @@ export interface BankAccount {
 
 export function useBankAccounts(props: QueryProps<BankAccount[]> = {}) {
   const { data, error, isLoading, refetch } = useQuery(
-    "/proxy/api/ach/accounts",
+    '/proxy/api/ach/accounts',
     useFetcher<BankAccount[]>(),
     props
   );
