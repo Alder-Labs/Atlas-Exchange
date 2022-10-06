@@ -25,7 +25,7 @@ registerPlugin(FilePondPluginFileValidateSize);
 
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
-import { SupportTicketCreate } from '../../lib/types';
+import { CustomPage, SupportTicketCreate } from '../../lib/types';
 
 const ticketCategories: { value: string; label: string }[] = [
   { value: 'Account closure', label: 'Account closure' },
@@ -45,7 +45,7 @@ const ticketCategories: { value: string; label: string }[] = [
   { value: 'Video Upload', label: 'Video Upload' },
 ];
 
-const NewTicketPage: NextPage = () => {
+const NewTicketPage: CustomPage = () => {
   const router = useRouter();
 
   const {
@@ -144,5 +144,7 @@ const NewTicketPage: NextPage = () => {
     </SidePadding>
   );
 };
+
+NewTicketPage.showFooter = true;
 
 export default NewTicketPage;

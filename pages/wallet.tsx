@@ -15,6 +15,7 @@ import WithdrawTransactions from '../components/wallet/Withdrawals';
 import { useUserState } from '../lib/auth-token-context';
 
 import type { NextPage } from 'next';
+import { CustomPage } from '../lib/types';
 
 enum TabType {
   Balances = 'Balances',
@@ -25,7 +26,7 @@ enum TabType {
 
 const ALL_TABS = Object.values(TabType);
 
-const Wallet: NextPage = () => {
+const Wallet: CustomPage = () => {
   const userState = useUserState();
 
   const router = useRouter();
@@ -139,5 +140,7 @@ const Wallet: NextPage = () => {
     </>
   );
 };
+
+Wallet.showFooter = true;
 
 export default Wallet;
