@@ -1,3 +1,5 @@
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
@@ -5,6 +7,7 @@ import { Rifm } from 'rifm';
 
 import { KycSsn } from '../../lib/types/kyc';
 import { Text, TextInput, Button } from '../base';
+import { TextBubble } from '../Warning';
 
 import { OnboardingCard, OnboardingCardProps } from './OnboardingCard';
 
@@ -72,8 +75,10 @@ export function SocialSecurity(props: SocialSecurityProps) {
     );
   }, [vals]);
 
+  const ssnRequired = cachedForm.country === 'USA';
+
   return (
-    <OnboardingCard {...rest} title={'Social Security Number'}>
+    <OnboardingCard {...rest} title={'Social Security Number (U.S. Users Only)'}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="max-w-md">
           <div className="h-2"></div>
@@ -84,37 +89,51 @@ export function SocialSecurity(props: SocialSecurityProps) {
         </div>
 
         <div className="h-6"></div>
-        <Controller
-          name={'socialSecurityNumber'}
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Rifm
-              accept={/\d+/g}
-              format={formatSSN}
-              value={field.value ?? ''}
-              onChange={(val) => {
-                const strippedVal = val.replace(/\D/g, '');
-                field.onChange(strippedVal);
-              }}
-            >
-              {({ value, onChange }) => (
-                <TextInput
-                  placeholder={'000-00-0000'}
-                  value={value}
-                  onChange={onChange}
-                  className="w-full"
-                />
-              )}
-            </Rifm>
-          )}
-        />
+        {ssnRequired && (
+          <Controller
+            name={'socialSecurityNumber'}
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Rifm
+                accept={/\d+/g}
+                format={formatSSN}
+                value={field.value ?? ''}
+                onChange={(val) => {
+                  const strippedVal = val.replace(/\D/g, '');
+                  field.onChange(strippedVal);
+                }}
+              >
+                {({ value, onChange }) => (
+                  <TextInput
+                    placeholder={'000-00-0000'}
+                    value={value}
+                    onChange={onChange}
+                    className="w-full"
+                  />
+                )}
+              </Rifm>
+            )}
+          />)}
         {errors.socialSecurityNumber?.type === 'required' && (
           <Text color={'error'} size="sm">
             required
           </Text>
         )}
+
+        {!ssnRequired && (<TextBubble className='bg-info/25 dark:bg-infoDark/25'>
+          <div className="flex flex-row items-center">
+            <Text color="info">
+              <FontAwesomeIcon icon={faCircleInfo} className="mr-4 h-5" />
+            </Text>
+            <Text>
+              This section is not applicable because you provided an address outside of the US
+            </Text>
+          </div>
+        </TextBubble>)}
+
         <div className="h-8"></div>
+
         <Button className="w-full" type="submit">
           Continue
         </Button>
