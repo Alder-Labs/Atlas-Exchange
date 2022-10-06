@@ -179,7 +179,7 @@ export const Select = <T extends string | Date | number>({
                 })}
                 {filteredOptions.length === 0 && (
                   <div className="px-3 py-3 text-sm text-grayLight-70">
-                    <Text>No options</Text>
+                    <Text color="secondary">No {value && 'other '}options</Text>
                   </div>
                 )}
               </Listbox.Options>

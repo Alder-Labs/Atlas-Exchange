@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 
+const { withSentryConfig } = require('@sentry/nextjs');
+
 // - prevent iframe embedding except from Plaid and Stripe
 // - only allow scripts from the same origin, Plaid, Stripe, or Sardine
 
@@ -9,7 +11,7 @@ const ContentSecurityPolicy = `
   frame-src *.plaid.com *.sardine.ai *.stripe.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
   font-src 'self' https://fonts.gstatic.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sardine.ai *.stripe.com *.plaid.com;
+  connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sardine.ai *.stripe.com *.plaid.com *.sentry.io;
   img-src 'self' data: ftx.us *.stripe.com *.plaid.com;
   prefetch-src 'self' *.plaid.com;
 `;
@@ -54,10 +56,6 @@ const nextConfig = {
   experimental: {
     legacyBrowsers: false,
     browsersListForSwc: true,
-    images: {
-      unoptimized: true,
-      allowFutureImage: true,
-    },
   },
   async headers() {
     return [
@@ -68,9 +66,38 @@ const nextConfig = {
       },
     ];
   },
+
+  sentry: {
+    // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
+    // for client-side builds. (This will be the default starting in
+    // `@sentry/nextjs` version 8.0.0.) See
+    // https://webpack.js.org/configuration/devtool/ and
+    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-hidden-source-map
+    // for more information.
+    hideSourceMaps: true,
+
+    // This option will automatically provide performance monitoring for Next.js
+    // data-fetching methods and API routes, making the manual wrapping of API
+    // routes via `withSentry` redundant.
+    autoInstrumentServerFunctions: true,
+  },
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
-module.exports = withBundleAnalyzer(nextConfig);
+
+const sentryWebpackPluginOptions = {
+  // Additional config options for the Sentry Webpack plugin. Keep in mind that
+  // the following options are set automatically, and overriding them is not
+  // recommended:
+  //   release, url, org, project, authToken, configFile, stripPrefix,
+  //   urlPrefix, include, ignore
+
+  silent: true, // Suppresses all logs
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options.
+};
+
+const withAnalyzer = withBundleAnalyzer(nextConfig);
+module.exports = withSentryConfig(withAnalyzer, sentryWebpackPluginOptions);

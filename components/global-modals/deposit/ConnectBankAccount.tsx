@@ -39,7 +39,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
     enabled: isLoggedIn,
   });
 
-  const linkTokenData = usePlaidLinkToken();
+  const { getLinkToken, plaidLinkTokenData } = usePlaidLinkToken();
 
   const { isLoading: createAchAccountLoading, mutate: createAchAccount } =
     useMutation(
@@ -70,7 +70,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
   const { open, ready } = usePlaidLink(
     useMemo(
       () => ({
-        token: linkTokenData?.link_token ?? null,
+        token: plaidLinkTokenData?.link_token ?? null,
         onSuccess: (publicToken, metadata) => {
           const account = metadata.accounts[0];
           createAchAccount({
@@ -92,77 +92,76 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
           setLoading(false);
         },
       }),
-      [createAchAccount, linkTokenData?.link_token]
+      [createAchAccount, plaidLinkTokenData?.link_token]
     )
   );
 
   return (
-    <SidePadding>
-      <TitledModal
-        darkenBackground={false}
-        title="Connect Bank Account"
-        onGoBack={onGoBack}
-        onClose={onClose}
-        className="mx-auto my-8 w-full max-w-lg lg:mt-32"
-        isOpen={isOpen}
-      >
-        <div className="px-4 py-8">
-          {loading ? (
-            <div className="flex w-full items-center justify-center gap-4 py-8">
-              <Text>Connecting bank account...</Text>
-              <Spinner />
+    <TitledModal
+      darkenBackground={false}
+      title="Connect Bank Account"
+      onGoBack={onGoBack}
+      onClose={onClose}
+      className="mx-auto my-8 w-full max-w-lg lg:mt-32"
+      isOpen={isOpen}
+    >
+      <div className="px-4 py-8">
+        {loading ? (
+          <div className="flex w-full items-center justify-center gap-4 py-8">
+            <Text>Connecting bank account...</Text>
+            <Spinner />
+          </div>
+        ) : (
+          <>
+            <Text>Disclaimer:</Text>
+
+            <div className="h-1"></div>
+            <Text>
+              I am linking my bank because I want to use deposited funds to
+              trade cryptocurrency. Nobody else is instructing me to create an
+              FTX US account or link my bank account.
+            </Text>
+
+            <div className="h-4"></div>
+            <div className="flex cursor-pointer items-center gap-1.5">
+              <InputCheckbox
+                label="I agree"
+                className="cursor-pointer"
+                type="checkbox"
+                checked={agree}
+                onChange={(e) => {
+                  setAgree(e.target.checked);
+                }}
+              />
             </div>
-          ) : (
-            <>
-              <Text>Disclaimer:</Text>
+            <div className="h-12"></div>
 
-              <div className="h-1"></div>
-              <Text>
-                I am linking my bank because I want to use deposited funds to
-                trade cryptocurrency. Nobody else is instructing me to create an
-                FTX US account or link my bank account.
+            <div className="text-center">
+              <Button
+                disabled={!agree}
+                onClick={async () => {
+                  if (ready) {
+                    setLoading(true);
+                    await getLinkToken();
+                    open();
+                  } else {
+                    toast.error('Plaid link is not ready');
+                  }
+                }}
+                className="w-full"
+                loading={loading}
+              >
+                Continue
+              </Button>
+              <div className="h-2"></div>
+              <Text color="secondary" size="xs" className="">
+                {BRAND_NAME} uses Plaid and Circle to allow you to safely
+                deposit your funds from your bank account
               </Text>
-
-              <div className="h-4"></div>
-              <div className="flex cursor-pointer items-center gap-1.5">
-                <InputCheckbox
-                  label="I agree"
-                  className="cursor-pointer"
-                  type="checkbox"
-                  checked={agree}
-                  onChange={(e) => {
-                    setAgree(e.target.checked);
-                  }}
-                />
-              </div>
-              <div className="h-12"></div>
-
-              <div className="text-center">
-                <Button
-                  disabled={!agree}
-                  onClick={() => {
-                    if (ready) {
-                      setLoading(true);
-                      open();
-                    } else {
-                      toast.error('Plaid link is not ready');
-                    }
-                  }}
-                  className="w-full"
-                  loading={loading}
-                >
-                  Continue
-                </Button>
-                <div className="h-2"></div>
-                <Text color="secondary" size="xs" className="">
-                  {BRAND_NAME} uses Plaid and Circle to allow you to safely
-                  deposit your funds from your bank account
-                </Text>
-              </div>
-            </>
-          )}
-        </div>
-      </TitledModal>
-    </SidePadding>
+            </div>
+          </>
+        )}
+      </div>
+    </TitledModal>
   );
 }

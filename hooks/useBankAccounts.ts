@@ -59,6 +59,14 @@ export interface Balances {
   unofficial_currency_code: null;
 }
 
+export enum BankAccountStatus {
+  REQUESTED = 'requested',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  NEEDS_DEPOSIT_VERIFICATION = 'needs_deposit_verification',
+  PENDING_PLAID_VERIFICATION = 'pending_plaid_verification',
+}
+
 export interface BankAccount {
   id: number;
   name: string;
@@ -72,7 +80,7 @@ export interface BankAccount {
   candidateBillingInfoNames: string[];
   candidateBillingInfoAddresses: BillingInfo[];
   earlyCreditEligible: boolean;
-  status: string;
+  status: BankAccountStatus;
   data: {
     mask: string;
     institutionName: string;

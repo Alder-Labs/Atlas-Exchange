@@ -13,6 +13,7 @@ import { useMutation } from 'react-query';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
+import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType, RecaptchaActions } from '../../lib/types';
@@ -22,8 +23,7 @@ import { TitledModal } from '../modals/TitledModal';
 import { ExistingMfaInput } from './ExistingMfaInput';
 import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
 
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
-
+const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 interface SetSmsMfaForm {
   countryCode: string;
   phoneNumber: string;

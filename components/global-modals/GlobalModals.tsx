@@ -13,6 +13,7 @@ import { SignInWrapper } from './authentication/SignIn';
 import SignUpModal from './authentication/SignUp';
 import { ConnectBankAccount } from './deposit/ConnectBankAccount';
 import DepositModal from './deposit/DepositModal';
+import { Kyc1Complete } from './one-off/Kyc1Complete';
 import SendModal from './send-receive/SendModal';
 import { WithdrawModal } from './withdraw/WithdrawModal';
 
@@ -26,6 +27,9 @@ export const GlobalModals = () => {
           <ModalBackdrop className="z-50" />
         </Portal>
       )}
+
+      {/* One off modals */}
+      <Kyc1Complete />
 
       {/* Auth */}
       <SignInWrapper />
