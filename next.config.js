@@ -5,8 +5,8 @@
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com *.plaid.com *.sardine.ai https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;
-  frame-src *.stripe.com *.plaid.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
+  script-src 'self' 'unsafe-eval' *.plaid.com *.sardine.ai *.stripe.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;
+  frame-src *.plaid.com *.sardine.ai *.stripe.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
   font-src 'self' https://fonts.gstatic.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sardine.ai *.stripe.com *.plaid.com;

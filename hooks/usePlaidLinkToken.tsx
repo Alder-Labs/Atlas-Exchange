@@ -30,7 +30,5 @@ export function usePlaidLinkToken() {
     }
   }, [mutate, isLoggedIn]);
 
-  console.log(plaidLinkTokenData?.expiration);
-
   return plaidLinkTokenData;
 }
