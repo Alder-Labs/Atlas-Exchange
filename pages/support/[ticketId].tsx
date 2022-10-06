@@ -26,11 +26,12 @@ import { useFormMutationFetcher } from '../../lib/formMutation';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import {
+  CustomPage,
   SupportMessageCreate,
   SupportTicketStatusUpdate,
 } from '../../lib/types';
 
-const SupportTicketPage: NextPage = () => {
+const SupportTicketPage: CustomPage = () => {
   const router = useRouter();
   const { ticketId } = router.query;
 
@@ -210,5 +211,7 @@ const SupportTicketPage: NextPage = () => {
     </SidePadding>
   );
 };
+
+SupportTicketPage.showFooter = true;
 
 export default SupportTicketPage;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Footer } from './Footer';
 
 import { Navbar } from './Navbar';
 import { SidePadding } from './SidePadding';
@@ -16,13 +17,7 @@ export function Layout({
 
       <main className="flex flex-1 flex-col">{children}</main>
 
-      {showFooter && (
-        <footer>
-          <SidePadding className="bg-grayLight-90">
-            <div className="h-48"></div>
-          </SidePadding>
-        </footer>
-      )}
+      {showFooter && <Footer />}
     </div>
   );
 }

@@ -125,7 +125,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
             <div className="h-4"></div>
             <div className="flex cursor-pointer items-center gap-1.5">
               <InputCheckbox
-                label="I agree"
+                label={<Text className="pl-2">I agree</Text>}
                 className="cursor-pointer"
                 type="checkbox"
                 checked={agree}
