@@ -1,4 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.env
 
 .env
 
@@ -36,3 +37,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Sentry
+.sentryclirc

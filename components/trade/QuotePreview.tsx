@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useBalances } from '../../hooks/useBalances';
+import { useCurrentDate } from '../../hooks/useCurrentDate';
 import { useUserState } from '../../lib/auth-token-context';
 import { renderCurrency } from '../../lib/currency';
 import { Quote } from '../../lib/types';
@@ -50,13 +49,7 @@ export function QuotePreview(props: QuotePreviewProps) {
     enabled: isLoggedIn,
   });
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const currentDate = useCurrentDate();
   const secondsBetweenDates = Math.floor(
     (quote.expiry * 1000 - currentDate.getTime()) / 1000
   );

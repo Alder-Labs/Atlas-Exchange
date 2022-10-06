@@ -7,12 +7,13 @@ import {
 import { useMutation } from 'react-query';
 
 import { useLoginStatus } from '../../hooks/useLoginStatus';
+import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { RecaptchaActions } from '../../lib/types';
 import { Button, TextInput } from '../base';
 
-const RECAPTCHA_KEY = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ?? '';
+const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 
 interface ExistingMfaProps {
   label?: string;
