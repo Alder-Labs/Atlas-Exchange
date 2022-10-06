@@ -1,12 +1,17 @@
-import { createContext, useCallback, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect } from 'react';
 
-import { useRouter } from "next/router";
-import { useQueryClient } from "react-query";
+import { useRouter } from 'next/router';
+import { useQueryClient } from 'react-query';
 
-import { useStateCallback } from "../hooks/useStateCallback";
+import { useStateCallback } from '../hooks/useStateCallback';
 
-import { requireEnvVar } from "./env";
-import { RecaptchaParams, SigninParams, SignInResponse, SigninWithMfaParams } from './types';
+import { requireEnvVar } from './env';
+import {
+  RecaptchaParams,
+  SigninParams,
+  SignInResponse,
+  SigninWithMfaParams,
+} from './types';
 
 interface User {
   token: string;
@@ -23,23 +28,23 @@ export type SignupParams = {
 
 type UserState =
   | {
-    user: null;
-    signin: (params: SigninParams) => Promise<SignInResponse>;
-    signup: (params: SignupParams) => Promise<SignInResponse>;
-  }
+      user: null;
+      signin: (params: SigninParams) => Promise<SignInResponse>;
+      signup: (params: SignupParams) => Promise<SignInResponse>;
+    }
   | {
-    user: User;
-    signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-    setAuthToken: (
-      token: string | null | undefined,
-      callback?: (token: string | null | undefined) => void
-    ) => void;
-    signout: () => void;
-  };
+      user: User;
+      signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
+      setAuthToken: (
+        token: string | null | undefined,
+        callback?: (token: string | null | undefined) => void
+      ) => void;
+      signout: () => void;
+    };
 
 const UserContext = createContext<UserState | undefined>(undefined);
 
-const API_URL = requireEnvVar("NEXT_PUBLIC_API_URL");
+const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
@@ -62,15 +67,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     ) => {
       _setAuthToken(token, callback);
       if (token) {
-        localStorage.setItem("token", token);
+        localStorage.setItem('token', token);
         localStorage.setItem(
-          "tokenDate",
+          'tokenDate',
           // two day expiration
           (Date.now() + 1000 * 60 * 60 * 24 * 2).toString()
         );
       } else {
-        localStorage.removeItem("token");
-        localStorage.removeItem("tokenDate");
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenDate');
       }
     },
     [_setAuthToken]
@@ -78,11 +83,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     // In an effect since localStorage is not available during SSR
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     // we can no longer check token expiration because its encrypted
-    const tokenDate = localStorage.getItem("tokenDate");
+    const tokenDate = localStorage.getItem('tokenDate');
     if (tokenDate && Number(tokenDate) <= Date.now()) {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       setAuthToken(null);
     } else {
       setAuthToken(token);
@@ -102,8 +107,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return fetch(`${API_URL}/users`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(signupReq),
     })
       .then((res) => {
@@ -153,14 +158,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signinWithMfa = ({ code }: SigninWithMfaParams) => {
     if (!authToken) {
-      throw new Error("Not signed in");
+      throw new Error('Not signed in');
     }
 
     return new Promise<void>((resolve, reject) => {
       fetch(`${API_URL}/users/login_with_mfa`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
@@ -190,10 +195,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const signout = () => {
     // Remove client-side session token
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     queryClient.clear();
     setAuthToken(null);
-    router.push("/");
+    router.push('/');
 
     // TODO: Expire session server-side.
     // This is not currently supported, because FTX does not offer an endpoint
@@ -229,7 +234,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     // });
   };
 
-  if (typeof authToken === "undefined") {
+  if (typeof authToken === 'undefined') {
     return null;
   }
 
@@ -238,16 +243,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       value={
         authToken
           ? {
-            user: { token: authToken },
-            signinWithMfa: signinWithMfa,
-            signout: signout,
-            setAuthToken,
-          }
+              user: { token: authToken },
+              signinWithMfa: signinWithMfa,
+              signout: signout,
+              setAuthToken,
+            }
           : {
-            user: null,
-            signin,
-            signup,
-          }
+              user: null,
+              signin,
+              signup,
+            }
       }
     >
       {children}
@@ -258,7 +263,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 export function useUserState(): UserState {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error("useUserState must be used within a UserProvider");
+    throw new Error('useUserState must be used within a UserProvider');
   }
   return context;
 }
@@ -268,7 +273,7 @@ export function useUser() {
   const userState = useUserState();
   if (userState.user === null) {
     console.log(`userState: ${JSON.stringify(userState)}`);
-    throw new Error("useUser: not signed in");
+    throw new Error('useUser: not signed in');
   }
   return userState.user;
 }
