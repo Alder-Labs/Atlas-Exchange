@@ -170,6 +170,7 @@ export function SignIn(props: SignInProps) {
         />
         <div className="mt-4 mb-2 flex w-full">
           <TextButton
+            type="button"
             variant={'primary'}
             className="mr-1 ml-auto"
             onClick={(e) => {
