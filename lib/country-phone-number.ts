@@ -248,7 +248,8 @@ export const COUNTRY_PHONE_NUMBER_CODES: Record<string, string> = {
   MZ: '258',
 };
 
-export const countryPhoneNumberCodes =
-  Array.from(new Set(Object.values(COUNTRY_PHONE_NUMBER_CODES)))
-    .sort()
-    .map((v) => ({ value: `+${v}`, label: `+${v}` }));
+export const countryPhoneNumberCodes = Array.from(
+  new Set(Object.values(COUNTRY_PHONE_NUMBER_CODES))
+)
+  .sort()
+  .map((v) => ({ value: `+${v}`, label: `+${v}` }));
