@@ -1,0 +1,3 @@
+paths:
+  'components/global-modals/*':
+    - Verify login and signup functionality
