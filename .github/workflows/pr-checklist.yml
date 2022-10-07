@@ -1,0 +1,19 @@
+name: PR Reminders
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  pr-checklist:
+    runs-on: ubuntu-latest
+    name: PR Checklist
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Checklist
+        uses: wyozi/contextual-qa-checklist-action@master
+        with:
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
