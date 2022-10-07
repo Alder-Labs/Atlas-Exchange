@@ -464,6 +464,4 @@ const Account: CustomPage = () => {
   );
 };
 
-Account.showFooter = true;
-
 export default Account;

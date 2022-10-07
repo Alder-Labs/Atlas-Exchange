@@ -145,6 +145,4 @@ const NewTicketPage: CustomPage = () => {
   );
 };
 
-NewTicketPage.showFooter = true;
-
 export default NewTicketPage;

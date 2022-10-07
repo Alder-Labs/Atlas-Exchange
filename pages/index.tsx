@@ -132,6 +132,4 @@ const Home: CustomPage = () => {
   );
 };
 
-Home.showFooter = true;
-
 export default Home;

@@ -156,6 +156,4 @@ const Index: CustomPage = () => {
   );
 };
 
-Index.showFooter = true;
-
 export default Index;
