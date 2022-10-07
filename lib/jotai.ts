@@ -12,4 +12,4 @@ export const globalModalStateDetailedAtom = atom<ModalStateDetailed>({
 
 export const globalModalStateDetailedStackAtom = atom<ModalStateDetailed[]>([]);
 
-export const sardineDeviceIdAtom = atom<string | null>(null);
+export const sardineDeviceIdAtom = atom<string | undefined>(undefined);
