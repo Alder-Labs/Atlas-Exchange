@@ -4,12 +4,14 @@ import React, { useMemo } from 'react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
-import { FilePondFile } from 'filepond';
+import { FilePondFile, registerPlugin } from 'filepond';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { FilePond } from 'react-filepond';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
+registerPlugin(FilePondPluginFileValidateSize);
 
 import {
   Button,
@@ -194,6 +196,8 @@ const SupportTicketPage: NextPage = () => {
                 'Drag and Drop here,<span class=text-brand-500> or click to Browse</span>'
               }
               onupdatefiles={setSupportingDocument}
+              allowFileSizeValidation={true}
+              maxFileSize="5MB"
             />
           </div>
           <Button

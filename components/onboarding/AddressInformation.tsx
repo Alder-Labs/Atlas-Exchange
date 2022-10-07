@@ -2,7 +2,10 @@ import { useEffect } from 'react';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import { countryCodesAlpha3, countryRegionsAlpha3 } from '../../lib/country-codes';
+import {
+  countryCodesAlpha3,
+  countryRegionsAlpha3,
+} from '../../lib/country-codes';
 import { KycAddress } from '../../lib/types/kyc';
 import { Text, TextInput, Button, Select } from '../base';
 import { SelectAutocomplete } from '../base/SelectAutocomplete';
@@ -73,7 +76,9 @@ export function AddressInformation(props: AddressInformationProps) {
     );
   }, [vals]);
 
-  const countryRegions = getValues("country") ? countryRegionsAlpha3[getValues("country")] ?? [] : [];
+  const countryRegions = getValues('country')
+    ? countryRegionsAlpha3[getValues('country')] ?? []
+    : [];
 
   return (
     <OnboardingCard {...rest} title={'Address Information'}>
@@ -93,7 +98,7 @@ export function AddressInformation(props: AddressInformationProps) {
               onSelect={(e) => {
                 if (typeof e === 'string') {
                   field.onChange(e);
-                  setValue("stateProvinceRegion", '');
+                  setValue('stateProvinceRegion', '');
                 }
               }}
               options={countryCodesAlpha3}
