@@ -141,6 +141,4 @@ const Wallet: CustomPage = () => {
   );
 };
 
-Wallet.showFooter = true;
-
 export default Wallet;

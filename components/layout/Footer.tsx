@@ -8,7 +8,7 @@ export const Footer = () => {
   return (
     <footer>
       <SidePadding className="bg-grayLight-10 dark:bg-grayDark-10">
-        <div className="flex flex-row justify-between px-8 py-8">
+        <div className="flex flex-row justify-between py-8 lg:px-8">
           <div className="flex flex-col">
             <Text color="secondary">
               <Link href="/">Home</Link>

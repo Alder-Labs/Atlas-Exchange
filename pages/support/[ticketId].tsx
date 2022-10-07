@@ -212,6 +212,4 @@ const SupportTicketPage: CustomPage = () => {
   );
 };
 
-SupportTicketPage.showFooter = true;
-
 export default SupportTicketPage;

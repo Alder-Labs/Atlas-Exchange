@@ -8,7 +8,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const ContentSecurityPolicy = `
   base-uri 'none'
   connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sardine.ai *.stripe.com *.plaid.com *.sentry.io;
-  default-src 'self' *.sentry.io;
+  default-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sentry.io;
   font-src 'self' https://fonts.gstatic.com;
   frame-ancestors 'none';
   frame-src *.plaid.com *.sardine.ai *.stripe.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;

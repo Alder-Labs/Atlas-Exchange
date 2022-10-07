@@ -1,12 +1,11 @@
 import React from 'react';
-import { Footer } from './Footer';
 
+import { Footer } from './Footer';
 import { Navbar } from './Navbar';
-import { SidePadding } from './SidePadding';
 
 export function Layout({
   children,
-  showFooter = false,
+  showFooter = true,
 }: {
   children: React.ReactNode;
   showFooter?: boolean;

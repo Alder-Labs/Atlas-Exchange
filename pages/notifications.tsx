@@ -105,6 +105,4 @@ const Notifications: CustomPage = () => {
   );
 };
 
-Notifications.showFooter = true;
-
 export default Notifications;

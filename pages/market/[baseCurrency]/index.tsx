@@ -329,6 +329,4 @@ const Balance = (props: { coin: Coin; balance: CoinBalance }) => {
   );
 };
 
-Page.showFooter = true;
-
 export default Page;
