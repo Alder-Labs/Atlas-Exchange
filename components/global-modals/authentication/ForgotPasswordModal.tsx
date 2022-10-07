@@ -50,7 +50,7 @@ const ForgotPasswordModal = () => {
     mutate: requestPasswordReset,
   } = useMutation(
     useMutationFetcher<PublicResetPasswordRequest, {}>(
-      `/proxy/api/users/public_change_password`
+      `/users/public-change-password`
     ),
     {
       onSuccess: (data) => {
@@ -67,27 +67,25 @@ const ForgotPasswordModal = () => {
   }, [reset]);
 
   const onResetPassword = async (data: ForgotPasswordForm) => {
-    let inputData = {
-      ...data,
-      captcha: {
-        recaptcha_challenge: '',
-      },
-    };
-
     if (!executeRecaptcha) {
       toast.error('Error: reCAPTCHA not loaded.');
       return;
     }
 
+    let captchaToken: string;
     try {
-      const captchaToken = await executeRecaptcha(
-        RecaptchaActions.CHANGEPASSWORD
-      );
-      inputData.captcha.recaptcha_challenge = captchaToken;
+      captchaToken = await executeRecaptcha(RecaptchaActions.CHANGEPASSWORD);
     } catch (e) {
       toast.error('Error: reCAPTCHA failed. Please contact Support.');
       return;
     }
+
+    let inputData = {
+      ...data,
+      captcha: {
+        recaptcha_challenge: captchaToken,
+      },
+    };
 
     requestPasswordReset({
       deviceId: sardineDeviceId,
