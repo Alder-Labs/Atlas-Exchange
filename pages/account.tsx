@@ -18,6 +18,7 @@ import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 
 import type { NextPage } from 'next';
+import { CustomPage } from '../lib/types';
 
 const AccountNavbarTab = ({
   label,
@@ -420,7 +421,7 @@ const AccountNavbar = ({
   );
 };
 
-const Account: NextPage = () => {
+const Account: CustomPage = () => {
   const router = useRouter();
   const tabIndex = router.query.tabIndex ? Number(router.query.tabIndex) : 0;
 

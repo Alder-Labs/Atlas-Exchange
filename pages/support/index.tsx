@@ -9,13 +9,14 @@ import { LoaderDoubleLine } from '../../components/loaders';
 import { Table } from '../../components/table';
 import { StatusBadge } from '../../components/wallet/StatusBadge';
 import { useSupportTickets } from '../../hooks/useSupportTickets';
+import { CustomPage } from '../../lib/types';
 
 const formatTime = (time: string) => {
   const date = new Date(time);
   return date.toLocaleString();
 };
 
-const Index: NextPage = () => {
+const Index: CustomPage = () => {
   const router = useRouter();
 
   const {
