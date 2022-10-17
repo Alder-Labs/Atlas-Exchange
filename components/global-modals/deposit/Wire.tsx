@@ -223,7 +223,13 @@ const DepositWireInstruction = (props: {
           <InputCheckbox
             checked={includedAccountId}
             onClick={() => setIncludedAccountId(!includedAccountId)}
-            label="I have included my Account Identifier in my wire transfer and confirm that the name on my bank account matches the name on my account."
+            label={
+              <Text className="pl-2">
+                I have included my Account Identifier in my wire transfer and
+                confirm that the name on my bank account matches the name on my
+                account.
+              </Text>
+            }
           ></InputCheckbox>
           <div className="mt-6 w-full">
             <Button
