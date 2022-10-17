@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useRouter } from 'next/router';
-
 import { useLoginStatus } from '../../../../hooks/useLoginStatus';
 import { useModalState } from '../../../../hooks/useModalState';
 import { useUserState } from '../../../../lib/auth-token-context';
@@ -9,11 +7,9 @@ import { toast } from '../../../../lib/toast';
 import { ModalState } from '../../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../../base';
 import { TitledModal } from '../../../modals/TitledModal';
-import { TitledCard } from '../../../TitledCard';
 
 export const TotpAuth = () => {
   const userState = useUserState();
-  const router = useRouter();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
@@ -75,6 +71,7 @@ export const TotpAuth = () => {
         </Text>
         <div className="h-1"></div>
         <TextInput
+          autoFocus={true}
           label="Code"
           disabled={isLoggingIn}
           value={mfaCode}
@@ -84,7 +81,7 @@ export const TotpAuth = () => {
           }}
         />
         <div className="h-4"></div>
-        <Button loading={isLoggingIn} onClick={handleSubmit}>
+        <Button type="submit" loading={isLoggingIn} onClick={handleSubmit}>
           Submit
         </Button>
       </div>
