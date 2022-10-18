@@ -82,42 +82,65 @@ export interface User {
   cancelAllOrdersButtonEnabled: boolean;
 }
 
-export type LoginStatus =
-  | {
-      loggedIn: true;
-      account: Account;
-      user: User;
-      subaccount: null;
-      country: string;
-      state: string;
-      supportOnly: boolean;
-      mfaRequired: MfaType;
-      requiresEmailLink: boolean;
-      maxLeverage: null;
-      mfa: MfaType;
-      readOnly: boolean;
-      restrictedToSubaccount: boolean;
-      withdrawalEnabled: boolean;
-      internalTransfersEnabled: boolean;
-      onlyAllowSupportOnly: boolean;
-      nftTradingEnabled: boolean;
-    }
-  | {
-      loggedIn: false;
-      account: null;
-      user: null;
-      subaccount: null;
-      country: string;
-      state: string;
-      supportOnly: false;
-      mfaRequired: MfaType;
-      requiresEmailLink: false;
-      jurisdictionRestriction: null;
-      maxLeverage: null;
-      readOnly: true;
-      restrictedToSubaccount: false;
-      withdrawalEnabled: false;
-      internalTransfersEnabled: false;
-      onlyAllowSupportOnly: false;
-      nftTradingEnabled: false;
-    };
+type StatusLoggedOut = {
+  loggedIn: false;
+  account: null;
+  user: null;
+  subaccount: null;
+  country: string;
+  state: string;
+  supportOnly: false;
+  mfaRequired: null;
+  requiresEmailLink: false;
+  jurisdictionRestriction: null;
+  maxLeverage: null;
+  readOnly: true;
+  restrictedToSubaccount: false;
+  withdrawalEnabled: false;
+  internalTransfersEnabled: false;
+  onlyAllowSupportOnly: false;
+  nftTradingEnabled: false;
+};
+
+type StatusMfaRequired = {
+  loggedIn: false;
+  account: null;
+  user: null;
+  subaccount: null;
+  country: string;
+  state: string;
+  supportOnly: false;
+  mfaRequired: MfaType;
+  requiresEmailLink: false;
+  jurisdictionRestriction: null;
+  maxLeverage: null;
+  readOnly: false;
+  restrictedToSubaccount: boolean;
+  withdrawalEnabled: boolean;
+  internalTransfersEnabled: boolean;
+  onlyAllowSupportOnly: boolean;
+  nftTradingEnabled: boolean;
+};
+
+type StatusLoggedIn = {
+  loggedIn: true;
+  account: Account;
+  user: User;
+  subaccount: null;
+  country: string;
+  state: string;
+  supportOnly: boolean;
+  mfaRequired: MfaType;
+  requiresEmailLink: boolean;
+  jurisdictionRestriction: string | null;
+  maxLeverage: null;
+  mfa: MfaType;
+  readOnly: false;
+  restrictedToSubaccount: boolean;
+  withdrawalEnabled: boolean;
+  internalTransfersEnabled: boolean;
+  onlyAllowSupportOnly: boolean;
+  nftTradingEnabled: boolean;
+};
+
+export type LoginStatus = StatusLoggedOut | StatusMfaRequired | StatusLoggedIn;

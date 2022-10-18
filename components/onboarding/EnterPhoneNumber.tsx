@@ -191,8 +191,8 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
                     // do not jump after ) until see number before
                     mask={
                       !field.value ||
-                        (field?.value?.length < 6 &&
-                          /[^\d]+/.test(field.value[3]))
+                      (field?.value?.length < 6 &&
+                        /[^\d]+/.test(field.value[3]))
                         ? undefined
                         : field.value.length >= 14
                     }

@@ -142,7 +142,7 @@ export function Dropdown() {
                   <Text isLoading={loadingLoginStatusData} loadingWidth="8rem">
                     {loginStatusData?.loggedIn
                       ? loginStatusData.user.displayName
-                      : 'Not logged in'}
+                      : '---'}
                   </Text>
                   <FontAwesomeIcon
                     icon={faChevronDown}

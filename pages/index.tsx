@@ -14,6 +14,7 @@ import { LoaderTripleLine } from '../components/loaders/LoaderTripleLine';
 import { BuySellConvert } from '../components/trade/BuySellConvert';
 import { useBalances } from '../hooks/useBalances';
 import { useLoginStatus } from '../hooks/useLoginStatus';
+import { CustomPage } from '../lib/types';
 
 enum HomePromptType {
   LOADING,
@@ -23,7 +24,7 @@ enum HomePromptType {
   BUYING_POWER,
 }
 
-const Home: NextPage = () => {
+const Home: CustomPage = () => {
   const { data: loginStatus } = useLoginStatus();
 
   const { balancesMap } = useBalances({

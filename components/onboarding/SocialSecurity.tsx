@@ -78,7 +78,10 @@ export function SocialSecurity(props: SocialSecurityProps) {
   const ssnRequired = cachedForm.country === 'USA';
 
   return (
-    <OnboardingCard {...rest} title={'Social Security Number (U.S. Users Only)'}>
+    <OnboardingCard
+      {...rest}
+      title={'Social Security Number (U.S. Users Only)'}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="max-w-md">
           <div className="h-2"></div>
@@ -114,23 +117,27 @@ export function SocialSecurity(props: SocialSecurityProps) {
                 )}
               </Rifm>
             )}
-          />)}
+          />
+        )}
         {errors.socialSecurityNumber?.type === 'required' && (
           <Text color={'error'} size="sm">
             required
           </Text>
         )}
 
-        {!ssnRequired && (<TextBubble className='bg-info/25 dark:bg-infoDark/25'>
-          <div className="flex flex-row items-center">
-            <Text color="info">
-              <FontAwesomeIcon icon={faCircleInfo} className="mr-4 h-5" />
-            </Text>
-            <Text>
-              This section is not applicable because you provided an address outside of the US
-            </Text>
-          </div>
-        </TextBubble>)}
+        {!ssnRequired && (
+          <TextBubble className="bg-info/25 dark:bg-infoDark/25">
+            <div className="flex flex-row items-center">
+              <Text color="info">
+                <FontAwesomeIcon icon={faCircleInfo} className="mr-4 h-5" />
+              </Text>
+              <Text>
+                This section is not applicable because you provided an address
+                outside of the US
+              </Text>
+            </div>
+          </TextBubble>
+        )}
 
         <div className="h-8"></div>
 

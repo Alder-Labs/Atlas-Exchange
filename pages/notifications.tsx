@@ -11,13 +11,14 @@ import { useUserState } from '../lib/auth-token-context';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { Notification } from '../lib/types/notification';
+import { CustomPage } from '../lib/types';
 
 const formatTime = (time: string) => {
   const date = new Date(time);
   return date.toLocaleString();
 };
 
-const Notifications: NextPage = () => {
+const Notifications: CustomPage = () => {
   const userState = useUserState();
   const isLoggedIn = !!userState.user;
 

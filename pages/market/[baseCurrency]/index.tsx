@@ -13,10 +13,7 @@ import { useRouter } from 'next/router';
 import { Text, Title } from '../../../components/base';
 import { CryptoIcon } from '../../../components/CryptoIcon';
 import { SidePadding } from '../../../components/layout/SidePadding';
-import {
-  CandleChartDetailed,
-  CandleChartDetailedProps,
-} from '../../../components/market/CandleChartDetailed';
+import { CandleChartDetailedProps } from '../../../components/market/CandleChartDetailed';
 import { DurationIntervalSelector } from '../../../components/market/DurationIntervalSelector';
 import UserTransactions from '../../../components/market/Transactions';
 import { priceDataWithDateIntervals } from '../../../components/market/utils';
@@ -30,7 +27,7 @@ import { renderCurrency } from '../../../lib/currency';
 import { DurationInterval, DURATION_INFO } from '../../../lib/duration';
 import { buyCoinIdAtom } from '../../../lib/jotai';
 import { toast } from '../../../lib/toast';
-import { Coin, CoinBalance } from '../../../lib/types';
+import { Coin, CoinBalance, CustomPage } from '../../../lib/types';
 
 import type { NextPage } from 'next';
 
@@ -43,7 +40,7 @@ const DynamicCandleChartDetailed: ComponentType<CandleChartDetailedProps> =
     { loading: () => <div style={{ height: '60%' }} /> }
   );
 
-const Page: NextPage = () => {
+const Page: CustomPage = () => {
   const router = useRouter();
   const { baseCurrency } = router.query;
   const quoteCurrency = 'USD';

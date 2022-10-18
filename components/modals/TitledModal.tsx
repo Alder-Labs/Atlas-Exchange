@@ -23,7 +23,7 @@ export function TitledModal({
   isOpen,
   title,
   renderWhenClosed = false,
-  onClose = () => {},
+  onClose = () => { },
   showCloseButton = true,
   onClickCloseButton,
   onGoBack,
@@ -43,7 +43,8 @@ export function TitledModal({
 
   return (
     <Modal {...rest} isOpen={isOpen} onClose={onClose}>
-      <div className="box-border w-full rounded-md border-grayLight-70 bg-white text-white shadow-md dark:bg-grayDark-20">
+      <div className="box-border flex w-full flex-col-reverse rounded-md border-grayLight-70 bg-white text-white shadow-md dark:bg-grayDark-20">
+        {children}
         <div className="flex items-baseline justify-center gap-2 border-b border-grayLight-40 p-4 pb-4 dark:border-grayDark-40">
           <div className="flex flex-1 justify-start">
             {onGoBack && (
@@ -69,7 +70,6 @@ export function TitledModal({
             )}
           </div>
         </div>
-        {isOpen && children}
       </div>
     </Modal>
   );
