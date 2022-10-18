@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Text } from './Text';
 
 type Props = {
-  label: string;
+  label: React.ReactNode;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export const InputCheckbox = React.forwardRef<HTMLInputElement, Props>(
@@ -21,7 +21,7 @@ export const InputCheckbox = React.forwardRef<HTMLInputElement, Props>(
           )}
           {...rest}
         />
-        <Text className="pl-2">{label}</Text>
+        {label}
       </label>
     );
   }

@@ -20,6 +20,7 @@ import { ModalState } from '../../../lib/types/modalState';
 import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
 import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
+import { BRAND_NAME } from '../../../lib/constants';
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);
@@ -246,7 +247,14 @@ const SignUpModal = (props: SignUpProps) => {
         )}
 
         <InputCheckbox
-          label="I agree to the FTX US Terms of Service"
+          label={
+            <Text className="pl-2">
+              I agree to {BRAND_NAME}{' '}
+              <Text color="brand">
+                <a href="">Terms of Service</a>
+              </Text>
+            </Text>
+          }
           type="checkbox"
           checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}

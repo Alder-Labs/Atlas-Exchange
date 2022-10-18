@@ -264,34 +264,39 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                 );
               },
             },
-            {
-              type: 'custom',
-              align: 'right',
-              widthClassName: 'lg:w-24',
-              label: '',
-              show: 'lg',
-              renderCell: (row) => {
-                return (
-                  <div
-                    onClick={() => {
-                      if (!(row.coin.fiat || row.coin.usdFungible)) {
-                        router.push(`/market/${row.coin.id}`);
-                      }
-                    }}
-                    className="ml-8 flex h-16 cursor-pointer items-center"
-                  >
-                    {row.market && (
-                      <DynamicCandleChart
-                        height="60%"
-                        lineWidth={1}
-                        market={row.market.name}
-                        duration={'1D'}
-                      />
-                    )}
-                  </div>
-                );
-              },
-            },
+            // Comment out graph because it produces
+            // excessive network calls without adding much to
+            // user experience
+            /*
+                        {
+                          type: 'custom',
+                          align: 'right',
+                          widthClassName: 'lg:w-24',
+                          label: '',
+                          show: 'lg',
+                          renderCell: (row) => {
+                            return (
+                              <div
+                                onClick={() => {
+                                  if (!(row.coin.fiat || row.coin.usdFungible)) {
+                                    router.push(`/market/${row.coin.id}`);
+                                  }
+                                }}
+                                className="ml-8 flex h-16 cursor-pointer items-center"
+                              >
+                                {row.market && (
+                                  <DynamicCandleChart
+                                    height="60%"
+                                    lineWidth={1}
+                                    market={row.market.name}
+                                    duration={'1D'}
+                                  />
+                                )}
+                              </div>
+                            );
+                          },
+                        },
+            */
             {
               type: 'custom',
               align: 'right',
