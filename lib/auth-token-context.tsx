@@ -40,7 +40,7 @@ type UserState =
         token: string | null | undefined,
         callback?: (token: string | null | undefined) => void
       ) => void;
-      signout: () => void;
+      signout: () => Promise<void>;
     };
 
 const UserContext = createContext<UserState | undefined>(undefined);
@@ -196,46 +196,36 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const router = useRouter();
   const signout = () => {
-    // Remove client-side session token
-    localStorage.removeItem('token');
-    queryClient.clear();
-    setAuthToken(null);
-    router.push('/');
-
-    // TODO: Expire session server-side.
-    // This is not currently supported, because FTX does not offer an endpoint
-    // for expiring an individual session.
-
-    // return new Promise<any>((resolve, reject) => {
-    //   fetch(`${API_URL}/proxy/api/logout`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${authToken}`,
-    //     },
-    //     body: JSON.stringify({}),
-    //   })
-    //     .then((res) => {
-    //       return res.json();
-    //     })
-    //     .then((res) => {
-    //       // Remove client-side session token
-    //       localStorage.removeItem('token');
-    //       queryClient.clear();
-    //       setAuthToken(null);
-    //
-    //       // Server-side session token expiration failed
-    //       if (!res.success) throw new Error(res.error);
-    //     })
-    //     .then((res) => {
-    //       resolve(res);
-    //     })
-    //     .catch((err) => {
-    //       reject(err);
-    //     });
-    // });
+    return new Promise<void>((resolve, reject) => {
+      fetch(`${API_URL}/users/signout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({}),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          if (!res.success) throw new Error(res.error);
+          return;
+        })
+        .then((res) => {
+          localStorage.removeItem('token');
+          queryClient.clear();
+          setAuthToken(null);
+          resolve(res);
+        })
+        .catch((err) => {
+          localStorage.removeItem('token');
+          queryClient.clear();
+          setAuthToken(null);
+          reject(err);
+        });
+    });
   };
 
   if (typeof authToken === 'undefined') {

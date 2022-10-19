@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 
 import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,7 @@ import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
 import { Text } from '../base';
 import { DarkModeModal } from '../DarkModeModal';
+import { toast } from '../../lib/toast';
 
 interface DropdownMenuItemProps {
   onClick: () => void;
@@ -50,6 +51,7 @@ export function Dropdown() {
   const userState = useUserState();
   const isLoggedIn = !!userState.user;
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
 
@@ -117,7 +119,17 @@ export function Dropdown() {
                           <button
                             className={styles}
                             onClick={() => {
-                              userState.signout();
+                              setIsSigningOut(true);
+                              userState
+                                .signout()
+                                .catch((err: Error) => {
+                                  toast.error(`Error: ${err.message}`);
+                                })
+                                .finally(() => {
+                                  router.push('/').then(() => {
+                                    setIsSigningOut(false);
+                                  });
+                                });
                             }}
                           >
                             <Text color="error">Log out</Text>
