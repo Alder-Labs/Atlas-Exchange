@@ -6,8 +6,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 // - only allow scripts from the same origin, Plaid, Stripe, or Sardine
 
 const ContentSecurityPolicy = `
-  base-uri 'none'
-  connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sardine.ai *.stripe.com *.plaid.com *.sentry.io;
+  base-uri 'none';
+  connect-src 'self' ws: wss: ${process.env.NEXT_PUBLIC_API_URL} *.sardine.ai *.stripe.com *.plaid.com *.sentry.io;
   default-src 'self' ${process.env.NEXT_PUBLIC_API_URL} *.sentry.io;
   font-src 'self' https://fonts.gstatic.com;
   frame-ancestors 'none';
