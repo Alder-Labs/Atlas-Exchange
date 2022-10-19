@@ -3,6 +3,7 @@ import {
   iso31662,
   iso31661Alpha2ToAlpha3,
   ISO31662Entry,
+  ISO31661AssignedEntry,
 } from 'iso-3166';
 
 type MenuItem = {
@@ -10,6 +11,8 @@ type MenuItem = {
   label: string;
 };
 
+// Country code specification used by ftx.us
+// https://documenter.getpostman.com/view/16837442/UVR7LUCM#37d28da9-8c21-4176-b127-d6f1c3e6fbe0
 export const countryCodesAlpha3: MenuItem[] = iso31661
   .filter((state) => state.state === 'assigned')
   .map((state) => ({ value: state.alpha3, label: state.name }))
@@ -25,6 +28,15 @@ export const countryCodesAlpha3: MenuItem[] = iso31661
     return 0;
   });
 
+export const alpha3ToCountryName: Record<string, string> = iso31661
+  .filter((state) => state.state === 'assigned')
+  .reduce((map: Record<string, string>, entry: ISO31661AssignedEntry) => {
+    map[entry.alpha3] = entry.name;
+    return map;
+  },
+    {}
+  );
+
 export const countryRegionsAlpha3: Record<string, MenuItem[]> = iso31662.reduce(
   (map: Record<string, MenuItem[]>, entry: ISO31662Entry) => {
     const alpha3 = iso31661Alpha2ToAlpha3[entry.parent];
@@ -39,12 +51,3 @@ export const countryRegionsAlpha3: Record<string, MenuItem[]> = iso31662.reduce(
   },
   {}
 );
-
-export function countryRegionsAlpha3F(country: string): MenuItem[] {
-  return iso31662
-    .filter((entry) => entry.parent === country)
-    .map((entry) => ({
-      value: entry.code.substring(country.length + 1, entry.code.length),
-      label: entry.name,
-    }));
-}

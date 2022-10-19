@@ -25,6 +25,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
 
     const inputStyles = clsx({
       'w-full outline-none dark:bg-grayDark-40 rounded-lg bg-white': true,
+      'disabled:opacity-50': true,
       'py-3': inputSize === 'md',
       'pl-4': inputSize === 'md' && !renderPrefix,
       'pr-4': inputSize === 'md' && !renderSuffix,
