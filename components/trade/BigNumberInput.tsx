@@ -19,37 +19,42 @@ const fullConfig = resolveConfig(tailwindConfig);
 
 const numberAccept = /[\d.]+/g;
 
-function formatInputValue(nStr: string) {
-  nStr += '';
-  let x = nStr.replace(/[^\d.]/g, '').split('.');
-  let x1 = x[0];
-  let x2 = x.length > 1 ? '.' + x[1] : '';
-  let rgx = /(\d+)(\d{3})/;
-  while (rgx.test(x1)) {
-    x1 = x1.replace(rgx, '$1' + ',' + '$2');
-  }
-  return x1 + x2.slice(0, 9);
+function getFormatInputValue(coinId?: string) {
+  const decimalPlaces = coinId === 'USD' ? 2 : 8;
+  return (nStr: string) => {
+    nStr += '';
+    let x = nStr.replace(/[^\d.]/g, '').split('.');
+    let x1 = x[0];
+    let x2 = x.length > 1 ? '.' + x[1] : '';
+    let rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2.slice(0, decimalPlaces + 1);
+  };
 }
 
-/**
- * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
- *
- * @param {String} text The text to be rendered.
- * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- *
- * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
- */
-function getTextWidth(text: string, font: string) {
-  const CANVAS = document.createElement('canvas');
-  // re-use canvas object for better performance
-  const context = CANVAS.getContext('2d');
-  if (!context) {
-    return 0;
-  }
+function measureText(pText: string, pFont: string) {
+  var lDiv: HTMLDivElement | null = document.createElement('div');
 
-  context.font = font;
-  const metrics = context.measureText(text);
-  return metrics.width;
+  document.body.appendChild(lDiv);
+
+  lDiv.style.font = pFont;
+  lDiv.style.position = 'absolute';
+  lDiv.style.visibility = 'hidden';
+  lDiv.style.pointerEvents = 'none';
+
+  lDiv.textContent = pText;
+
+  var lResult = {
+    width: lDiv.clientWidth,
+    height: lDiv.clientHeight,
+  };
+
+  document.body.removeChild(lDiv);
+  lDiv = null;
+
+  return lResult.width;
 }
 
 function getFontSizeDefault(valueLength: number): string {
@@ -81,9 +86,15 @@ export function getFontSizeForBuySell(valueLength: number): string {
   } else if (valueLength < 12) {
     // @ts-ignore
     return fullConfig.theme?.fontSize['3xl'];
-  } else {
+  } else if (valueLength < 16) {
     // @ts-ignore
     return fullConfig.theme?.fontSize['2xl'];
+  } else if (valueLength < 18) {
+    // @ts-ignore
+    return fullConfig.theme?.fontSize['xl'];
+  } else {
+    // @ts-ignore
+    return fullConfig.theme?.fontSize['md'];
   }
 }
 
@@ -115,10 +126,12 @@ export const BigNumberInput = forwardRef<HTMLInputElement, BigNumberInputProps>(
     const [focused, setFocused] = useState(false);
 
     const val = focused ? value?.toString() : value?.toString() || placeholder;
+
+    const formatInputValue = getFormatInputValue(coinId);
     const renderedValue = formatInputValue(val ?? '');
 
     const renderedFontSize = getFontSize(renderedValue.length);
-    const width = getTextWidth(
+    const width = measureText(
       renderedValue,
       // @ts-ignore
       `${renderedFontSize} ${fullConfig.theme?.fontFamily['sans']}`
