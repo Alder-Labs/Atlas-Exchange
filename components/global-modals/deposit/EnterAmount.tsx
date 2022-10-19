@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
+import { useBalances } from '../../../hooks/useBalances';
 import { useBankAccounts } from '../../../hooks/useBankAccounts';
 import { useDepositLimits } from '../../../hooks/useDepositLimits';
 import { useModal } from '../../../hooks/useModal';
@@ -11,6 +13,7 @@ import { useModalState } from '../../../hooks/useModalState';
 import { useUserState } from '../../../lib/auth-token-context';
 import { BRAND_NAME } from '../../../lib/constants';
 import { renderCurrency } from '../../../lib/currency';
+import { watchBalanceUntilAtom } from '../../../lib/jotai';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
 import { CustomPage } from '../../../lib/types';
@@ -42,6 +45,8 @@ export function EnterAmount(props: EnterAmountProps) {
   const { data: depositLimits } = useDepositLimits({
     enabled: isLoggedIn,
   });
+  const { refetch: refetchBalances } = useBalances();
+  const [_, setWatchBalanceUntil] = useAtom(watchBalanceUntilAtom);
 
   const limit = depositLimits
     ? depositLimits.achDepositLimit - depositLimits.achRecentlyDeposited
@@ -67,10 +72,17 @@ export function EnterAmount(props: EnterAmountProps) {
           achAccountId: string;
         },
         {}
-      >('/proxy/api/wallet/circle_ach_deposit'),
+      >('/proxy/api/wallet/circle_ach_deposit', {}),
       {
         onError: (err: Error) => {
           toast.error(`Error: ${err.message}`);
+        },
+        onSuccess: () => {
+          // Watch balance for the next 10 seconds
+          setWatchBalanceUntil(Date.now() + 1000 * 10);
+          setModalState({
+            state: ModalState.DepositAchSuccess,
+          });
         },
       }
     );
@@ -88,7 +100,9 @@ export function EnterAmount(props: EnterAmountProps) {
     <div className="">
       <TitledModal
         isOpen={state.state === ModalState.DepositAchSuccess}
-        onClose={onClose}
+        onClose={() => {
+          onClose();
+        }}
         title="Deposit Successful"
         darkenBackground={false}
       >
@@ -100,13 +114,24 @@ export function EnterAmount(props: EnterAmountProps) {
             </Text>
           </Text>
           <div className="h-4"></div>
-          <Text>
-            Please make sure to have{' '}
-            {renderCurrency({ amount: amount, coinId: 'USD' })} in your bank
-            account until the funds are deducted to prevent frozen withdrawal
-          </Text>
+          <div className="text-left">
+            <Text>Funds will be available within a few seconds. </Text>
+            <div className="h-2"></div>
+            <Text>
+              {renderCurrency({ amount: amount, coinId: 'USD' })} will be
+              deducted from your bank account within 5 business days. Please
+              make sure to have at least{' '}
+              {renderCurrency({ amount: amount, coinId: 'USD' })} in your bank
+              account until then.
+            </Text>
+          </div>
           <div className="h-6"></div>
-          <Button onClick={onClose} className="w-full">
+          <Button
+            onClick={() => {
+              onClose();
+            }}
+            className="w-full"
+          >
             Continue
           </Button>
         </div>
@@ -129,7 +154,7 @@ export function EnterAmount(props: EnterAmountProps) {
         <div className="px-6 pb-8">
           <div className="h-4"></div>
           <div>
-            <div className="flex justify-center">
+            <div className="flex justify-center rounded-md border p-1 dark:border-grayDark-40">
               <BigNumberInput
                 className="w-full"
                 onKeyDown={(e) => {
@@ -181,13 +206,13 @@ export function EnterAmount(props: EnterAmountProps) {
             <div className="h-4"></div>
 
             <Text size="xs" color="secondary">
-              By submitting, I authorize Circle Internet Financial, on behalf of
-              FTX, to electronically debit my account (and, if necessary,
-              electronically credit my account) at the financial institution
-              indicated by me. I understand that this authorization will remain
-              in full force and effect until I notify FTX that I wish to revoke
-              this authorization. I agree that ACH transactions I authorize
-              comply with all applicable law.
+              By submitting, I authorize Circle Internet Financial, on behalf of{' '}
+              {BRAND_NAME}, to electronically debit my account (and, if
+              necessary, electronically credit my account) at the financial
+              institution indicated by me. I understand that this authorization
+              will remain in full force and effect until I notify {BRAND_NAME}{' '}
+              that I wish to revoke this authorization. I agree that ACH
+              transactions I authorize comply with all applicable law.
             </Text>
             <div className="h-4"></div>
             <Button

@@ -1,31 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useSetAtom } from 'jotai';
-import { useQuery } from 'react-query';
 
-import { useUserState } from '../../lib/auth-token-context';
-import { useFetcher } from '../../lib/fetcher';
 import { sardineDeviceIdAtom } from '../../lib/jotai';
-import { SardineSdkConfig } from '../../lib/types/sardine';
 
-const useSardineSdkConfig = () => {
-  const userState = useUserState();
-  const isSignedIn = !!userState?.user?.token;
-
-  const { data, error, isLoading, refetch } = useQuery(
-    `/api/sardine/sdk-config`,
-    useFetcher<SardineSdkConfig>(),
-    { enabled: isSignedIn, refetchOnWindowFocus: false }
-  );
-  return useMemo(() => {
-    return {
-      data,
-      error,
-      refetch,
-      isLoading,
-    };
-  }, [data, error, refetch, isLoading]);
-};
+import { useSardineSdkConfig } from './useSardineSdkConfig';
 
 const SardineEmbed = () => {
   const { data, error } = useSardineSdkConfig();

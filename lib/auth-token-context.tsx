@@ -198,8 +198,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter();
   const signout = () => {
-    // Remove client-side session token
-    localStorage.removeItem('token');
+    // Clear localstorage, including removing client-side session token
+    localStorage.clear();
     queryClient.clear();
     setAuthToken(null);
     router.push('/');
