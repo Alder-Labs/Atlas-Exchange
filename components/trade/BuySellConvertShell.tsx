@@ -151,8 +151,8 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
     <div className="flex h-full w-full flex-col items-center justify-between">
       <div className="flex w-full flex-col items-center">
         <div className="h-4"></div>
-        <div className="relative flex h-12 w-full items-center justify-between">
-          <div className="w-20"></div>
+        <div className="relative flex h-12 w-full items-center justify-between gap-2">
+          <div className="flex-1"></div>
           <BigNumberInput
             ref={inputRef}
             coinId={tradeUnit === 'from' ? fromCoinId : toCoinId}
@@ -172,7 +172,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
               }
             }}
           />
-          <div className="flex h-full w-20 items-center">
+          <div className="flex h-full w-20 flex-1 items-center">
             <SelectTradeUnit
               fromLabel={fromCoinId}
               toLabel={toCoinId}

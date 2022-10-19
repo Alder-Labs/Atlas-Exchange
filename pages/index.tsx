@@ -1,7 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import { NextPage } from 'next';
-
 import { BuyingPowerPrompt } from '../components/home/BuyingPowerPrompt';
 import { DepositPrompt } from '../components/home/DepositPrompt';
 import { MarketWatchlist } from '../components/home/MarketWatchlist';

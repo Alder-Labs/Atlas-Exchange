@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
-// State representing the current date
-// Updates every second by default
+/**
+ * NOTE: This hook will cause a re-render every second by default.
+ * Only use this hook if you need to update the UI every [timeInterval] based on the current date.
+ */
 export function useCurrentDate(
   props: { updateInterval?: number } | void
 ): Date {
