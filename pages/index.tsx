@@ -1,6 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
-
-import { NextPage } from 'next';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { BuyingPowerPrompt } from '../components/home/BuyingPowerPrompt';
 import { DepositPrompt } from '../components/home/DepositPrompt';
@@ -31,31 +29,6 @@ const Home: CustomPage = () => {
     enabled: loginStatus?.loggedIn ?? false,
     refetchOnWindowFocus: false,
   });
-
-  const [tradeDefaults, setTradeDefaults] = useState<{
-    fromCoinId?: string;
-    fromAmount?: string;
-    toCoinId?: string;
-    toAmount?: string;
-  }>({
-    fromCoinId: 'USD',
-    fromAmount: '',
-    toCoinId: 'BTC',
-    toAmount: '',
-  });
-
-  const updateTradeProps = (props: {
-    fromCoinId?: string;
-    fromAmount?: string;
-    toCoinId?: string;
-    toAmount?: string;
-  }) => {
-    setTradeDefaults(props);
-    tradeRef.current?.focus();
-  };
-  const tradeRef = useRef<HTMLInputElement>(null);
-
-  // const { ref, dimElement, focused, setFocused } = useDimSurroundings();
 
   const renderHomePrompt = useMemo(() => {
     const promptType: HomePromptType = !loginStatus
@@ -92,7 +65,7 @@ const Home: CustomPage = () => {
             </Responsive>
             <div className="h-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:ml-8"></div>
             <div className="flex-1 py-8 sm:p-8">
-              <MarketWatchlist updateTradeProps={updateTradeProps} />
+              <MarketWatchlist />
             </div>
           </div>
 

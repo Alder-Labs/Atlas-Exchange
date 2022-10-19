@@ -216,7 +216,7 @@ const OnboardingPage: CustomPage = () => {
 
                   return submitKycLevel1(kycLevel1Data)
                     .then((res) => {
-                      localStorage.clear();
+                      localStorage.removeItem('kycForm');
                       setModalState({
                         state: ModalState.Kyc1Complete,
                       });
