@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { useSardineSdkConfig } from './../components/sardine/useSardineSdkConfig';
 import { useUser, useUserState } from './auth-token-context';
 import { requireEnvVar } from './env';
 
@@ -13,7 +14,8 @@ const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 export const createMutationFetcher = <TRequestData, TQueryFnData>(
   path: string,
   options: MutationFetcherOptions,
-  authToken?: string
+  authToken?: string,
+  sardineSessionKey?: string
 ) => {
   return async (body: TRequestData): Promise<TQueryFnData> => {
     const headers: Record<string, string> = {
@@ -21,6 +23,9 @@ export const createMutationFetcher = <TRequestData, TQueryFnData>(
     };
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    if (sardineSessionKey) {
+      headers['X-Sardine-Session'] = sardineSessionKey;
     }
     let promise = fetch(`${API_URL}${path}`, {
       method: options.method ?? 'POST',
@@ -49,13 +54,16 @@ export function useMutationFetcher<TRequestData, TQueryFnData>(
 ) {
   const userState = useUserState();
 
+  const { data } = useSardineSdkConfig();
+
   return useMemo(
     () =>
       createMutationFetcher<TRequestData, TQueryFnData>(
         path,
         options ?? { method: 'POST' },
-        userState?.user?.token
+        userState?.user?.token,
+        data?.context.sessionKey
       ),
-    [options, path, userState?.user?.token]
+    [options, path, userState?.user?.token, data?.context.sessionKey]
   );
 }
