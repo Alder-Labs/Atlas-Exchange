@@ -21,6 +21,9 @@ import { AuthLevel } from '../../lib/types/auth-level';
 import { ModalState } from '../../lib/types/modalState';
 
 import type { KycForm, KycRawForm } from '../../lib/types/kyc';
+import { ProofOfAddress } from '../../components/onboarding/ProofOfAddress';
+import { COUNTRY_PHONE_NUMBER_CODES } from '../../lib/country-phone-number';
+import { iso31661Alpha3ToAlpha2 } from 'iso-3166';
 
 function useUpdateQueryParams() {
   const router = useRouter();
@@ -45,6 +48,7 @@ enum OnboardingStage {
   ADDRESS_INFORMATION = 'ADDRESS_INFORMATION',
   SOCIAL_SECURITY = 'SOCIAL_SECURITY',
   PHONE_NUMBER = 'PHONE_NUMBER',
+  PROOF_OF_ADDRESS = 'PROOF_OF_ADDRESS',
 }
 
 const MAP_STAGE_TO_LABEL: Record<OnboardingStage, string> = {
@@ -52,9 +56,17 @@ const MAP_STAGE_TO_LABEL: Record<OnboardingStage, string> = {
   [OnboardingStage.ADDRESS_INFORMATION]: 'Address Information',
   [OnboardingStage.PHONE_NUMBER]: 'Phone Number',
   [OnboardingStage.SOCIAL_SECURITY]: 'Social Security',
+  [OnboardingStage.PROOF_OF_ADDRESS]: 'Proof of Address',
 };
 
-const ENABLED_STAGES = new Set(Object.values(OnboardingStage));
+const ENABLED_STAGES = Object.values(OnboardingStage)
+  .filter((val) => val != OnboardingStage.PROOF_OF_ADDRESS)
+  .map((val) => {
+    return {
+      value: val,
+      label: MAP_STAGE_TO_LABEL[val],
+    };
+  });
 
 const ALL_STAGES = Object.values(OnboardingStage).map((val) => {
   return {
@@ -99,18 +111,20 @@ const OnboardingPage: CustomPage = () => {
       useMutationFetcher<KycForm, { token: string }>(`/kyc/level1`, {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (userState.user) {
-              userState.setAuthToken(res.token, async (token) => {
-                if (token) {
-                  await refetchLoginStatus();
-                  resolve(res);
-                } else {
-                  reject();
-                }
-              });
-            } else {
+            if (!userState.user) {
               reject();
+              return;
             }
+
+            userState.setAuthToken(res.token, async (token) => {
+              if (!token) {
+                reject();
+                return;
+              }
+
+              await refetchLoginStatus();
+              resolve(res);
+            });
           }),
       }),
       {}
@@ -127,7 +141,7 @@ const OnboardingPage: CustomPage = () => {
             <StageNavigator
               // enabledStages={ALL_STAGES.map((stage) => stage.value)}
               currentStage={currentStage}
-              stages={ALL_STAGES}
+              stages={ENABLED_STAGES}
               // enabledStages={ENABLED_STAGES}
               onStageClick={(newStage) => {
                 navStage(newStage);
@@ -193,6 +207,7 @@ const OnboardingPage: CustomPage = () => {
                     return;
                   }
 
+                  rawKycData.countryCode = `+${rawKycData.countryCode}`;
                   const kycLevel1Data: KycForm = {
                     ...rawKycData,
                     dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
@@ -208,11 +223,28 @@ const OnboardingPage: CustomPage = () => {
                       router.push('/');
                     })
                     .catch((err: Error) => {
+                      if (
+                        err.message === 'Phone number does not match country' ||
+                        err.message ===
+                          'Please complete level 2 and provide proof of address'
+                      ) {
+                        navStage(OnboardingStage.PROOF_OF_ADDRESS);
+                        return;
+                      }
                       toast.error(`Error: ${err.message}`);
                     });
                 }}
                 onBack={() => {
                   navStage(OnboardingStage.SOCIAL_SECURITY);
+                }}
+              />
+            </FadeTransition>
+            <FadeTransition
+              show={stageDisplayed === OnboardingStage.PROOF_OF_ADDRESS}
+            >
+              <ProofOfAddress
+                onContinue={() => {
+                  router.push('/onboarding/identity-verification');
                 }}
               />
             </FadeTransition>
