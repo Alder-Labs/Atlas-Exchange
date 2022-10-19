@@ -61,6 +61,8 @@ export function BuySellConvert(props: BuySellConvertProps) {
     'pointer-events-none opacity-0': !focused,
   });
 
+  console.log('LELE');
+
   return (
     <>
       <Portal>
