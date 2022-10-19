@@ -124,6 +124,8 @@ export const BigNumberInput = forwardRef<HTMLInputElement, BigNumberInputProps>(
       `${renderedFontSize} ${fullConfig.theme?.fontFamily['sans']}`
     );
 
+    console.log(width, renderedValue);
+
     const inputStyles = clsx({
       'outline-none bg-transparent font-sans': true,
       // Placeholder, caret

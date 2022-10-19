@@ -35,21 +35,9 @@ enum FilterType {
   Watchlist = 'Watchlist',
 }
 
-interface TradeProps {
-  fromCoinId?: string;
-  fromAmount?: string;
-  toCoinId?: string;
-  toAmount?: string;
-}
+export type MarketWatchlistProps = React.HTMLAttributes<HTMLDivElement>;
 
-export type MarketWatchlistProps = {
-  updateTradeProps: (props: TradeProps) => void;
-} & React.HTMLAttributes<HTMLDivElement>;
-
-export const MarketWatchlist = ({
-  className,
-  updateTradeProps,
-}: MarketWatchlistProps) => {
+export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
   const router = useRouter();
 
   const userState = useUserState();
