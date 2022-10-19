@@ -169,7 +169,9 @@ export function Table<T>(props: TableProps<T>) {
                   {!noHeader && <TableCell className="w-3"></TableCell>}
 
                   {columns.map((column, idx) => {
-                    const styles = getColumnStyles(column);
+                    const styles = clsx(getColumnStyles(column), {
+                      [`${rowHeightClassName}`]: true,
+                    });
 
                     if (column.renderLoading) {
                       return (
@@ -210,7 +212,9 @@ export function Table<T>(props: TableProps<T>) {
                 {!noHeader && <TableCell className="w-3"></TableCell>}
 
                 {columns.map((column, idx) => {
-                  const styles = getColumnStyles(column);
+                  const styles = clsx(getColumnStyles(column), {
+                    [`${rowHeightClassName}`]: true,
+                  });
 
                   switch (column.type) {
                     case 'string': {
