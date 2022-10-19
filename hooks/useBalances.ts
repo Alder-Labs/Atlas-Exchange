@@ -8,8 +8,6 @@ import { useFetcher } from '../lib/fetcher';
 import { watchBalanceUntilAtom } from '../lib/jotai';
 import { QueryProps } from '../lib/queryProps';
 
-import { useCurrentDate } from './useCurrentDate';
-
 import type { CoinBalance } from '../lib/types';
 
 export function useBalances(props: QueryProps<CoinBalance[]> = {}) {

@@ -1,7 +1,6 @@
 import '../styles/globals.css';
 import React, { useEffect } from 'react';
 
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
