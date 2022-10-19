@@ -172,7 +172,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
               }
             }}
           />
-          <div className="flex h-full w-20 flex-1 items-center">
+          <div className="flex h-full flex-1 shrink-0 items-center justify-end">
             <SelectTradeUnit
               fromLabel={fromCoinId}
               toLabel={toCoinId}

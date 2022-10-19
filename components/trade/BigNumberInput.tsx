@@ -34,26 +34,27 @@ function getFormatInputValue(coinId?: string) {
   };
 }
 
-/**
- * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
- *
- * @param {String} text The text to be rendered.
- * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- *
- * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
- */
-const CANVAS = document.createElement('canvas');
-function getTextWidth(text: string, font: string) {
-  const context = CANVAS.getContext('2d');
-  if (!context) {
-    return 0;
-  }
+function measureText(pText: string, pFont: string) {
+  var lDiv: HTMLDivElement | null = document.createElement('div');
 
-  context.font = font;
+  document.body.appendChild(lDiv);
 
-  console.log(CANVAS);
-  const metrics = context.measureText(text);
-  return metrics.width;
+  lDiv.style.font = pFont;
+  lDiv.style.position = 'absolute';
+  lDiv.style.visibility = 'hidden';
+  lDiv.style.pointerEvents = 'none';
+
+  lDiv.textContent = pText;
+
+  var lResult = {
+    width: lDiv.clientWidth,
+    height: lDiv.clientHeight,
+  };
+
+  document.body.removeChild(lDiv);
+  lDiv = null;
+
+  return lResult.width;
 }
 
 function getFontSizeDefault(valueLength: number): string {
@@ -130,13 +131,11 @@ export const BigNumberInput = forwardRef<HTMLInputElement, BigNumberInputProps>(
     const renderedValue = formatInputValue(val ?? '');
 
     const renderedFontSize = getFontSize(renderedValue.length);
-    const width = getTextWidth(
+    const width = measureText(
       renderedValue,
       // @ts-ignore
       `${renderedFontSize} ${fullConfig.theme?.fontFamily['sans']}`
     );
-
-    console.log('width', width);
 
     const inputStyles = clsx({
       'outline-none bg-transparent font-sans': true,
