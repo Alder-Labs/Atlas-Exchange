@@ -151,7 +151,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
     <div className="flex h-full w-full flex-col items-center justify-between">
       <div className="flex w-full flex-col items-center">
         <div className="h-4"></div>
-        <div className="relative flex h-12 w-full items-center justify-between gap-2">
+        <div className="relative flex h-12 w-full items-center justify-between gap-4">
           <div className="flex-1"></div>
           <BigNumberInput
             ref={inputRef}

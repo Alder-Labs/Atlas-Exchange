@@ -19,16 +19,19 @@ const fullConfig = resolveConfig(tailwindConfig);
 
 const numberAccept = /[\d.]+/g;
 
-function formatInputValue(nStr: string) {
-  nStr += '';
-  let x = nStr.replace(/[^\d.]/g, '').split('.');
-  let x1 = x[0];
-  let x2 = x.length > 1 ? '.' + x[1] : '';
-  let rgx = /(\d+)(\d{3})/;
-  while (rgx.test(x1)) {
-    x1 = x1.replace(rgx, '$1' + ',' + '$2');
-  }
-  return x1 + x2.slice(0, 9);
+function getFormatInputValue(coinId?: string) {
+  const decimalPlaces = coinId === 'USD' ? 2 : 8;
+  return (nStr: string) => {
+    nStr += '';
+    let x = nStr.replace(/[^\d.]/g, '').split('.');
+    let x1 = x[0];
+    let x2 = x.length > 1 ? '.' + x[1] : '';
+    let rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2.slice(0, decimalPlaces + 1);
+  };
 }
 
 /**
@@ -122,6 +125,8 @@ export const BigNumberInput = forwardRef<HTMLInputElement, BigNumberInputProps>(
     const [focused, setFocused] = useState(false);
 
     const val = focused ? value?.toString() : value?.toString() || placeholder;
+
+    const formatInputValue = getFormatInputValue(coinId);
     const renderedValue = formatInputValue(val ?? '');
 
     const renderedFontSize = getFontSize(renderedValue.length);
