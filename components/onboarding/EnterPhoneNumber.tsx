@@ -10,6 +10,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
+import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
@@ -18,7 +19,6 @@ import { RecaptchaActions, RecaptchaParams } from '../../lib/types/recaptcha';
 import { Text, TextInput, Button, Select } from '../base';
 
 import { OnboardingCardProps, OnboardingCard } from './OnboardingCard';
-import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 
@@ -41,7 +41,6 @@ interface EnterPhoneNumberProps
 function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
   const { onFinish, ...rest } = props;
 
-  const router = useRouter();
   const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
   const {
     setValue,
@@ -52,7 +51,9 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     handleSubmit,
     control,
     formState,
-  } = useForm<KycPhone>({ defaultValues: cachedForm });
+  } = useForm<KycPhone>({
+    defaultValues: { countryCode: '+1', ...cachedForm },
+  });
 
   const { errors } = formState;
 
