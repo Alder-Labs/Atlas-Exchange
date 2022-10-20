@@ -42,13 +42,9 @@ export function WithdrawAch() {
   const userState = useUserState();
   const isLoggedIn = !!userState.user;
 
-  const { data: bankAccounts } = useBankAccounts({
-    enabled: isLoggedIn,
-  });
+  const { data: bankAccounts } = useBankAccounts();
 
-  const { balancesMap, isLoading: loadingBalances } = useBalances({
-    enabled: isLoggedIn,
-  });
+  const { balancesMap, isLoading: loadingBalances } = useBalances();
 
   const [accountId, setAccountId] = useState<number | null>(null);
   const [amount, setAmount] = useState('');

@@ -97,15 +97,12 @@ interface WalletBalancesProps {
 }
 export const WalletBalances = (props: WalletBalancesProps) => {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
   const [_buyCoinId, setBuyCoinId] = useAtom(buyCoinIdAtom);
   const [bscFocused, setBscFocused] = useAtom(bscFocusedAtom);
   const router = useRouter();
 
-  const { balances, isLoading: balanceLoading } = useBalances({
-    enabled: isLoggedIn,
-  });
+  const { balances, isLoading: balanceLoading } = useBalances();
   const { coinsMap, isLoading: coinsLoading } = useCoins({
     refetchOnWindowFocus: false,
   });
