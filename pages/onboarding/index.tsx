@@ -68,13 +68,6 @@ const ENABLED_STAGES = Object.values(OnboardingStage)
     };
   });
 
-const ALL_STAGES = Object.values(OnboardingStage).map((val) => {
-  return {
-    value: val,
-    label: MAP_STAGE_TO_LABEL[val],
-  };
-});
-
 const OnboardingPage: CustomPage = () => {
   const router = useRouter();
   const { data: loginStatus, isLoading: loginIsLoading } = useLoginStatus();

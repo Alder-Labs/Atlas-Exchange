@@ -8,7 +8,8 @@ import { FilePond } from 'react-filepond';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useMutationFetcher } from '../../lib/mutation';
+import { alpha3ToCountryName } from '../../lib/country-codes';
+import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
 import { Text, Button, TextLabel } from '../base';
 import { TextBubble } from '../Warning';
@@ -16,9 +17,6 @@ import { TextBubble } from '../Warning';
 import { OnboardingCard, OnboardingCardProps } from './OnboardingCard';
 
 import 'filepond/dist/filepond.min.css';
-import { useFormMutationFetcher } from '../../lib/formMutation';
-import { iso31661 } from 'iso-3166';
-import { alpha3ToCountryName } from '../../lib/country-codes';
 
 registerPlugin(FilePondPluginFileValidateSize);
 
@@ -53,7 +51,8 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
       kycType: 'individual',
       country: cachedForm.country,
       fullLegalName: cachedForm.fullLegalName,
-      proofOfAddress: supportingDocument.length > 0 && supportingDocument[0].file,
+      proofOfAddress:
+        supportingDocument.length > 0 && supportingDocument[0].file,
     } as ProofOfAddressForm;
     proofOfAddressUpload(formData);
   };
@@ -93,18 +92,18 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
       </TextBubble>
       <div className="h-2" />
 
-      <div className='flex flex-row justify-between'>
-        <Text color='secondary'>
-          Country: <Text>
-            {alpha3ToCountryName[cachedForm.country] ?? ''} ({cachedForm.country})
+      <div className="flex flex-row justify-between">
+        <Text color="secondary">
+          Country:{' '}
+          <Text>
+            {alpha3ToCountryName[cachedForm.country] ?? ''} (
+            {cachedForm.country})
           </Text>
         </Text>
       </div>
-      <div className='flex flex-row justify-between'>
-        <Text color='secondary'>
-          Legal Name: <Text>
-            {cachedForm.fullLegalName}
-          </Text>
+      <div className="flex flex-row justify-between">
+        <Text color="secondary">
+          Legal Name: <Text>{cachedForm.fullLegalName}</Text>
         </Text>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -113,7 +112,7 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
         <div className="h-4" />
         <div className={'w-full'}>
           <FilePond
-            className='cursor-pointer'
+            className="cursor-pointer"
             allowMultiple={true}
             credits={false}
             labelIdle={
@@ -121,7 +120,8 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
             }
             onupdatefiles={setSupportingDocument}
             allowFileSizeValidation={true}
-            maxFileSize="5MB"
+            maxFiles={4}
+            maxFileSize="2MB"
           />
         </div>
         <div className="h-4" />
