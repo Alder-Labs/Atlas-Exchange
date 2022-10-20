@@ -21,102 +21,36 @@ import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
 import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 import { BRAND_NAME } from '../../../lib/constants';
+import { useLoginStatus } from '../../../hooks/useLoginStatus';
+import { iso31661Alpha2ToAlpha3 } from 'iso-3166';
+import {
+  ALPHA3_TO_COUNTRY_NAME,
+  EU_COUNTRIES,
+} from '../../../lib/country-codes';
 
-function validatePassword(password: string) {
-  const noSpaces = !/\s/.test(password);
-  const atLeast8Chars = password.length >= 8;
-  const hasLowerAndUpper =
-    !!password.match(/[a-z]/) && !!password.match(/[A-Z]/);
-  const hasNumber = !!password.match(/[0-9]/);
-  const hasSpecialChar = !!password.match(/[!@#$%^&*]/);
-
-  const isValid =
-    noSpaces &&
-    atLeast8Chars &&
-    hasLowerAndUpper &&
-    hasNumber &&
-    hasSpecialChar;
-
-  return {
-    noSpaces,
-    atLeast8Chars,
-    hasLowerAndUpper,
-    hasNumber,
-    hasSpecialChar,
-    isValid,
-  } as const;
-}
-
-function PasswordRequirement({
-  satisfied,
-  errorMessage,
-}: {
-  satisfied: boolean;
-  errorMessage: string;
-}) {
+const RecaptchaSignUpWrapper = () => {
+  const [modalState, setModalState] = useModalState();
   return (
-    <div className="flex items-center">
-      {satisfied ? (
-        <Text color="green">
-          <FontAwesomeIcon
-            icon={faCheckCircle}
-            className="text-green-500 mr-2 h-4 w-4"
-          />
-        </Text>
-      ) : (
-        <Text color="secondary">
-          <FontAwesomeIcon
-            icon={faCheckCircle}
-            className="text-red-500 mr-2 h-4 w-4"
-          />
-        </Text>
-      )}
-      <Text size="sm" color={satisfied ? 'normal' : 'secondary'}>
-        {errorMessage}
-      </Text>
-    </div>
+    <TitledModal
+      isOpen={modalState.state === ModalState.SignUp}
+      title="Sign Up"
+      darkenBackground={false}
+      onClose={() => setModalState({ state: ModalState.Closed })}
+    >
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+        <SignUpModal />
+      </GoogleReCaptchaProvider>
+    </TitledModal>
   );
-}
+};
 
-export function PasswordRequirements({ password }: { password: string }) {
-  const {
-    noSpaces,
-    atLeast8Chars,
-    hasLowerAndUpper,
-    hasNumber,
-    hasSpecialChar,
-  } = validatePassword(password);
+export default RecaptchaSignUpWrapper;
 
-  return (
-    <div className="flex flex-col items-start gap-1">
-      <PasswordRequirement
-        satisfied={noSpaces}
-        errorMessage="Must contain spaces"
-      />
-      <PasswordRequirement
-        satisfied={atLeast8Chars}
-        errorMessage="Must be at least 8 characters long"
-      />
-      <PasswordRequirement
-        satisfied={hasLowerAndUpper}
-        errorMessage="Must have at least one lowercase and one uppercase letter"
-      />
-      <PasswordRequirement
-        satisfied={hasNumber}
-        errorMessage="Must have at least one number"
-      />
-      <PasswordRequirement
-        satisfied={hasSpecialChar}
-        errorMessage="Must have at least one special character"
-      />
-    </div>
-  );
-}
-
-interface SignUpProps {}
+interface SignUpProps { }
 
 const SignUpModal = (props: SignUpProps) => {
   const router = useRouter();
+  const { data: loginStatus } = useLoginStatus();
   const userState = useUserState();
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [modalState, setModalState] = useModalState();
@@ -150,11 +84,6 @@ const SignUpModal = (props: SignUpProps) => {
     }
 
     const password: string = data.password;
-    if (password.length < 8) {
-      toast.error('Password must be at least 8 characters long');
-      return;
-    }
-
     const isValid = validatePassword(password).isValid;
     if (!isValid) {
       toast.error('Invalid password');
@@ -178,6 +107,13 @@ const SignUpModal = (props: SignUpProps) => {
       ...data,
       captcha: { recaptcha_challenge: recaptchaToken },
     };
+
+    const alpha3Code = iso31661Alpha2ToAlpha3[loginStatus?.country ?? ''];
+    const countryName = ALPHA3_TO_COUNTRY_NAME[alpha3Code];
+    if (EU_COUNTRIES.has(alpha3Code)) {
+      toast.error(`Error: Registration is not allowed in ${countryName}`);
+      return;
+    }
 
     if (!userState.user) {
       setIsSigningUp(true);
@@ -283,20 +219,102 @@ const SignUpModal = (props: SignUpProps) => {
   );
 };
 
-const RecaptchaSignUpWrapper = () => {
-  const [modalState, setModalState] = useModalState();
-  return (
-    <TitledModal
-      isOpen={modalState.state === ModalState.SignUp}
-      title="Sign Up"
-      darkenBackground={false}
-      onClose={() => setModalState({ state: ModalState.Closed })}
-    >
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-        <SignUpModal />
-      </GoogleReCaptchaProvider>
-    </TitledModal>
-  );
+type validatePasswordResult = {
+  isValid: boolean;
+  noSpaces: boolean;
+  atLeast8Chars: boolean;
+  hasLowerAndUpper: boolean;
+  hasNumber: boolean;
+  hasSpecialChar: boolean;
 };
 
-export default RecaptchaSignUpWrapper;
+function validatePassword(password: string): validatePasswordResult {
+  const noSpaces = !/\s/.test(password);
+  const atLeast8Chars = password.length >= 8;
+  const hasLowerAndUpper =
+    !!password.match(/[a-z]/) && !!password.match(/[A-Z]/);
+  const hasNumber = !!password.match(/[0-9]/);
+  const hasSpecialChar = !!password.match(/[!@#$%^&*]/);
+
+  const isValid =
+    noSpaces &&
+    atLeast8Chars &&
+    hasLowerAndUpper &&
+    hasNumber &&
+    hasSpecialChar;
+
+  return {
+    noSpaces,
+    atLeast8Chars,
+    hasLowerAndUpper,
+    hasNumber,
+    hasSpecialChar,
+    isValid,
+  } as const;
+}
+
+function PasswordRequirement({
+  satisfied,
+  errorMessage,
+}: {
+  satisfied: boolean;
+  errorMessage: string;
+}) {
+  return (
+    <div className="flex items-center">
+      {satisfied ? (
+        <Text color="green">
+          <FontAwesomeIcon
+            icon={faCheckCircle}
+            className="text-green-500 mr-2 h-4 w-4"
+          />
+        </Text>
+      ) : (
+        <Text color="secondary">
+          <FontAwesomeIcon
+            icon={faCheckCircle}
+            className="text-red-500 mr-2 h-4 w-4"
+          />
+        </Text>
+      )}
+      <Text size="sm" color={satisfied ? 'normal' : 'secondary'}>
+        {errorMessage}
+      </Text>
+    </div>
+  );
+}
+
+export function PasswordRequirements({ password }: { password: string }) {
+  const {
+    noSpaces,
+    atLeast8Chars,
+    hasLowerAndUpper,
+    hasNumber,
+    hasSpecialChar,
+  } = validatePassword(password);
+
+  return (
+    <div className="flex flex-col items-start gap-1">
+      <PasswordRequirement
+        satisfied={noSpaces}
+        errorMessage="Must contain spaces"
+      />
+      <PasswordRequirement
+        satisfied={atLeast8Chars}
+        errorMessage="Must be at least 8 characters long"
+      />
+      <PasswordRequirement
+        satisfied={hasLowerAndUpper}
+        errorMessage="Must have at least one lowercase and one uppercase letter"
+      />
+      <PasswordRequirement
+        satisfied={hasNumber}
+        errorMessage="Must have at least one number"
+      />
+      <PasswordRequirement
+        satisfied={hasSpecialChar}
+        errorMessage="Must have at least one special character"
+      />
+    </div>
+  );
+}
