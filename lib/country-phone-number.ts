@@ -252,4 +252,4 @@ export const countryPhoneNumberCodes = Array.from(
   new Set(Object.values(COUNTRY_PHONE_NUMBER_CODES))
 )
   .sort()
-  .map((v) => ({ value: `+${v}`, label: `+${v}` }));
+  .map((v) => ({ value: v, label: `+${v}` }));

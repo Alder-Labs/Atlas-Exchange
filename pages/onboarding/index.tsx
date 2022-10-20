@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { iso31661Alpha3ToAlpha2 } from 'iso-3166';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
@@ -8,12 +9,14 @@ import { SidePadding } from '../../components/layout/SidePadding';
 import { AddressInformation } from '../../components/onboarding/AddressInformation';
 import { EnterPhoneNumber } from '../../components/onboarding/EnterPhoneNumber';
 import { PersonalDetails } from '../../components/onboarding/PersonalDetails';
+import { ProofOfAddress } from '../../components/onboarding/ProofOfAddress';
 import { SocialSecurity } from '../../components/onboarding/SocialSecurity';
 import { StageNavigator } from '../../components/onboarding/StageNavigator';
 import { FadeTransition } from '../../components/transitions/FadeTransition';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
+import { COUNTRY_PHONE_NUMBER_CODES } from '../../lib/country-phone-number';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { CustomPage } from '../../lib/types';
@@ -45,6 +48,7 @@ enum OnboardingStage {
   ADDRESS_INFORMATION = 'ADDRESS_INFORMATION',
   SOCIAL_SECURITY = 'SOCIAL_SECURITY',
   PHONE_NUMBER = 'PHONE_NUMBER',
+  PROOF_OF_ADDRESS = 'PROOF_OF_ADDRESS',
 }
 
 const MAP_STAGE_TO_LABEL: Record<OnboardingStage, string> = {
@@ -52,16 +56,17 @@ const MAP_STAGE_TO_LABEL: Record<OnboardingStage, string> = {
   [OnboardingStage.ADDRESS_INFORMATION]: 'Address Information',
   [OnboardingStage.PHONE_NUMBER]: 'Phone Number',
   [OnboardingStage.SOCIAL_SECURITY]: 'Social Security',
+  [OnboardingStage.PROOF_OF_ADDRESS]: 'Proof of Address',
 };
 
-const ENABLED_STAGES = new Set(Object.values(OnboardingStage));
-
-const ALL_STAGES = Object.values(OnboardingStage).map((val) => {
-  return {
-    value: val,
-    label: MAP_STAGE_TO_LABEL[val],
-  };
-});
+const ENABLED_STAGES = Object.values(OnboardingStage)
+  .filter((val) => val != OnboardingStage.PROOF_OF_ADDRESS)
+  .map((val) => {
+    return {
+      value: val,
+      label: MAP_STAGE_TO_LABEL[val],
+    };
+  });
 
 const OnboardingPage: CustomPage = () => {
   const router = useRouter();
@@ -99,22 +104,22 @@ const OnboardingPage: CustomPage = () => {
       useMutationFetcher<KycForm, { token: string }>(`/kyc/level1`, {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (userState.user) {
-              userState.setUser(
-                (prev) =>
-                  prev ? { status: 'logged-in', token: res.token } : null,
-                async (token) => {
-                  if (token) {
-                    await refetchLoginStatus();
-                    resolve(res);
-                  } else {
-                    reject();
-                  }
-                }
-              );
-            } else {
+            if (!userState.user) {
               reject();
+              return;
             }
+            userState.setUser(
+              (prev) =>
+                prev ? { status: 'logged-in', token: res.token } : null,
+              async (token) => {
+                if (token) {
+                  await refetchLoginStatus();
+                  resolve(res);
+                } else {
+                  reject();
+                }
+              }
+            );
           }),
       }),
       {}
@@ -131,7 +136,7 @@ const OnboardingPage: CustomPage = () => {
             <StageNavigator
               // enabledStages={ALL_STAGES.map((stage) => stage.value)}
               currentStage={currentStage}
-              stages={ALL_STAGES}
+              stages={ENABLED_STAGES}
               // enabledStages={ENABLED_STAGES}
               onStageClick={(newStage) => {
                 navStage(newStage);
@@ -197,6 +202,7 @@ const OnboardingPage: CustomPage = () => {
                     return;
                   }
 
+                  rawKycData.countryCode = `+${rawKycData.countryCode}`;
                   const kycLevel1Data: KycForm = {
                     ...rawKycData,
                     dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
@@ -212,11 +218,28 @@ const OnboardingPage: CustomPage = () => {
                       router.push('/');
                     })
                     .catch((err: Error) => {
+                      if (
+                        err.message === 'Phone number does not match country' ||
+                        err.message ===
+                          'Please complete level 2 and provide proof of address'
+                      ) {
+                        navStage(OnboardingStage.PROOF_OF_ADDRESS);
+                        return;
+                      }
                       toast.error(`Error: ${err.message}`);
                     });
                 }}
                 onBack={() => {
                   navStage(OnboardingStage.SOCIAL_SECURITY);
+                }}
+              />
+            </FadeTransition>
+            <FadeTransition
+              show={stageDisplayed === OnboardingStage.PROOF_OF_ADDRESS}
+            >
+              <ProofOfAddress
+                onContinue={() => {
+                  router.push('/onboarding/identity-verification');
                 }}
               />
             </FadeTransition>
