@@ -53,10 +53,13 @@ export const TotpAuth = () => {
   }, [handleSubmit]);
 
   useEffect(() => {
-    if (loginStatusData?.mfaRequired === 'totp') {
+    if (
+      loginStatusData?.mfaRequired === 'totp' &&
+      modalState.state === ModalState.Closed
+    ) {
       setModalState({ state: ModalState.SmsAuth });
     }
-  }, [loginStatusData, setModalState]);
+  }, [loginStatusData, modalState.state, setModalState]);
 
   return (
     <TitledModal
