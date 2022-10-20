@@ -100,14 +100,17 @@ const OnboardingPage: CustomPage = () => {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
             if (userState.user) {
-              userState.setAuthToken(res.token, async (token) => {
-                if (token) {
-                  await refetchLoginStatus();
-                  resolve(res);
-                } else {
-                  reject();
+              userState.setUser(
+                (prev) => (prev ? { ...prev, token: res.token } : null),
+                async (token) => {
+                  if (token) {
+                    await refetchLoginStatus();
+                    resolve(res);
+                  } else {
+                    reject();
+                  }
                 }
-              });
+              );
             } else {
               reject();
             }
