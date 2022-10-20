@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { iso31661Alpha3ToAlpha2 } from 'iso-3166';
 import { AsYouType } from 'libphonenumber-js';
-import { useRouter } from 'next/router';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
@@ -10,7 +10,10 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
-import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
+import {
+  countryPhoneNumberCodes,
+  COUNTRY_PHONE_NUMBER_CODES,
+} from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
@@ -38,10 +41,27 @@ interface EnterPhoneNumberProps
   onFinish: () => Promise<void>;
 }
 
+function setDefaultSmsCountryToAddressCountry() {
+  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const countryPhoneCode =
+    COUNTRY_PHONE_NUMBER_CODES[iso31661Alpha3ToAlpha2[cachedForm.country]];
+  // set country code phone number to the country user has selected
+  cachedForm.countryCode = countryPhoneCode;
+  // update localstorage with changes
+  localStorage.setItem(
+    'kycForm',
+    JSON.stringify({
+      ...cachedForm,
+    })
+  );
+}
+
 function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
   const { onFinish, ...rest } = props;
 
+  setDefaultSmsCountryToAddressCountry();
   const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+
   const {
     setValue,
     register,
@@ -52,9 +72,8 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     control,
     formState,
   } = useForm<KycPhone>({
-    defaultValues: { countryCode: '+1', ...cachedForm },
+    defaultValues: cachedForm,
   });
-
   const { errors } = formState;
 
   // Append Phone Data to KYC Form Data
@@ -129,7 +148,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     }
 
     let inputData = {
-      phoneNumber: countryCode + phoneNumber,
+      phoneNumber: `+${countryCode}${phoneNumber}`,
       captcha: {
         recaptcha_challenge: '',
       },
@@ -167,7 +186,12 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
               render={({ field }) => (
                 <Select
                   value={field.value}
-                  onSelect={(value) => field.onChange(value)}
+                  onSelect={(value) => {
+                    if (!value) {
+                      return;
+                    }
+                    field.onChange(value);
+                  }}
                   options={countryPhoneNumberCodes}
                   className="col-span-1 w-full items-center"
                   placeholder="none"
