@@ -33,9 +33,7 @@ export const alpha3ToCountryName: Record<string, string> = iso31661
   .reduce((map: Record<string, string>, entry: ISO31661AssignedEntry) => {
     map[entry.alpha3] = entry.name;
     return map;
-  },
-    {}
-  );
+  }, {});
 
 export const countryRegionsAlpha3: Record<string, MenuItem[]> = iso31662.reduce(
   (map: Record<string, MenuItem[]>, entry: ISO31662Entry) => {

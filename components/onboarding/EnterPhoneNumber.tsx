@@ -41,9 +41,7 @@ interface EnterPhoneNumberProps
   onFinish: () => Promise<void>;
 }
 
-function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
-  const { onFinish, ...rest } = props;
-
+function setDefaultSmsCountryToAddressCountry() {
   const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
   const countryPhoneCode =
     COUNTRY_PHONE_NUMBER_CODES[iso31661Alpha3ToAlpha2[cachedForm.country]];
@@ -56,6 +54,13 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
       ...cachedForm,
     })
   );
+}
+
+function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
+  const { onFinish, ...rest } = props;
+
+  setDefaultSmsCountryToAddressCountry();
+  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
 
   const {
     setValue,
@@ -211,8 +216,8 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
                     // do not jump after ) until see number before
                     mask={
                       !field.value ||
-                        (field?.value?.length < 6 &&
-                          /[^\d]+/.test(field.value[3]))
+                      (field?.value?.length < 6 &&
+                        /[^\d]+/.test(field.value[3]))
                         ? undefined
                         : field.value.length >= 14
                     }
