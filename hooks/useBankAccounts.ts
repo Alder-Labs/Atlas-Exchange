@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { useQuery } from 'react-query';
 
+import { useUserState } from '../lib/auth-token-context';
 import { useFetcher } from '../lib/fetcher';
 import { QueryProps } from '../lib/queryProps';
 
@@ -89,10 +90,15 @@ export interface BankAccount {
 }
 
 export function useBankAccounts(props: QueryProps<BankAccount[]> = {}) {
+  const userState = useUserState();
   const { data, error, isLoading, refetch } = useQuery(
     '/proxy/api/ach/accounts',
     useFetcher<BankAccount[]>(),
-    props
+    {
+      ...props,
+      enabled:
+        userState.user?.status === 'logged-in' && (props.enabled ?? true),
+    }
   );
 
   const bankAccountsMap = useMemo(() => {

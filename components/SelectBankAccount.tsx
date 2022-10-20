@@ -32,9 +32,7 @@ function RenderBankAccount(props: RenderBankAccountProps) {
   const userState = useUserState();
   const isLoggedIn = !!userState.user;
 
-  const { bankAccountsMap, refetch: refetchBankAccounts } = useBankAccounts({
-    enabled: isLoggedIn,
-  });
+  const { bankAccountsMap, refetch: refetchBankAccounts } = useBankAccounts();
 
   const { isLoading: loadingDeleteAchAccount, mutateAsync: deleteAchAccount } =
     useMutation(

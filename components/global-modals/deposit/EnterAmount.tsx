@@ -37,14 +37,9 @@ export function EnterAmount(props: EnterAmountProps) {
   const [state, setModalState] = useModalState();
 
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
-  const { data: bankAccounts } = useBankAccounts({
-    enabled: isLoggedIn,
-  });
-  const { data: depositLimits } = useDepositLimits({
-    enabled: isLoggedIn,
-  });
+  const { data: bankAccounts } = useBankAccounts();
+  const { data: depositLimits } = useDepositLimits();
   const { refetch: refetchBalances } = useBalances();
   const [_, setWatchBalanceUntil] = useAtom(watchBalanceUntilAtom);
 

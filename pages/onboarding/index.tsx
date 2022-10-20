@@ -101,7 +101,8 @@ const OnboardingPage: CustomPage = () => {
           new Promise((resolve, reject) => {
             if (userState.user) {
               userState.setUser(
-                (prev) => (prev ? { ...prev, token: res.token } : null),
+                (prev) =>
+                  prev ? { status: 'logged-in', token: res.token } : null,
                 async (token) => {
                   if (token) {
                     await refetchLoginStatus();

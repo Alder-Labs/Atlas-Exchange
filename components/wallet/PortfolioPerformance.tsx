@@ -34,7 +34,6 @@ const DynamicCandleChartDetailed: ComponentType<CandleChartDetailedProps> =
 
 export const PortfolioPerformance = () => {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
   const [durationInterval, setDurationInterval] =
     useState<DurationInterval>('1M');
@@ -50,7 +49,6 @@ export const PortfolioPerformance = () => {
         onError: (err: Error) => {
           toast.error(`Error: ${err.message}`);
         },
-        enabled: isLoggedIn,
       }
     );
 
@@ -64,7 +62,6 @@ export const PortfolioPerformance = () => {
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
       },
-      enabled: isLoggedIn,
     }
   );
 

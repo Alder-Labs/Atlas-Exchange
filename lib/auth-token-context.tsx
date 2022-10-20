@@ -100,10 +100,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const tokenDate = localStorage.getItem('tokenDate');
 
     if (tokenDate && Number(tokenDate) <= Date.now()) {
-      console.log('Set user to null because ' + 'expire date has been reached');
       setUser(null);
     } else {
-      console.log('Set user to cachedUser', cachedUser);
       setUser(cachedUser);
     }
   }, [setUser]);
@@ -136,7 +134,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return res.result;
         })
         .then((res: SignUpResponse) => {
-          console.log(res);
           setUser({ token: res.token, status: 'logged-in' }, () => {
             resolve(res);
           });

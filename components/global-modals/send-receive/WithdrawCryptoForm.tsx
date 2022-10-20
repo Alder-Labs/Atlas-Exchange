@@ -38,13 +38,9 @@ export const WithdrawCryptoForm = (props: {
   const isLoggedIn = !!userState.user;
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const { balancesMap, isLoading: balancesLoading } = useBalances({
-    enabled: isLoggedIn,
-  });
+  const { balancesMap, isLoading: balancesLoading } = useBalances();
   const { data: withdrawalLimits, isLoading: limitsLoading } =
-    useWithdrawalLimits({
-      enabled: isLoggedIn,
-    });
+    useWithdrawalLimits();
 
   const {
     watch,
