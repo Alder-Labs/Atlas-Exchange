@@ -17,7 +17,8 @@ const SECONDS_BETWEEN_RESEND_CODE = 59;
 export const SmsAuth = () => {
   const userState = useUserState();
   const [modalState, setModalState] = useModalState();
-  const { refetch: refetchLoginStatus } = useLoginStatus();
+  const { refetch: refetchLoginStatus, data: loginStatusData } =
+    useLoginStatus();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [code, setCode] = useState('');
@@ -95,6 +96,12 @@ export const SmsAuth = () => {
       onRequestSmsCode();
     }
   }, [modalState, onRequestSmsCode]);
+
+  useEffect(() => {
+    if (loginStatusData?.mfaRequired === 'sms') {
+      setModalState({ state: ModalState.SmsAuth });
+    }
+  }, [loginStatusData, setModalState]);
 
   return (
     <TitledModal
