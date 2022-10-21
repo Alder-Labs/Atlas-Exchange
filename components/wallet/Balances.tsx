@@ -478,7 +478,6 @@ export const WalletBalances = (props: WalletBalancesProps) => {
             },
           ],
           [
-            router,
             setBscFocused,
             setBuyCoinId,
             onChangeSortMethod,
