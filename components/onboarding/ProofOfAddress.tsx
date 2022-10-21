@@ -98,9 +98,9 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
           <Text>
             {ALPHA3_TO_COUNTRY_NAME[cachedForm.country] ?? ''} (
             {cachedForm.country})
-          </Text >
-        </Text >
-      </div >
+          </Text>
+        </Text>
+      </div>
       <div className="flex flex-row justify-between">
         <Text color="secondary">
           Legal Name: <Text>{cachedForm.fullLegalName}</Text>
@@ -134,6 +134,6 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
           Continue to Identity Verification Level 2
         </Button>
       </form>
-    </OnboardingCard >
+    </OnboardingCard>
   );
 }
