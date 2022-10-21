@@ -28,7 +28,7 @@ export const countryCodesAlpha3: MenuItem[] = iso31661
     return 0;
   });
 
-export const alpha3ToCountryName: Record<string, string> = iso31661
+export const ALPHA3_TO_COUNTRY_NAME: Record<string, string> = iso31661
   .filter((state) => state.state === 'assigned')
   .reduce((map: Record<string, string>, entry: ISO31661AssignedEntry) => {
     map[entry.alpha3] = entry.name;
@@ -49,3 +49,33 @@ export const countryRegionsAlpha3: Record<string, MenuItem[]> = iso31662.reduce(
   },
   {}
 );
+
+export const EU_COUNTRIES: Set<string> = new Set([
+  'AUT',
+  'BEL',
+  'BGR',
+  'HRV',
+  'CYP',
+  'CZE',
+  'DNK',
+  'EST',
+  'FIN',
+  'FRA',
+  'DEU',
+  'GRC',
+  'HUN',
+  'IRL',
+  'ITA',
+  'LVA',
+  'LTU',
+  'LUX',
+  'MLT',
+  'NLD',
+  'POL',
+  'PRT',
+  'ROU',
+  'SVK',
+  'SVN',
+  'ESP',
+  'SWE',
+]);

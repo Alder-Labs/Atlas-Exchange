@@ -42,7 +42,7 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
   const {
     options,
     value,
-    onSelect = () => {},
+    onSelect = () => { },
     className,
     placeholder,
     renderOption,
@@ -66,11 +66,11 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
     query === ''
       ? options
       : options.filter((option) =>
-          (option.searchKey ?? option.label)
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(query.toLowerCase().replace(/\s+/g, ''))
-        );
+        (option.searchKey ?? option.label)
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      );
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -137,8 +137,7 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
                     <Combobox.Option
                       key={option.value}
                       className={({ active }) =>
-                        `${
-                          active && 'bg-grayLight-30 dark:bg-grayDark-30'
+                        `${active && 'bg-grayLight-30 dark:bg-grayDark-30'
                         } relative cursor-pointer select-none py-3 px-3`
                       }
                       value={option}
@@ -148,9 +147,8 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
                           <>{renderOption(option.value, props)}</>
                         ) : (
                           <span
-                            className={`${
-                              props.selected ? 'font-medium' : 'font-normal'
-                            } block truncate`}
+                            className={`${props.selected ? 'font-medium' : 'font-normal'
+                              } block truncate`}
                           >
                             {option.label}
                           </span>
