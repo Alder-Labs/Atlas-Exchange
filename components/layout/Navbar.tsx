@@ -26,6 +26,7 @@ import { Dropdown } from './Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
+import { BrandLogo } from '../BrandLogo';
 
 export function IconButton(props: {
   icon: ReactNode;
@@ -134,20 +135,9 @@ export function Navbar({ children }: NavbarProps) {
     <>
       <Responsive showIfSmallerThan="lg" className="sticky top-0 z-40 w-full">
         <div className="flex w-full items-center justify-between bg-grayLight-20 dark:bg-grayDark-20">
-          <Link href="/">
-            <a className="flex items-center pl-4">
-              {/* <img src="/favicon.ico" className="mr-3 h-6 sm:h-9" alt="Logo" /> */}
-              <img
-                src={
-                  darkMode === 'dark'
-                    ? '/atlas-text-logo-white.svg'
-                    : '/atlas-text-logo-gray.svg'
-                }
-                className="w-16"
-                alt="Logo"
-              />
-            </a>
-          </Link>
+          <div className="ml-4">
+            <BrandLogo className="w-16" noIcon={true} />
+          </div>
           <button
             className="flex items-center p-4"
             onClick={() => {
@@ -283,24 +273,7 @@ export function Navbar({ children }: NavbarProps) {
           <SidePadding as="nav" className="w-full py-4">
             <div className="flex w-full flex-wrap items-center justify-between px-8">
               <div className="flex flex-wrap items-center">
-                <Link href="/">
-                  <a className="mb-[2px] flex items-center">
-                    <img
-                      src="/atlas-lion-logo-rgb.svg"
-                      className="mr-2.5 h-4 w-6 sm:h-9"
-                      alt="Logo"
-                    />
-                    <img
-                      src={
-                        darkMode === 'dark'
-                          ? '/atlas-text-logo-white.svg'
-                          : '/atlas-text-logo-gray.svg'
-                      }
-                      className="w-16"
-                      alt="Logo"
-                    />
-                  </a>
-                </Link>
+                <BrandLogo className="w-16" />
                 {signedIn && !basicMode && (
                   <>
                     <div className="w-10"></div>
