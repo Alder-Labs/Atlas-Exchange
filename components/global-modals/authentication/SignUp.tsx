@@ -15,12 +15,12 @@ import { useForm } from 'react-hook-form';
 
 import { useModalState } from '../../../hooks/useModalState';
 import { SignupParams, useUserState } from '../../../lib/auth-token-context';
+import { BRAND_NAME } from '../../../lib/constants';
 import { toast } from '../../../lib/toast';
-import { ModalState } from '../../../lib/types/modalState';
 import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
+import { ModalState } from '../../../lib/types/modalState';
 import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { BRAND_NAME } from '../../../lib/constants';
 
 function validatePassword(password: string) {
   const noSpaces = !/\s/.test(password);

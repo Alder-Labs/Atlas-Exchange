@@ -14,7 +14,7 @@ import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { SelectBankAccount } from '../../SelectBankAccount';
+import { SelectBankAccount } from '../../select-bank-account/SelectBankAccount';
 
 const COIN_ID = 'USD';
 

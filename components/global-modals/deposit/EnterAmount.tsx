@@ -22,7 +22,7 @@ import { ModalState } from '../../../lib/types/modalState';
 import { Text, TextInput, Button, TextButton } from '../../base';
 import { SidePadding } from '../../layout/SidePadding';
 import { TitledModal } from '../../modals/TitledModal';
-import { SelectBankAccount } from '../../SelectBankAccount';
+import { SelectBankAccount } from '../../select-bank-account/SelectBankAccount';
 import { TitledCard } from '../../TitledCard';
 import { BigNumberInput } from '../../trade/BigNumberInput';
 
