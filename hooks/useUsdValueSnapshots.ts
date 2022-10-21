@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import { useQuery } from 'react-query';
 
+import { useUserState } from '../lib/auth-token-context';
 import { useFetcher } from '../lib/fetcher';
 import { QueryProps } from '../lib/queryProps';
 
@@ -31,10 +32,15 @@ export function useUsdValueSnapshots(
   const paramString = new URLSearchParams(params).toString();
   const fullParamString = paramString ? `?${paramString}` : '';
 
+  const userState = useUserState();
   const { data, error, isLoading } = useQuery(
     `/proxy/api/wallet/usd_value_snapshots${fullParamString}`,
     useFetcher<UsdValueHistory>(),
-    props
+    {
+      ...props,
+      enabled:
+        userState.user?.status === 'logged-in' && (props.enabled ?? true),
+    }
   );
 
   return useMemo(

@@ -24,7 +24,6 @@ export interface QuotePreviewProps {
 
 export function QuotePreview(props: QuotePreviewProps) {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
   const {
     quote,
@@ -45,9 +44,7 @@ export function QuotePreview(props: QuotePreviewProps) {
     refetch: refetchBalances,
     isLoading: balancesIsLoading,
     error: balanceError,
-  } = useBalances({
-    enabled: isLoggedIn,
-  });
+  } = useBalances();
 
   const currentDate = useCurrentDate();
   const secondsBetweenDates = Math.floor(

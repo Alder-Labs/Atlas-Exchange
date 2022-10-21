@@ -27,7 +27,7 @@ export function ConvertAllButton(props: ConvertAllButtonProps) {
     refetch: refetchBalances,
     isLoading: balancesIsLoading,
     error: balanceError,
-  } = useBalances({ enabled: loggedIn });
+  } = useBalances();
 
   const handleClick = () => {
     const usdBalance = balancesMap?.[coinId]?.total;

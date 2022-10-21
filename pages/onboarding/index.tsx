@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { iso31661Alpha3ToAlpha2 } from 'iso-3166';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
@@ -8,12 +9,14 @@ import { SidePadding } from '../../components/layout/SidePadding';
 import { AddressInformation } from '../../components/onboarding/AddressInformation';
 import { EnterPhoneNumber } from '../../components/onboarding/EnterPhoneNumber';
 import { PersonalDetails } from '../../components/onboarding/PersonalDetails';
+import { ProofOfAddress } from '../../components/onboarding/ProofOfAddress';
 import { SocialSecurity } from '../../components/onboarding/SocialSecurity';
 import { StageNavigator } from '../../components/onboarding/StageNavigator';
 import { FadeTransition } from '../../components/transitions/FadeTransition';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
+import { COUNTRY_PHONE_NUMBER_CODES } from '../../lib/country-phone-number';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { CustomPage } from '../../lib/types';
@@ -21,9 +24,6 @@ import { AuthLevel } from '../../lib/types/auth-level';
 import { ModalState } from '../../lib/types/modalState';
 
 import type { KycForm, KycRawForm } from '../../lib/types/kyc';
-import { ProofOfAddress } from '../../components/onboarding/ProofOfAddress';
-import { COUNTRY_PHONE_NUMBER_CODES } from '../../lib/country-phone-number';
-import { iso31661Alpha3ToAlpha2 } from 'iso-3166';
 
 function useUpdateQueryParams() {
   const router = useRouter();
@@ -108,16 +108,18 @@ const OnboardingPage: CustomPage = () => {
               reject();
               return;
             }
-
-            userState.setAuthToken(res.token, async (token) => {
-              if (!token) {
-                reject();
-                return;
+            userState.setUser(
+              (prev) =>
+                prev ? { status: 'logged-in', token: res.token } : null,
+              async (token) => {
+                if (token) {
+                  await refetchLoginStatus();
+                  resolve(res);
+                } else {
+                  reject();
+                }
               }
-
-              await refetchLoginStatus();
-              resolve(res);
-            });
+            );
           }),
       }),
       {}

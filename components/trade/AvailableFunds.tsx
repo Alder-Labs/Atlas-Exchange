@@ -22,9 +22,7 @@ export function AvailableFunds(props: AvailableFundsProps) {
     refetch: refetchBalances,
     isLoading: balancesIsLoading,
     error: balanceError,
-  } = useBalances({
-    enabled: loggedIn,
-  });
+  } = useBalances();
 
   return (
     <div
