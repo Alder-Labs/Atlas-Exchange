@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
+
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { BankAccount } from '../../hooks/useBankAccounts';
+import { BankAccount, useBankAccounts } from '../../hooks/useBankAccounts';
 import {
   countryCodesAlpha3,
   countryRegionsAlpha3,
@@ -20,13 +22,19 @@ export type BillingInfo = {
 };
 interface EnterBillingInfoProps {
   account: BankAccount;
+  onSuccess?: () => void;
 }
 export function EnterBillingInfo(props: EnterBillingInfoProps) {
-  const { account } = props;
+  const { account, onSuccess } = props;
 
-  const { mutateAsync } = useMutation(
+  const { refetch } = useBankAccounts();
+
+  const { mutateAsync, isLoading } = useMutation(
     useMutationFetcher<BillingInfo, any>(
-      `/proxy/api/ach/accounts/${account.id}/billing_info`
+      `/proxy/api/ach/accounts/${account.id}/billing_info`,
+      {
+        onFetchSuccess: refetch,
+      }
     ),
     {
       onSuccess: () => {
@@ -37,26 +45,35 @@ export function EnterBillingInfo(props: EnterBillingInfoProps) {
 
   // Append Phone to KYC Form Data
   const onSubmit = (data: BillingInfo) => {
-    mutateAsync(data);
+    mutateAsync(data)
+      .then(() => {
+        onSuccess?.();
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   const {
     register,
     handleSubmit,
     setValue,
-    getValues,
+    watch,
     control,
     formState: { errors },
   } = useForm<BillingInfo>({});
 
-  const countryRegions = getValues('country')
-    ? countryRegionsAlpha3[getValues('country')] ?? []
-    : [];
+  const country = watch('country');
+  const countryRegions = useMemo(
+    () => (country ? countryRegionsAlpha3[country] ?? [] : []),
+    [country]
+  );
 
   return (
     <div className="">
       <Text color="secondary">
-        Please enter your billing information related to the following account:
+        Please enter your billing information associated with the following
+        account in order to verify and use it.
       </Text>
       <div className="h-4"></div>
       <Text weight="bold">{account.data?.institutionName}</Text>
@@ -183,7 +200,7 @@ export function EnterBillingInfo(props: EnterBillingInfoProps) {
         <div className="h-4" />
 
         <div className={'h-8'} />
-        <Button className="w-full" type="submit">
+        <Button className="w-full" type="submit" loading={isLoading}>
           Submit
         </Button>
       </form>

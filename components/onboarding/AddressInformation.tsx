@@ -24,7 +24,7 @@ export function AddressInformation(props: AddressInformationProps) {
   const {
     register,
     control,
-    getValues,
+    watch,
     setValue,
     handleSubmit,
     formState: { errors },
@@ -76,8 +76,8 @@ export function AddressInformation(props: AddressInformationProps) {
     );
   }, [vals]);
 
-  const countryRegions = getValues('country')
-    ? countryRegionsAlpha3[getValues('country')] ?? []
+  const countryRegions = watch('country')
+    ? countryRegionsAlpha3[watch('country')] ?? []
     : [];
 
   return (
