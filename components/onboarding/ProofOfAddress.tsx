@@ -8,8 +8,8 @@ import { FilePond } from 'react-filepond';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { alpha3ToCountryName } from '../../lib/country-codes';
 import { useFormMutationFetcher } from '../../lib/formMutation';
+import { ALPHA3_TO_COUNTRY_NAME } from '../../lib/country-codes';
 import { toast } from '../../lib/toast';
 import { Text, Button, TextLabel } from '../base';
 import { TextBubble } from '../Warning';
@@ -96,11 +96,11 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
         <Text color="secondary">
           Country:{' '}
           <Text>
-            {alpha3ToCountryName[cachedForm.country] ?? ''} (
+            {ALPHA3_TO_COUNTRY_NAME[cachedForm.country] ?? ''} (
             {cachedForm.country})
-          </Text>
-        </Text>
-      </div>
+          </Text >
+        </Text >
+      </div >
       <div className="flex flex-row justify-between">
         <Text color="secondary">
           Legal Name: <Text>{cachedForm.fullLegalName}</Text>
@@ -134,6 +134,6 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
           Continue to Identity Verification Level 2
         </Button>
       </form>
-    </OnboardingCard>
+    </OnboardingCard >
   );
 }
