@@ -45,9 +45,7 @@ export function RenderBankAccount(props: RenderBankAccountProps) {
 
   const renderStatus = useCallback(
     (account: BankAccount) => {
-      const needsBillingInfo = true;
-
-      if (needsBillingInfo) {
+      if (account.needsBillingInfo) {
         return (
           <span className="ml-2 inline-block">
             <div className="flex items-center">
