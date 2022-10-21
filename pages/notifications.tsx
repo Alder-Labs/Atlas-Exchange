@@ -10,8 +10,8 @@ import { useNotifications } from '../hooks/useNotifications';
 import { useUserState } from '../lib/auth-token-context';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
-import { Notification } from '../lib/types/notification';
 import { CustomPage } from '../lib/types';
+import { Notification } from '../lib/types/notification';
 
 const formatTime = (time: string) => {
   const date = new Date(time);
@@ -27,7 +27,6 @@ const Notifications: CustomPage = () => {
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
       },
-      enabled: isLoggedIn,
     });
 
   const { isLoading: markAllReadIsLoading, mutate: markAllRead } = useMutation(

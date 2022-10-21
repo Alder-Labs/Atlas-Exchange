@@ -14,7 +14,7 @@ import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
-import { SelectBankAccount } from '../../SelectBankAccount';
+import { SelectBankAccount } from '../../select-bank-account/SelectBankAccount';
 
 const COIN_ID = 'USD';
 
@@ -42,13 +42,9 @@ export function WithdrawAch() {
   const userState = useUserState();
   const isLoggedIn = !!userState.user;
 
-  const { data: bankAccounts } = useBankAccounts({
-    enabled: isLoggedIn,
-  });
+  const { data: bankAccounts } = useBankAccounts();
 
-  const { balancesMap, isLoading: loadingBalances } = useBalances({
-    enabled: isLoggedIn,
-  });
+  const { balancesMap, isLoading: loadingBalances } = useBalances();
 
   const [accountId, setAccountId] = useState<number | null>(null);
   const [amount, setAmount] = useState('');

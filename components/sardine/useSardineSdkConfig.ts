@@ -12,7 +12,7 @@ const SARDINE_LOCAL_STORAGE_KEY = 'sardineSdkConfig';
 
 export const useSardineSdkConfig = () => {
   const userState = useUserState();
-  const isSignedIn = !!userState?.user?.token;
+  const isSignedIn = !!userState?.user;
   const authToken = userState.user?.token;
 
   const existingSardineSdkConfig = useMemo(() => {

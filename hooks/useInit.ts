@@ -7,10 +7,6 @@ export function useInit() {
   const userState = useUserState();
   const isLoggedIn = !!userState.user;
 
-  useBankAccounts({
-    enabled: isLoggedIn,
-  });
-  useDepositLimits({
-    enabled: isLoggedIn,
-  });
+  useBankAccounts();
+  useDepositLimits();
 }

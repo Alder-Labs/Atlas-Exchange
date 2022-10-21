@@ -6,6 +6,7 @@ import {
   faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { iso31661Alpha2ToAlpha3 } from 'iso-3166';
 import { useRouter } from 'next/router';
 import {
   GoogleReCaptchaProvider,
@@ -13,20 +14,19 @@ import {
 } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 
+import { useLoginStatus } from '../../../hooks/useLoginStatus';
 import { useModalState } from '../../../hooks/useModalState';
 import { SignupParams, useUserState } from '../../../lib/auth-token-context';
-import { toast } from '../../../lib/toast';
-import { ModalState } from '../../../lib/types/modalState';
-import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
-import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
-import { TitledModal } from '../../modals/TitledModal';
 import { BRAND_NAME } from '../../../lib/constants';
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
-import { iso31661Alpha2ToAlpha3 } from 'iso-3166';
 import {
   ALPHA3_TO_COUNTRY_NAME,
   EU_COUNTRIES,
 } from '../../../lib/country-codes';
+import { toast } from '../../../lib/toast';
+import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
+import { ModalState } from '../../../lib/types/modalState';
+import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
+import { TitledModal } from '../../modals/TitledModal';
 
 const RecaptchaSignUpWrapper = () => {
   const [modalState, setModalState] = useModalState();
@@ -46,7 +46,7 @@ const RecaptchaSignUpWrapper = () => {
 
 export default RecaptchaSignUpWrapper;
 
-interface SignUpProps { }
+interface SignUpProps {}
 
 const SignUpModal = (props: SignUpProps) => {
   const router = useRouter();

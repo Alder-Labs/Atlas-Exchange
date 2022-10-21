@@ -37,8 +37,8 @@ export function useBalances(props: QueryProps<CoinBalance[]> = {}) {
     refetch,
   } = useQuery('/proxy/api/wallet/balances', useFetcher<CoinBalance[]>(), {
     refetchInterval: shouldWatch ? 1000 * 2 : false, // 2 seconds
-    enabled: !!userState.user,
     ...props,
+    enabled: userState.user?.status === 'logged-in' && (props.enabled ?? true),
   });
 
   const balancesMap = useMemo(() => {

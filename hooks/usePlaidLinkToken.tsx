@@ -7,7 +7,6 @@ import { useMutationFetcher } from '../lib/mutation';
 
 export function usePlaidLinkToken() {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
   const {
     mutate,
@@ -27,12 +26,12 @@ export function usePlaidLinkToken() {
   );
 
   useEffect(() => {
-    if (isLoggedIn && userState?.user?.token) {
+    if (userState.user?.status === 'logged-in') {
       mutate({
         products: ['auth'],
       });
     }
-  }, [mutate, isLoggedIn, userState?.user?.token]);
+  }, [mutate, userState.user?.status]);
 
   const getLinkToken = useCallback(async () => {
     if (plaidLinkTokenData) {
