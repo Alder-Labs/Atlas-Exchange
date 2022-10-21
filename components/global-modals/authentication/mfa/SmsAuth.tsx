@@ -97,6 +97,9 @@ export const SmsAuth = () => {
     }
   }, [modalState, onRequestSmsCode]);
 
+  /**
+   * If user reloads page, open this modal if needed
+   */
   useEffect(() => {
     if (
       loginStatusData?.mfaRequired === 'sms' &&
