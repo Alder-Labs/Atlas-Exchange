@@ -5,15 +5,25 @@ import { useDarkOrLightMode } from '../lib/dark-mode';
 export const BrandLogo = (props: {
   className: string;
   href?: string;
+<<<<<<< HEAD
   noIcon?: boolean;
 }) => {
   const { className, href = '/', noIcon = false } = props;
+=======
+  noLogo?: boolean;
+}) => {
+  const { className, href = '/', noLogo = false } = props;
+>>>>>>> 608ce13 (stylize footer)
   const darkMode = useDarkOrLightMode();
 
   return (
     <Link href={href}>
       <div className="flex items-center">
+<<<<<<< HEAD
         {!noIcon && (
+=======
+        {!noLogo && (
+>>>>>>> 608ce13 (stylize footer)
           <img
             src="/atlas-lion-logo-rgb.svg"
             className="mr-2.5 h-9 w-6"
