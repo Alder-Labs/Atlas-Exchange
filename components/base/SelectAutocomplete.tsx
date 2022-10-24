@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 
 import { Combobox, Transition } from '@headlessui/react';
 import clsx from 'clsx';
@@ -62,15 +62,16 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
     [`${className}`]: className,
   });
 
-  const filteredOptions =
-    query === ''
+  const filteredOptions = useMemo(() => {
+    return query === ''
       ? options
       : options.filter((option) =>
         (option.searchKey ?? option.label)
           .toLowerCase()
           .replace(/\s+/g, '')
           .includes(query.toLowerCase().replace(/\s+/g, ''))
-      );
+      )
+  }, [query, options]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
