@@ -1,6 +1,11 @@
-import { createContext, useCallback, useContext, useEffect } from 'react';
+import {
+  createContext,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+} from 'react';
 
-import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 
 import { useStateCallback } from '../hooks/useStateCallback';
@@ -16,6 +21,7 @@ import { SignUpResponse } from './types/signup';
 
 interface User {
   token: string;
+  status: 'needs-mfa' | 'logged-in';
 }
 
 export type SignupParams = {
@@ -36,9 +42,9 @@ type UserState =
   | {
       user: User;
       signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-      setAuthToken: (
-        token: string | null | undefined,
-        callback?: (token: string | null | undefined) => void
+      setUser: (
+        user: SetStateAction<User | null | undefined>,
+        callback?: (user: User | null | undefined) => void
       ) => void;
       signout: () => Promise<void>;
     };
@@ -57,43 +63,47 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
    * 3. undefined: state has not been initialized. In this case, UserProvider will
    *    not render any children.
    */
-  const [authToken, _setAuthToken] = useStateCallback<
-    string | null | undefined
-  >(undefined);
+  const [user, _setUser] = useStateCallback<User | null | undefined>(undefined);
 
-  const setAuthToken = useCallback(
+  // const [authToken, _setUser] = useStateCallback<
+  //   string | null | undefined
+  // >(undefined);
+
+  const setUser = useCallback(
     (
-      token: string | null | undefined,
-      callback?: (token: string | null | undefined) => void
+      user: SetStateAction<User | null | undefined>,
+      callback?: (user: User | null | undefined) => void
     ) => {
-      _setAuthToken(token, callback);
-      if (token) {
-        localStorage.setItem('token', token);
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem(
           'tokenDate',
           // two day expiration
           (Date.now() + 1000 * 60 * 60 * 24 * 2).toString()
         );
       } else {
-        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         localStorage.removeItem('tokenDate');
       }
+      _setUser(user, callback);
     },
-    [_setAuthToken]
+    [_setUser]
   );
 
   useEffect(() => {
     // In an effect since localStorage is not available during SSR
-    const token = localStorage.getItem('token');
+    const cachedUser = JSON.parse(
+      localStorage.getItem('user') || 'null'
+    ) as User | null;
     // we can no longer check token expiration because its encrypted
     const tokenDate = localStorage.getItem('tokenDate');
+
     if (tokenDate && Number(tokenDate) <= Date.now()) {
-      localStorage.removeItem('token');
-      setAuthToken(null);
+      setUser(null);
     } else {
-      setAuthToken(token);
+      setUser(cachedUser);
     }
-  }, [setAuthToken]);
+  }, [setUser]);
 
   const signup = (data: SignupParams) => {
     const signupReq = {
@@ -122,8 +132,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           }
           return res.result;
         })
-        .then((res) => {
-          setAuthToken(res.token, () => {
+        .then((res: SignUpResponse) => {
+          setUser({ token: res.token, status: 'logged-in' }, () => {
             resolve(res);
           });
         })
@@ -149,10 +159,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           }
           return res.result;
         })
-        .then((res) => {
-          setAuthToken(res.token, () => {
-            resolve(res);
-          });
+        .then((res: SignInResponse) => {
+          setUser(
+            {
+              token: res.token,
+              status: res.mfaRequired ? 'needs-mfa' : 'logged-in',
+            },
+            () => {
+              resolve(res);
+            }
+          );
         })
         .catch((err) => {
           reject(err);
@@ -161,7 +177,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signinWithMfa = ({ code }: SigninWithMfaParams) => {
-    if (!authToken) {
+    if (!user) {
       throw new Error('Not signed in');
     }
 
@@ -170,7 +186,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
           code: code,
@@ -186,9 +202,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return res.result;
         })
         .then((res) => {
-          setAuthToken(res.token, () => {
-            resolve();
-          });
+          console.log(res);
+          setUser(
+            {
+              token: res.token,
+              status: 'logged-in',
+            },
+            () => {
+              resolve();
+            }
+          );
         })
         .catch((err) => {
           reject(err);
@@ -197,12 +220,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signout = () => {
+    if (!user) {
+      throw new Error('Not signed in');
+    }
+
     return new Promise<void>((resolve, reject) => {
       fetch(`${API_URL}/users/signout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({}),
       })
@@ -216,31 +243,32 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res) => {
           localStorage.removeItem('token');
           queryClient.clear();
-          setAuthToken(null);
+          setUser(null);
           resolve(res);
         })
         .catch((err) => {
           localStorage.removeItem('token');
           queryClient.clear();
-          setAuthToken(null);
+          setUser(null);
           reject(err);
         });
     });
   };
 
-  if (typeof authToken === 'undefined') {
+  if (typeof user === 'undefined') {
+    // User state has not loaded; render nothing
     return null;
   }
 
   return (
     <UserContext.Provider
       value={
-        authToken
+        user
           ? {
-              user: { token: authToken },
+              user: user,
               signinWithMfa: signinWithMfa,
               signout: signout,
-              setAuthToken,
+              setUser,
             }
           : {
               user: null,

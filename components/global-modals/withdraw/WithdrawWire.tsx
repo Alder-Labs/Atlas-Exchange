@@ -76,9 +76,7 @@ export const WithdrawWire = ({ onSuccess }: { onSuccess: () => void }) => {
     });
 
   const { data: loginStatus } = useLoginStatus();
-  const { balancesMap, isLoading: loadingBalances } = useBalances({
-    enabled: isLoggedIn,
-  });
+  const { balancesMap, isLoading: loadingBalances } = useBalances();
 
   const [countryRegions, setCountryRegions] = useState<
     { value: string; label: string }[]

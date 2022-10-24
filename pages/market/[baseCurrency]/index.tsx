@@ -121,9 +121,7 @@ const Page: CustomPage = () => {
   const { coinsMap } = useCoins({
     refetchOnWindowFocus: false,
   });
-  const { balancesMap, isLoading: balanceLoading } = useBalances({
-    enabled: isLoggedIn,
-  });
+  const { balancesMap, isLoading: balanceLoading } = useBalances();
 
   const coinMarket = useMemo(() => {
     if (!coinsMap || !market) {

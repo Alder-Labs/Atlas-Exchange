@@ -22,7 +22,7 @@ import { ModalState } from '../../../lib/types/modalState';
 import { Text, TextInput, Button, TextButton } from '../../base';
 import { SidePadding } from '../../layout/SidePadding';
 import { TitledModal } from '../../modals/TitledModal';
-import { SelectBankAccount } from '../../SelectBankAccount';
+import { SelectBankAccount } from '../../select-bank-account/SelectBankAccount';
 import { TitledCard } from '../../TitledCard';
 import { BigNumberInput } from '../../trade/BigNumberInput';
 
@@ -37,14 +37,9 @@ export function EnterAmount(props: EnterAmountProps) {
   const [state, setModalState] = useModalState();
 
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
-  const { data: bankAccounts } = useBankAccounts({
-    enabled: isLoggedIn,
-  });
-  const { data: depositLimits } = useDepositLimits({
-    enabled: isLoggedIn,
-  });
+  const { data: bankAccounts } = useBankAccounts();
+  const { data: depositLimits } = useDepositLimits();
   const { refetch: refetchBalances } = useBalances();
   const [_, setWatchBalanceUntil] = useAtom(watchBalanceUntilAtom);
 

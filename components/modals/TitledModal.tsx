@@ -23,7 +23,7 @@ export function TitledModal({
   isOpen,
   title,
   renderWhenClosed = false,
-  onClose = () => { },
+  onClose = () => {},
   showCloseButton = true,
   onClickCloseButton,
   onGoBack,
