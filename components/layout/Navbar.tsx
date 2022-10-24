@@ -17,7 +17,6 @@ import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
-import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
 import { Button, Text } from '../base';
 import Drawer from '../Drawer';
