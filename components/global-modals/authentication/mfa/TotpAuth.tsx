@@ -15,8 +15,9 @@ export const TotpAuth = () => {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
 
-  const [authModalState, setAuthModalState] = useModalState();
-  const { refetch: refetchLoginStatus } = useLoginStatus();
+  const [modalState, setModalState] = useModalState();
+  const { refetch: refetchLoginStatus, data: loginStatusData } =
+    useLoginStatus();
 
   const onSignInWithMfa = useCallback(
     (code: string) => {
@@ -26,7 +27,7 @@ export const TotpAuth = () => {
           .signinWithMfa({ code: code })
           .then(async () => {
             await refetchLoginStatus();
-            setAuthModalState({ state: ModalState.Closed });
+            setModalState({ state: ModalState.Closed });
           })
           .catch((err: Error) => {
             toast.error(`Error: ${err.message}`);
@@ -38,7 +39,7 @@ export const TotpAuth = () => {
         setIsLoggingIn(false);
       }
     },
-    [refetchLoginStatus, setAuthModalState, userState]
+    [refetchLoginStatus, setModalState, userState]
   );
 
   const handleSubmit = useCallback(() => {
@@ -52,10 +53,22 @@ export const TotpAuth = () => {
     handleSubmit();
   }, [handleSubmit]);
 
+  /**
+   * If user reloads page, open this modal if needed
+   */
+  useEffect(() => {
+    if (
+      loginStatusData?.mfaRequired === 'totp' &&
+      modalState.state === ModalState.Closed
+    ) {
+      setModalState({ state: ModalState.SmsAuth });
+    }
+  }, [loginStatusData, modalState.state, setModalState]);
+
   return (
     <TitledModal
       title="Two-factor authentication required"
-      isOpen={authModalState.state === ModalState.TotpAuth}
+      isOpen={modalState.state === ModalState.TotpAuth}
       darkenBackground={false}
       onGoBack={() => {
         if (userState.user) {
@@ -68,7 +81,7 @@ export const TotpAuth = () => {
             .finally(() => {
               setIsSigningOut(false);
             });
-          setAuthModalState({ state: ModalState.SignIn });
+          setModalState({ state: ModalState.SignIn });
         }
       }}
       showCloseButton={false}

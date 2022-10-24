@@ -71,9 +71,7 @@ export function NotificationDropdown() {
     data: notifications,
     isLoading: notificationsAreLoading,
     refetch: refetchNotifications,
-  } = useNotifications({
-    enabled: isLoggedIn,
-  });
+  } = useNotifications();
 
   const { isLoading: markAllReadIsLoading, mutate: markAllRead } = useMutation(
     useMutationFetcher<{}, {}>(

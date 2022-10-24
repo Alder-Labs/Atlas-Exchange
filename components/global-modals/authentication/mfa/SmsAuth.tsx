@@ -17,7 +17,8 @@ const SECONDS_BETWEEN_RESEND_CODE = 59;
 export const SmsAuth = () => {
   const userState = useUserState();
   const [modalState, setModalState] = useModalState();
-  const { refetch: refetchLoginStatus } = useLoginStatus();
+  const { refetch: refetchLoginStatus, data: loginStatusData } =
+    useLoginStatus();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -97,6 +98,18 @@ export const SmsAuth = () => {
       onRequestSmsCode();
     }
   }, [modalState, onRequestSmsCode]);
+
+  /**
+   * If user reloads page, open this modal if needed
+   */
+  useEffect(() => {
+    if (
+      loginStatusData?.mfaRequired === 'sms' &&
+      modalState.state === ModalState.Closed
+    ) {
+      setModalState({ state: ModalState.SmsAuth });
+    }
+  }, [loginStatusData, modalState, setModalState]);
 
   return (
     <TitledModal

@@ -1,89 +1,102 @@
-import { useEffect } from 'react';
+import { useMemo } from 'react';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 
+import { BankAccount, useBankAccounts } from '../../hooks/useBankAccounts';
 import {
   countryCodesAlpha3,
   countryRegionsAlpha3,
 } from '../../lib/country-codes';
-import { KycAddress } from '../../lib/types/kyc';
-import { Text, TextInput, Button, Select } from '../base';
+import { useMutationFetcher } from '../../lib/mutation';
+import { toast } from '../../lib/toast';
+import { Text, Button, TextInput } from '../base';
 import { SelectAutocomplete } from '../base/SelectAutocomplete';
-
-import { OnboardingCard, OnboardingCardProps } from './OnboardingCard';
-
-interface AddressInformationProps
-  extends Omit<OnboardingCardProps, 'children' | 'title'> {
-  onContinue: () => void;
+export type BillingInfo = {
+  name: string;
+  line1: string;
+  city: string;
+  district: string;
+  postalCode: string;
+  country: string;
+};
+interface EnterBillingInfoProps {
+  account: BankAccount;
+  onSuccess?: () => void;
 }
+export function EnterBillingInfo(props: EnterBillingInfoProps) {
+  const { account, onSuccess } = props;
 
-export function AddressInformation(props: AddressInformationProps) {
-  const { onContinue, ...rest } = props;
+  const { refetch } = useBankAccounts();
 
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
-  const {
-    register,
-    control,
-    watch,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<KycAddress>({ defaultValues: cachedForm });
+  const { mutateAsync, isLoading } = useMutation(
+    useMutationFetcher<BillingInfo, any>(
+      `/proxy/api/ach/accounts/${account.id}/billing_info`,
+      {
+        onFetchSuccess: refetch,
+      }
+    ),
+    {
+      onSuccess: () => {
+        toast.success('Billing info updated.');
+      },
+    }
+  );
 
   // Append Phone to KYC Form Data
-  const onSubmit = (data: KycAddress) => {
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
-
-    localStorage.setItem(
-      'kycForm',
-      JSON.stringify({
-        ...JSON.parse(prevRawKycFormData),
-        country: data.country,
-        stateProvinceRegion: data.stateProvinceRegion,
-        streetAddress: data.streetAddress,
-        city: data.city,
-        postalCode: data.postalCode,
+  const onSubmit = (data: BillingInfo) => {
+    mutateAsync(data)
+      .then(() => {
+        onSuccess?.();
       })
-    );
-
-    onContinue();
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
-  const vals = useWatch({
-    control: control,
-    name: [
-      'country',
-      'stateProvinceRegion',
-      'streetAddress',
-      'city',
-      'postalCode',
-    ],
-  });
-  useEffect(() => {
-    const [country, stateProvinceRegion, streetAddress, city, postalCode] =
-      vals;
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
-    localStorage.setItem(
-      'kycForm',
-      JSON.stringify({
-        ...JSON.parse(prevRawKycFormData),
-        country,
-        stateProvinceRegion,
-        streetAddress,
-        city,
-        postalCode,
-      })
-    );
-  }, [vals]);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<BillingInfo>({});
 
-  const countryRegions = watch('country')
-    ? countryRegionsAlpha3[watch('country')] ?? []
-    : [];
+  const country = watch('country');
+  const countryRegions = useMemo(
+    () => (country ? countryRegionsAlpha3[country] ?? [] : []),
+    [country]
+  );
 
   return (
-    <OnboardingCard {...rest} title={'Address Information'}>
-      <div className="h-6"></div>
+    <div className="">
+      <Text color="secondary">
+        Please enter your billing information associated with the following
+        account in order to verify and use it.
+      </Text>
+      <div className="h-4"></div>
+      <Text weight="bold">{account.data?.institutionName}</Text>
+      <div></div>
+      <Text size="sm">
+        {account.name} | {account.data?.mask}
+      </Text>
+
+      <div className="h-8"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <TextInput
+          label={'Full Name'}
+          placeholder={'Your full name'}
+          className="w-full"
+          {...register('name', { required: true })}
+        />
+        {errors.name?.type === 'required' && (
+          <Text color="error" size="sm">
+            {'required'}
+          </Text>
+        )}
+        <div className="h-4"></div>
+
         <label className="block text-sm font-medium text-black dark:text-grayDark-80">
           Country
         </label>
@@ -94,11 +107,12 @@ export function AddressInformation(props: AddressInformationProps) {
           rules={{ required: true }}
           render={({ field }) => (
             <SelectAutocomplete
+              placeholder="Select..."
               value={field.value}
               onSelect={(e) => {
                 if (typeof e === 'string') {
                   field.onChange(e);
-                  setValue('stateProvinceRegion', '');
+                  setValue('district', '');
                 }
               }}
               options={countryCodesAlpha3}
@@ -111,15 +125,15 @@ export function AddressInformation(props: AddressInformationProps) {
             {'required'}
           </Text>
         )}
-        <div className="h-6"></div>
+        <div className="h-4"></div>
 
         <TextInput
           label={'Street Address'}
           placeholder={'Street Address'}
           className="w-full"
-          {...register('streetAddress', { required: true })}
+          {...register('line1', { required: true })}
         />
-        {errors.streetAddress?.type === 'required' && (
+        {errors.line1?.type === 'required' && (
           <Text color="error" size="sm">
             {'required'}
           </Text>
@@ -141,7 +155,7 @@ export function AddressInformation(props: AddressInformationProps) {
           </div>
           <div className="col-span-2">
             <Controller
-              name={'stateProvinceRegion'}
+              name={'district'}
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
@@ -151,6 +165,7 @@ export function AddressInformation(props: AddressInformationProps) {
                   </label>
                   <div className="h-2" />
                   <SelectAutocomplete
+                    placeholder="Select..."
                     value={field.value}
                     onSelect={(e) => {
                       if (typeof e === 'string') {
@@ -163,7 +178,7 @@ export function AddressInformation(props: AddressInformationProps) {
                 </div>
               )}
             />
-            {errors.stateProvinceRegion?.type === 'required' && (
+            {errors.district?.type === 'required' && (
               <Text color="error" size="sm">
                 {'required'}
               </Text>
@@ -185,10 +200,10 @@ export function AddressInformation(props: AddressInformationProps) {
         <div className="h-4" />
 
         <div className={'h-8'} />
-        <Button className="w-full" type="submit">
-          Continue
+        <Button className="w-full" type="submit" loading={isLoading}>
+          Submit
         </Button>
       </form>
-    </OnboardingCard>
+    </div>
   );
 }

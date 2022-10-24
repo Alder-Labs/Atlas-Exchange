@@ -25,7 +25,7 @@ export function ConvertPercentageButtons(props: ConvertPercentageButtonsProps) {
     refetch: refetchBalances,
     isLoading: balancesIsLoading,
     error: balanceError,
-  } = useBalances({ enabled: loggedIn });
+  } = useBalances();
 
   const { authStatus } = useAuthStatus();
   const isDisabled =

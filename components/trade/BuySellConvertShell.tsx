@@ -81,7 +81,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
     refetch: refetchBalances,
     isLoading: balancesIsLoading,
     error: balanceError,
-  } = useBalances({ enabled: loggedIn });
+  } = useBalances();
 
   const {
     isLoading,
