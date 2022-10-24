@@ -3,14 +3,14 @@ import { useQuery } from 'react-query';
 import { useFetcher } from '../lib/fetcher';
 import { QueryProps } from '../lib/queryProps';
 
-import type { LoginStatus } from '../lib/types';
+import type { LoginStatusReduced } from '../lib/types';
 
-export function useLoginStatus(props: QueryProps<LoginStatus> = {}) {
+export function useLoginStatus(props: QueryProps<LoginStatusReduced> = {}) {
   const { onError, onSuccess } = props;
 
   const { data, error, isLoading, refetch, status } = useQuery(
-    '/proxy/api/login_status',
-    useFetcher<LoginStatus>(),
+    '/api/login_status',
+    useFetcher<LoginStatusReduced>(),
     props
   );
 

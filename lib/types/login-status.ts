@@ -2,7 +2,7 @@ import { MfaType } from './signin';
 
 interface Position {}
 
-export interface Account {
+export type Account = {
   accountIdentifier: number;
   username: string;
   collateral: number;
@@ -28,9 +28,9 @@ export interface Account {
   spotMarginWithdrawalsEnabled: boolean;
   spotLendingEnabled: boolean;
   accountType: null;
-}
+};
 
-export interface User {
+export type User = {
   mobileHasDeposited: null;
   mobileHasTraded: null;
   agreedToTrumpExtension: null;
@@ -80,52 +80,12 @@ export interface User {
   useBodPriceChange: boolean;
   confirmTrades: boolean;
   cancelAllOrdersButtonEnabled: boolean;
-}
-
-type StatusLoggedOut = {
-  loggedIn: false;
-  account: null;
-  user: null;
-  subaccount: null;
-  country: string;
-  state: string;
-  supportOnly: false;
-  mfaRequired: null;
-  requiresEmailLink: false;
-  jurisdictionRestriction: null;
-  maxLeverage: null;
-  readOnly: true;
-  restrictedToSubaccount: false;
-  withdrawalEnabled: false;
-  internalTransfersEnabled: false;
-  onlyAllowSupportOnly: false;
-  nftTradingEnabled: false;
 };
 
-type StatusMfaRequired = {
-  loggedIn: false;
-  account: null;
-  user: null;
-  subaccount: null;
-  country: string;
-  state: string;
-  supportOnly: false;
-  mfaRequired: MfaType;
-  requiresEmailLink: false;
-  jurisdictionRestriction: null;
-  maxLeverage: null;
-  readOnly: false;
-  restrictedToSubaccount: boolean;
-  withdrawalEnabled: boolean;
-  internalTransfersEnabled: boolean;
-  onlyAllowSupportOnly: boolean;
-  nftTradingEnabled: boolean;
-};
-
-type StatusLoggedIn = {
-  loggedIn: true;
-  account: Account;
-  user: User;
+export type LoginStatus = {
+  loggedIn: boolean;
+  account: Account | null;
+  user: User | null;
   subaccount: null;
   country: string;
   state: string;
@@ -143,4 +103,60 @@ type StatusLoggedIn = {
   nftTradingEnabled: boolean;
 };
 
-export type LoginStatus = StatusLoggedOut | StatusMfaRequired | StatusLoggedIn;
+export type AccountReduced = Omit<
+  Account,
+  | 'leverage'
+  | 'collateral'
+  | 'freeCollateral'
+  | 'initialMarginRequirement'
+  | 'maintenanceMarginRequirement'
+  | 'marginFraction'
+  | 'openMarginFraction'
+  | 'liquidating'
+  | 'backstopProvider'
+  | 'futuresLeverage'
+  | 'useFttCollateral'
+  | 'chargeInterestOnNegativeUsd'
+  | 'spotMarginEnabled'
+  | 'spotMarginWithdrawalsEnabled'
+  | 'spotLendingEnabled'
+  | 'liquidating'
+>;
+
+export type UserReduced = Omit<
+  User,
+  | 'agreedToMarginAndLocAgreement'
+  | 'referralCode'
+  | 'referred'
+  | 'referrerId'
+  | 'vip'
+  | 'vipManualMinimum'
+  | 'mmManualMinimum'
+  | 'mmLevel'
+  | 'feeTier'
+  | 'ftt'
+  | 'monthlyVolume'
+  | 'monthlyMakerVolume'
+  | 'monthlyLtVolume'
+  | 'monthlyLeveragedTokenCreationVolume'
+  | 'monthlyLeveragedTokenRedemptionVolume'
+  | 'dailyVolume'
+  | 'dailyMakerVolume'
+  | 'dailyLeveragedTokenCreationVolume'
+  | 'dailyLeveragedTokenRedemptionVolume'
+  | 'showInLeaderboard'
+  | 'useRealNameInLeaderboard'
+  | 'cancelAllOrdersButtonEnabled'
+>;
+
+export type LoginStatusReduced = Omit<
+  LoginStatus,
+  | 'restrictedToSubaccount'
+  | 'internalTransfersEnabled'
+  | 'onlyAllowSupportOnly'
+  | 'maxLeverage'
+  | 'supportOnly'
+  | 'subaccount'
+  | 'user'
+  | 'account'
+> & { user: UserReduced | null; account: AccountReduced | null };
