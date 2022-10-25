@@ -59,6 +59,7 @@ const DepositWireEntry = (props: {
 
 export const DepositWireConfirm = () => {
   const router = useRouter();
+  const [modalState, setModalState, handlers] = useModalState();
 
   return (
     <div className="flex flex-col">
@@ -73,8 +74,9 @@ export const DepositWireConfirm = () => {
       <div className="h-6" />
       <Button
         className="w-full"
-        onClick={() => {
-          router.push('/wallet');
+        onClick={async () => {
+          await router.push('/wallet');
+          setModalState({ state: ModalState.Closed });
         }}
       >
         <div className="w-full">Continue to Wallet</div>
