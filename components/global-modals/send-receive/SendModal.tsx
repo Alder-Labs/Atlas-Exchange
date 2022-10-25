@@ -10,8 +10,8 @@ import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import CryptoSelectMenu from '../../deposit/CryptoSelectMenu';
 import { TitledModal } from '../../modals/TitledModal';
-import CryptoDepositAddress from '../deposit/CryptoDepositAddress';
 
+import CryptoDepositAddress from './CryptoDepositAddress';
 import { ReceiveOption } from './ReceiveOption';
 import { SendOption } from './SendOption';
 import WithdrawCryptoConfirm from './WithdrawCryptoConfirm';
@@ -52,6 +52,7 @@ const SendModal = () => {
   }
 
   const kycLevel = loginStatus.user.kycLevel;
+  const mfa = loginStatus.mfa;
 
   return (
     <>
@@ -176,12 +177,14 @@ const SendModal = () => {
       >
         <div className={MenuStyle}>
           <ReceiveOption
+            mfa={mfa}
             kycLevel={kycLevel}
             onClick={() => {
               setModalState({ state: ModalState.ReceiveCryptoSelect });
             }}
           />
           <SendOption
+            mfa={mfa}
             kycLevel={kycLevel}
             onClick={() => {
               setModalState({ state: ModalState.SendCryptoSelect });
