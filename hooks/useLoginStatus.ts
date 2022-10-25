@@ -9,7 +9,7 @@ export function useLoginStatus(props: QueryProps<LoginStatus> = {}) {
   const { onError, onSuccess } = props;
 
   const { data, error, isLoading, refetch, status } = useQuery(
-    '/proxy/api/login_status',
+    '/api/login_status',
     useFetcher<LoginStatus>(),
     props
   );
