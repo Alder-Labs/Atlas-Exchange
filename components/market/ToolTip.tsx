@@ -17,9 +17,9 @@ type CustomTooltipProps = {
 const CustomToolTipCard = (props: { children: React.ReactNode }) => {
   return (
     <div
-      className={`flex flex-col rounded-md
-        border border-grayLight-60 bg-grayLight-10
-        px-3 py-2 shadow-md dark:border-grayDark-60 dark:bg-grayDark-10`}
+      className={`flex flex-col rounded-md border border-grayLight-60
+        bg-grayLight-10 px-3 py-2
+        shadow-md outline-none dark:border-grayDark-60 dark:bg-grayDark-10`}
     >
       {props.children}
     </div>
