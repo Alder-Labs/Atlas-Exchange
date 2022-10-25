@@ -34,6 +34,7 @@ const DynamicGlobalModals = dynamic(
     ),
   {
     loading: () => <div />,
+    ssr: false,
   }
 );
 
