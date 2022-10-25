@@ -56,7 +56,6 @@
   },
   "devDependencies": {
     "@aws-sdk/client-ssm": "^3.183.0",
-    "@serverless-stack/static-site-env": "^1.2.32",
     "@types/fontfaceobserver": "^2.1.0",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
