@@ -295,8 +295,8 @@ export function Navbar({ children }: NavbarProps) {
       <Responsive showIfLargerThan="lg" className="z-40 w-full">
         <div className="sticky top-0 w-full border-b-2 border-grayLight-20 bg-white dark:border-grayDark-10 dark:bg-grayDark-10">
           <SidePadding as="nav" className="w-full py-4">
-            <div className="flex w-full flex-wrap items-center justify-between px-8">
-              <div className="flex flex-wrap items-center">
+            <div className="flex w-full items-center justify-between px-8">
+              <div className="flex items-center">
                 <BrandLogo className="w-16" />
                 {authenticated && !basicMode && (
                   <>
@@ -331,7 +331,7 @@ export function Navbar({ children }: NavbarProps) {
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-4">
                 {authenticated && !basicMode && (
                   <>
                     <Button
