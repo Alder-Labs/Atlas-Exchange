@@ -20,6 +20,7 @@ import {
 import { SignUpResponse } from './types/signup';
 
 type User =
+  | { status: UserStateType.UNKNOWN }
   | { status: UserStateType.SIGNED_OUT }
   | { status: Omit<UserStateType, UserStateType.SIGNED_OUT>; token: string };
 
@@ -53,6 +54,7 @@ export type SupportOnlyAuthState = {
 };
 
 export enum UserStateType {
+  UNKNOWN = 'UNKNOWN',
   SIGNED_OUT = 'SIGNED_OUT',
   NEEDS_MFA = 'NEEDS_MFA',
   SIGNED_IN = 'SIGNED_IN',
@@ -99,7 +101,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
    *    not render any children.
    */
   const [user, _setUser] = useStateCallback<User>({
-    status: UserStateType.SIGNED_OUT,
+    status: UserStateType.UNKNOWN,
   });
 
   // const [authToken, _setUser] = useStateCallback<
@@ -260,7 +262,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signout = () => {
-    if (!user || user.status === UserStateType.SIGNED_OUT) {
+    if (
+      !user ||
+      user.status === UserStateType.SIGNED_OUT ||
+      user.status === UserStateType.UNKNOWN
+    ) {
       throw new Error('Not signed in');
     }
 
@@ -333,7 +339,10 @@ export function useUserState(): UserState {
 // Must be signed in
 export function useUser() {
   const userState = useUserState();
-  if (userState.user.status === UserStateType.SIGNED_OUT) {
+  if (
+    userState.user.status === UserStateType.SIGNED_OUT ||
+    userState.user.status === UserStateType.UNKNOWN
+  ) {
     console.log(`userState: ${JSON.stringify(userState)}`);
     throw new Error('useUser: not signed in');
   }
