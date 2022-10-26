@@ -21,6 +21,7 @@ export const SmsAuth = () => {
     useLoginStatus();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [code, setCode] = useState('');
 
   const currentDate = useCurrentDate();
@@ -79,6 +80,7 @@ export const SmsAuth = () => {
         setCodeLastSent(new Date());
       },
       onError: (err: Error) => {
+        console.error('Error requesting phone verification: ', err);
         toast.error(`Error: ${err.message}`);
       },
     }
@@ -116,7 +118,16 @@ export const SmsAuth = () => {
       darkenBackground={false}
       onGoBack={() => {
         if (userState.user) {
-          userState.signout();
+          setIsSigningOut(true);
+          userState
+            .signout()
+            .catch((err: Error) => {
+              console.error('Error signing out user', err);
+              toast.error(`Error: ${err.message}`);
+            })
+            .finally(() => {
+              setIsSigningOut(false);
+            });
           setModalState({ state: ModalState.SignIn });
         }
       }}

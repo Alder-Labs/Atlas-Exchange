@@ -12,6 +12,7 @@ export const TotpAuth = () => {
   const userState = useUserState();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
 
   const [modalState, setModalState] = useModalState();
@@ -71,7 +72,15 @@ export const TotpAuth = () => {
       darkenBackground={false}
       onGoBack={() => {
         if (userState.user) {
-          userState.signout();
+          setIsSigningOut(true);
+          userState
+            .signout()
+            .catch((err: Error) => {
+              toast.error(`Error: ${err.message}`);
+            })
+            .finally(() => {
+              setIsSigningOut(false);
+            });
           setModalState({ state: ModalState.SignIn });
         }
       }}

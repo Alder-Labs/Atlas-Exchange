@@ -44,6 +44,7 @@ const ResetPasswordPage: NextPage = (props: {}) => {
   const loggedIn = !!userState.user;
 
   const [sardineDeviceId] = useAtom(sardineDeviceIdAtom);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const { code } = router.query;
 
@@ -78,7 +79,19 @@ const ResetPasswordPage: NextPage = (props: {}) => {
       {
         onSuccess: (data) => {
           toast.success('Password reset successfully');
-          if (userState.user) userState.signout();
+          if (userState.user) {
+            setIsSigningOut(true);
+            userState
+              .signout()
+              .catch((err: Error) => {
+                toast.error(`Error: ${err.message}`);
+              })
+              .finally(() => {
+                router.push('/').then(() => {
+                  setIsSigningOut(false);
+                });
+              });
+          }
         },
         onError: (err: Error) => {
           toast.error(`Error: ${err.message}`);

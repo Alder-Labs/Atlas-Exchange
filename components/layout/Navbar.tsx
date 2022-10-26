@@ -116,6 +116,7 @@ export function Navbar({ children }: NavbarProps) {
   const router = useRouter();
   const url = router.pathname;
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
 
   const basicMode =
@@ -244,7 +245,17 @@ export function Navbar({ children }: NavbarProps) {
                   className="mx-4 mt-16"
                   onClick={() => {
                     setDrawerOpen(false);
-                    userState.signout();
+                    setIsSigningOut(true);
+                    userState
+                      .signout()
+                      .catch((err: Error) => {
+                        toast.error(`Error: ${err.message}`);
+                      })
+                      .finally(() => {
+                        router.push('/').then(() => {
+                          setIsSigningOut(false);
+                        });
+                      });
                     setModalStateDetailed({ state: ModalState.SignIn });
                   }}
                 >
