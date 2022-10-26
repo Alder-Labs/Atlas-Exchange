@@ -335,16 +335,3 @@ export function useUserState(): UserState {
   }
   return context;
 }
-
-// Must be signed in
-export function useUser() {
-  const userState = useUserState();
-  if (
-    userState.user.status === UserStateType.SIGNED_OUT ||
-    userState.user.status === UserStateType.UNKNOWN
-  ) {
-    console.log(`userState: ${JSON.stringify(userState)}`);
-    throw new Error('useUser: not signed in');
-  }
-  return userState.user;
-}
