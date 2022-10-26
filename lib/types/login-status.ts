@@ -1,6 +1,6 @@
 import { MfaType } from './signin';
 
-interface Position { }
+interface Position {}
 
 export type Account = {
   accountIdentifier: number;
@@ -106,12 +106,10 @@ export type User = {
   whitelistedSeller: boolean;
 };
 
-export type LoginStatus = {
-  account: Account | null;
+type LoginStatusShared = {
   country: string;
   internalTransfersEnabled: boolean;
   jurisdictionRestriction: string | null;
-  loggedIn: boolean;
   maxLeverage: null;
   mfa: MfaType;
   mfaRequired: MfaType;
@@ -123,9 +121,22 @@ export type LoginStatus = {
   state: string;
   subaccount: null;
   supportOnly: boolean;
-  user: User | null;
   withdrawalEnabled: boolean;
 };
+
+export type LoginStatus = (
+  | {
+      loggedIn: false;
+      account: null;
+      user: null;
+    }
+  | {
+      loggedIn: true;
+      account: Account;
+      user: User;
+    }
+) &
+  LoginStatusShared;
 
 export type AccountReduced = Pick<
   Account,
@@ -149,6 +160,7 @@ export type UserReduced = Pick<
   | 'defaultFiat'
   | 'displayName'
   | 'email'
+  | 'feeTier'
   | 'fiatVerified'
   | 'kycApplicationStatus'
   | 'kycLevel'
@@ -160,6 +172,9 @@ export type UserReduced = Pick<
   | 'mobileHasDeposited'
   | 'mobileHasTraded'
   | 'randomSlug'
+  | 'requireMfaForWithdrawals'
+  | 'requireWhitelistedWithdrawals'
+  | 'requireWithdrawalPassword'
   | 'useBodPriceChange'
   | 'verifiedPhone'
   | 'whitelabelUser'
@@ -167,16 +182,31 @@ export type UserReduced = Pick<
   | 'whitelistedSeller'
 >;
 
-export type LoginStatusReduced = Pick<
-  LoginStatus,
+type LoginStatusSharedReduced = Pick<
+  LoginStatusShared,
   | 'country'
   | 'jurisdictionRestriction'
-  | 'loggedIn'
   | 'mfa'
   | 'mfaRequired'
   | 'nftTradingEnabled'
+  | 'onlyAllowSupportOnly'
   | 'readOnly'
   | 'requiresEmailLink'
+  | 'supportOnly'
   | 'state'
   | 'withdrawalEnabled'
-> & { user: UserReduced | null; account: AccountReduced | null };
+>;
+
+export type LoginStatusReduced = (
+  | {
+      loggedIn: false;
+      account: null;
+      user: null;
+    }
+  | {
+      loggedIn: true;
+      account: AccountReduced;
+      user: UserReduced;
+    }
+) &
+  LoginStatusSharedReduced;
