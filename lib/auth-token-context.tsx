@@ -20,22 +20,17 @@ import {
 import { SignUpResponse } from './types/signup';
 
 type User =
-  | { status: UserStateType.UNKNOWN }
+  | undefined
   | { status: UserStateType.SIGNED_OUT }
   | { status: UserStateType.SUPPORT_ONLY; token: string }
   | { status: UserStateType.SIGNED_IN; token: string }
   | { status: UserStateType.NEEDS_MFA; token: string };
 
 export type UserState =
-  | UnknownUserState
   | SignedOutUserState
   | NeedsMfaUserState
   | SignedInUserState
   | SupportOnlyUserState;
-
-export type UnknownUserState = {
-  user: { status: UserStateType.UNKNOWN };
-};
 
 export type SignedOutUserState = {
   user: { status: UserStateType.SIGNED_OUT };
@@ -61,7 +56,6 @@ export type SupportOnlyUserState = {
 };
 
 export enum UserStateType {
-  UNKNOWN = 'UNKNOWN',
   SIGNED_OUT = 'SIGNED_OUT',
   NEEDS_MFA = 'NEEDS_MFA',
   SIGNED_IN = 'SIGNED_IN',
@@ -107,9 +101,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
    * 3. undefined: state has not been initialized. In this case, UserProvider will
    *    not render any children.
    */
-  const [user, _setUser] = useStateCallback<User>({
-    status: UserStateType.UNKNOWN,
-  });
+  const [user, _setUser] = useStateCallback<User>(undefined);
 
   // const [authToken, _setUser] = useStateCallback<
   //   string | null | undefined
@@ -269,11 +261,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signout = () => {
-    if (
-      !user ||
-      user.status === UserStateType.SIGNED_OUT ||
-      user.status === UserStateType.UNKNOWN
-    ) {
+    if (!user || user.status === UserStateType.SIGNED_OUT) {
       throw new Error('Not signed in');
     }
 
@@ -308,6 +296,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  if (typeof user === 'undefined') {
+    // User state has not loaded; render nothing
+    return null;
+  }
+
   return (
     <UserContext.Provider
       value={
@@ -328,8 +321,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               signOut: signout,
               updateToken: () => {},
             }
-          : user.status === UserStateType.UNKNOWN
-          ? { user: { status: UserStateType.UNKNOWN } }
           : { user: user, signIn: signin, signUp: signup }
       }
     >
