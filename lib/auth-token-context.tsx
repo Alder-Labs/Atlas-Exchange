@@ -22,34 +22,43 @@ import { SignUpResponse } from './types/signup';
 type User =
   | { status: UserStateType.UNKNOWN }
   | { status: UserStateType.SIGNED_OUT }
-  | { status: Omit<UserStateType, UserStateType.SIGNED_OUT>; token: string };
+  | { status: UserStateType.SUPPORT_ONLY; token: string }
+  | { status: UserStateType.SIGNED_IN; token: string }
+  | { status: UserStateType.NEEDS_MFA; token: string };
 
 export type UserState =
-  | SignedOutAuthState
-  | NeedsMfaAuthState
-  | SignedInAuthState
-  | SupportOnlyAuthState;
+  | UnknownUserState
+  | SignedOutUserState
+  | NeedsMfaUserState
+  | SignedInUserState
+  | SupportOnlyUserState;
 
-export type SignedOutAuthState = {
-  user: User;
+export type UnknownUserState = {
+  user: { status: UserStateType.UNKNOWN };
   signIn: (params: SigninParams) => Promise<any>;
   signUp: (params: SignupParams) => Promise<any>;
 };
 
-export type NeedsMfaAuthState = {
-  user: User;
+export type SignedOutUserState = {
+  user: { status: UserStateType.SIGNED_OUT };
+  signIn: (params: SigninParams) => Promise<any>;
+  signUp: (params: SignupParams) => Promise<any>;
+};
+
+export type NeedsMfaUserState = {
+  user: { status: UserStateType.SUPPORT_ONLY; token: string };
   signInWithMfa: (params: SigninWithMfaParams) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
-export type SignedInAuthState = {
-  user: User;
+export type SignedInUserState = {
+  user: { status: UserStateType.SIGNED_IN; token: string };
   signOut: () => Promise<void>;
   updateToken: (token: string) => void;
 };
 
-export type SupportOnlyAuthState = {
-  user: User;
+export type SupportOnlyUserState = {
+  user: { status: UserStateType.NEEDS_MFA; token: string };
   signOut: () => Promise<void>;
 };
 
