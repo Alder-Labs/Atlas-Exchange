@@ -20,13 +20,13 @@ import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
 import { Button, Text } from '../base';
+import { BrandLogo } from '../BrandLogo';
 import Drawer from '../Drawer';
 
 import { Dropdown } from './Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
-import { BrandLogo } from '../BrandLogo';
 
 export function IconButton(props: {
   icon: ReactNode;
