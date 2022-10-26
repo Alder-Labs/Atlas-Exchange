@@ -26,6 +26,7 @@ import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
 import { BrandLogo } from '../BrandLogo';
+import { toast } from '../../lib/toast';
 
 export function IconButton(props: {
   icon: ReactNode;
