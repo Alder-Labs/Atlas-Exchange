@@ -109,7 +109,7 @@ interface NavbarProps {
 
 export function Navbar({ children }: NavbarProps) {
   const userState = useUserState();
-  const signedIn = !!userState.user;
+  const authenticated = !!userState.user;
 
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
@@ -119,6 +119,7 @@ export function Navbar({ children }: NavbarProps) {
 
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
 
+  // Under basic mode, the user can only sign out and change app appearance.
   const basicMode =
     ['/onboarding/begin', '/onboarding', '/onboarding/signup'].includes(
       router.pathname
@@ -138,14 +139,28 @@ export function Navbar({ children }: NavbarProps) {
           <div className="ml-4">
             <BrandLogo className="w-16" noIcon={true} />
           </div>
-          <button
-            className="flex items-center p-4"
-            onClick={() => {
-              setDrawerOpen(true);
-            }}
-          >
-            <FontAwesomeIcon icon={faNavicon} className="h-6 w-6" />
-          </button>
+          {authenticated ? (
+            <button
+              className="flex items-center p-4"
+              onClick={() => {
+                setDrawerOpen(true);
+              }}
+            >
+              <FontAwesomeIcon icon={faNavicon} className="h-6 w-6" />
+            </button>
+          ) : (
+            <div className="m-4 flex h-6 items-center">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  setModalStateDetailed({ state: ModalState.SignIn })
+                }
+              >
+                Sign in
+              </Button>
+            </div>
+          )}
         </div>
         <Drawer
           widthClassName="w-64"
@@ -174,70 +189,79 @@ export function Navbar({ children }: NavbarProps) {
                   : 'Not logged in'}
               </Text>
             </div>
+
             <div className="flex flex-col gap-1 px-2">
-              <MobileNavbarLink
-                href="/"
-                icon={<FontAwesomeIcon icon={faHomeLg} className="h-4 w-4" />}
-                text="Home"
-                isActive={url === '/'}
-                onClick={() => {
-                  setDrawerOpen(false);
-                }}
-              />
+              {!basicMode && (
+                <>
+                  <MobileNavbarLink
+                    href="/"
+                    icon={
+                      <FontAwesomeIcon icon={faHomeLg} className="h-4 w-4" />
+                    }
+                    text="Home"
+                    isActive={url === '/'}
+                    onClick={() => {
+                      setDrawerOpen(false);
+                    }}
+                  />
 
-              <MobileNavbarLink
-                href="/wallet"
-                icon={<FontAwesomeIcon icon={faWallet} className="h-4 w-4" />}
-                text="Wallet"
-                isActive={url === '/wallet'}
-                onClick={() => {
-                  setDrawerOpen(false);
-                }}
-              />
+                  <MobileNavbarLink
+                    href="/wallet"
+                    icon={
+                      <FontAwesomeIcon icon={faWallet} className="h-4 w-4" />
+                    }
+                    text="Wallet"
+                    isActive={url === '/wallet'}
+                    onClick={() => {
+                      setDrawerOpen(false);
+                    }}
+                  />
 
-              <MobileNavbarLink
-                href="/notifications"
-                icon={<FontAwesomeIcon icon={faBell} className="h-4 w-4" />}
-                text="Notifications"
-                isActive={url === '/notifications'}
-                onClick={() => {
-                  setDrawerOpen(false);
-                }}
-              />
+                  <MobileNavbarLink
+                    href="/notifications"
+                    icon={<FontAwesomeIcon icon={faBell} className="h-4 w-4" />}
+                    text="Notifications"
+                    isActive={url === '/notifications'}
+                    onClick={() => {
+                      setDrawerOpen(false);
+                    }}
+                  />
 
-              <MobileNavbarLink
-                href="/account"
-                icon={<FontAwesomeIcon icon={faUser} className="h-4 w-4" />}
-                text="Settings"
-                isActive={url === '/account'}
-                onClick={() => {
-                  setDrawerOpen(false);
-                }}
-              />
+                  <MobileNavbarLink
+                    href="/account"
+                    icon={<FontAwesomeIcon icon={faUser} className="h-4 w-4" />}
+                    text="Settings"
+                    isActive={url === '/account'}
+                    onClick={() => {
+                      setDrawerOpen(false);
+                    }}
+                  />
 
-              <Button
-                rounded="md"
-                className="mx-4 mt-4"
-                onClick={() => {
-                  setDrawerOpen(false);
-                  setModalStateDetailed({ state: ModalState.DepositFiat });
-                }}
-              >
-                Deposit funds
-              </Button>
+                  <Button
+                    rounded="md"
+                    className="mx-4 mt-4"
+                    onClick={() => {
+                      setDrawerOpen(false);
+                      setModalStateDetailed({ state: ModalState.DepositFiat });
+                    }}
+                  >
+                    Deposit funds
+                  </Button>
 
-              <Button
-                rounded="md"
-                className="mx-4 mt-4"
-                onClick={() => {
-                  setDrawerOpen(false);
-                  setModalStateDetailed({
-                    state: ModalState.SendReceiveCrypto,
-                  });
-                }}
-              >
-                Send / Receive
-              </Button>
+                  <Button
+                    rounded="md"
+                    className="mx-4 mt-4"
+                    onClick={() => {
+                      setDrawerOpen(false);
+                      setModalStateDetailed({
+                        state: ModalState.SendReceiveCrypto,
+                      });
+                    }}
+                  >
+                    Send / Receive
+                  </Button>
+                </>
+              )}
               {userState.user ? (
                 <Button
                   variant="outline"
@@ -274,7 +298,7 @@ export function Navbar({ children }: NavbarProps) {
             <div className="flex w-full flex-wrap items-center justify-between px-8">
               <div className="flex flex-wrap items-center">
                 <BrandLogo className="w-16" />
-                {signedIn && !basicMode && (
+                {authenticated && !basicMode && (
                   <>
                     <div className="w-10"></div>
 
@@ -308,7 +332,7 @@ export function Navbar({ children }: NavbarProps) {
               </div>
 
               <div className="flex flex-wrap items-center gap-4">
-                {signedIn && !basicMode && (
+                {authenticated && !basicMode && (
                   <>
                     <Button
                       size="sm"
@@ -336,8 +360,8 @@ export function Navbar({ children }: NavbarProps) {
                     <div className="w-0.5 self-stretch dark:bg-grayDark-50"></div>
                   </>
                 )}
-                {signedIn && <Dropdown />}
-                {!signedIn && (
+                {authenticated && <Dropdown />}
+                {!authenticated && (
                   <Button
                     size="sm"
                     variant="outline"
