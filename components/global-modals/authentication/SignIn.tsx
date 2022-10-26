@@ -83,8 +83,9 @@ export function SignIn(props: SignInProps) {
       }
 
       try {
-        const captchaToken = await executeRecaptcha(RecaptchaActions.LOGIN);
-        inputData.captcha.recaptcha_challenge = captchaToken;
+        inputData.captcha.recaptcha_challenge = await executeRecaptcha(
+          RecaptchaActions.LOGIN
+        );
       } catch (e) {
         toast.error('Error: reCAPTCHA failed. Please contact Support.');
         return;

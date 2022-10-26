@@ -6,7 +6,6 @@ import {
   useEffect,
 } from 'react';
 
-import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 
 import { useStateCallback } from '../hooks/useStateCallback';
@@ -47,7 +46,7 @@ type UserState =
         user: SetStateAction<User | null | undefined>,
         callback?: (user: User | null | undefined) => void
       ) => void;
-      signout: () => void;
+      signout: () => Promise<void>;
     };
 
 const UserContext = createContext<UserState | undefined>(undefined);
@@ -220,13 +219,40 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const router = useRouter();
   const signout = () => {
-    // Clear localstorage, including removing client-side session token
-    localStorage.clear();
-    queryClient.clear();
-    setUser(null);
-    router.push('/');
+    if (!user) {
+      throw new Error('Not signed in');
+    }
+
+    return new Promise<void>((resolve, reject) => {
+      fetch(`${API_URL}/users/signout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({}),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          if (!res.success) throw new Error(res.error);
+          return;
+        })
+        .then((res) => {
+          localStorage.removeItem('token');
+          queryClient.clear();
+          setUser(null);
+          resolve(res);
+        })
+        .catch((err) => {
+          localStorage.removeItem('token');
+          queryClient.clear();
+          setUser(null);
+          reject(err);
+        });
+    });
   };
 
   if (typeof user === 'undefined') {
