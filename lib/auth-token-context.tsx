@@ -35,8 +35,6 @@ export type UserState =
 
 export type UnknownUserState = {
   user: { status: UserStateType.UNKNOWN };
-  signIn: (params: SigninParams) => Promise<any>;
-  signUp: (params: SignupParams) => Promise<any>;
 };
 
 export type SignedOutUserState = {
@@ -46,7 +44,7 @@ export type SignedOutUserState = {
 };
 
 export type NeedsMfaUserState = {
-  user: { status: UserStateType.SUPPORT_ONLY; token: string };
+  user: { status: UserStateType.NEEDS_MFA; token: string };
   signInWithMfa: (params: SigninWithMfaParams) => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -58,7 +56,7 @@ export type SignedInUserState = {
 };
 
 export type SupportOnlyUserState = {
-  user: { status: UserStateType.NEEDS_MFA; token: string };
+  user: { status: UserStateType.SUPPORT_ONLY; token: string };
   signOut: () => Promise<void>;
 };
 
@@ -257,7 +255,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(
             {
               token: res.token,
-              status: 'logged-in',
+              status: UserStateType.SIGNED_IN,
             },
             () => {
               resolve();
@@ -328,7 +326,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           ? {
               user: user,
               signOut: signout,
+              updateToken: () => {},
             }
+          : user.status === UserStateType.UNKNOWN
+          ? { user: { status: UserStateType.UNKNOWN } }
           : { user: user, signIn: signin, signUp: signup }
       }
     >
