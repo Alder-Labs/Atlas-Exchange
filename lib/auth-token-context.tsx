@@ -19,9 +19,44 @@ import {
 } from './types';
 import { SignUpResponse } from './types/signup';
 
-interface User {
-  token: string;
-  status: 'needs-mfa' | 'logged-in';
+type User =
+  | { status: UserStateType.SIGNED_OUT }
+  | { status: Omit<UserStateType, UserStateType.SIGNED_OUT>; token: string };
+
+export type UserState =
+  | SignedOutAuthState
+  | NeedsMfaAuthState
+  | SignedInAuthState
+  | SupportOnlyAuthState;
+
+export type SignedOutAuthState = {
+  user: User;
+  signIn: (params: SigninParams) => Promise<any>;
+  signUp: (params: SignupParams) => Promise<any>;
+};
+
+export type NeedsMfaAuthState = {
+  user: User;
+  signInWithMfa: (params: SigninWithMfaParams) => Promise<void>;
+  signOut: () => Promise<void>;
+};
+
+export type SignedInAuthState = {
+  user: User;
+  signOut: () => Promise<void>;
+  updateToken: (token: string) => void;
+};
+
+export type SupportOnlyAuthState = {
+  user: User;
+  signOut: () => Promise<void>;
+};
+
+export enum UserStateType {
+  SIGNED_OUT = 'SIGNED_OUT',
+  NEEDS_MFA = 'NEEDS_MFA',
+  SIGNED_IN = 'SIGNED_IN',
+  SUPPORT_ONLY = 'SUPPORT_ONLY',
 }
 
 export type SignupParams = {
@@ -33,21 +68,21 @@ export type SignupParams = {
   password: string;
 } & RecaptchaParams;
 
-type UserState =
-  | {
-      user: null;
-      signin: (params: SigninParams) => Promise<SignInResponse>;
-      signup: (params: SignupParams) => Promise<SignUpResponse>;
-    }
-  | {
-      user: User;
-      signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-      setUser: (
-        user: SetStateAction<User | null | undefined>,
-        callback?: (user: User | null | undefined) => void
-      ) => void;
-      signout: () => Promise<void>;
-    };
+// type UserState =
+//   | {
+//       user: null;
+//       signin: (params: SigninParams) => Promise<SignInResponse>;
+//       signup: (params: SignupParams) => Promise<SignUpResponse>;
+//     }
+//   | {
+//       user: User;
+//       signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
+//       setUser: (
+//         user: SetStateAction<User | null | undefined>,
+//         callback?: (user: User | null | undefined) => void
+//       ) => void;
+//       signout: () => Promise<void>;
+//     };
 
 const UserContext = createContext<UserState | undefined>(undefined);
 
@@ -63,7 +98,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
    * 3. undefined: state has not been initialized. In this case, UserProvider will
    *    not render any children.
    */
-  const [user, _setUser] = useStateCallback<User | null | undefined>(undefined);
+  const [user, _setUser] = useStateCallback<User>({
+    status: UserStateType.SIGNED_OUT,
+  });
 
   // const [authToken, _setUser] = useStateCallback<
   //   string | null | undefined
@@ -71,7 +108,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setUser = useCallback(
     (
-      user: SetStateAction<User | null | undefined>,
+      user: SetStateAction<User>,
       callback?: (user: User | null | undefined) => void
     ) => {
       if (user) {
@@ -92,14 +129,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     // In an effect since localStorage is not available during SSR
+    // we can no longer check token expiration because its encrypted
+
     const cachedUser = JSON.parse(
       localStorage.getItem('user') || 'null'
     ) as User | null;
-    // we can no longer check token expiration because its encrypted
     const tokenDate = localStorage.getItem('tokenDate');
 
-    if (tokenDate && Number(tokenDate) <= Date.now()) {
-      setUser(null);
+    if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
+      setUser({ status: UserStateType.SIGNED_OUT });
     } else {
       setUser(cachedUser);
     }
@@ -133,7 +171,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return res.result;
         })
         .then((res: SignUpResponse) => {
-          setUser({ token: res.token, status: 'logged-in' }, () => {
+          setUser({ token: res.token, status: UserStateType.SIGNED_IN }, () => {
             resolve(res);
           });
         })
@@ -163,7 +201,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(
             {
               token: res.token,
-              status: res.mfaRequired ? 'needs-mfa' : 'logged-in',
+              status: res.mfaRequired
+                ? UserStateType.NEEDS_MFA
+                : UserStateType.SIGNED_IN,
             },
             () => {
               resolve(res);
@@ -177,7 +217,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signinWithMfa = ({ code }: SigninWithMfaParams) => {
-    if (!user) {
+    if (!user || user.status !== UserStateType.NEEDS_MFA) {
       throw new Error('Not signed in');
     }
 
@@ -220,7 +260,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signout = () => {
-    if (!user) {
+    if (!user || user.status === UserStateType.SIGNED_OUT) {
       throw new Error('Not signed in');
     }
 
@@ -243,38 +283,38 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res) => {
           localStorage.removeItem('token');
           queryClient.clear();
-          setUser(null);
+          setUser({ status: UserStateType.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
           localStorage.removeItem('token');
           queryClient.clear();
-          setUser(null);
+          setUser({ status: UserStateType.SIGNED_OUT });
           reject(err);
         });
     });
   };
 
-  if (typeof user === 'undefined') {
-    // User state has not loaded; render nothing
-    return null;
-  }
-
   return (
     <UserContext.Provider
       value={
-        user
+        user.status === UserStateType.SUPPORT_ONLY
           ? {
               user: user,
-              signinWithMfa: signinWithMfa,
-              signout: signout,
-              setUser,
+              signOut: signout,
             }
-          : {
-              user: null,
-              signin,
-              signup,
+          : user.status === UserStateType.NEEDS_MFA
+          ? {
+              user: user,
+              signInWithMfa: signinWithMfa,
+              signOut: signout,
             }
+          : user.status === UserStateType.SIGNED_IN
+          ? {
+              user: user,
+              signOut: signout,
+            }
+          : { user: user, signIn: signin, signUp: signup }
       }
     >
       {children}
@@ -293,7 +333,7 @@ export function useUserState(): UserState {
 // Must be signed in
 export function useUser() {
   const userState = useUserState();
-  if (userState.user === null) {
+  if (userState.user.status === UserStateType.SIGNED_OUT) {
     console.log(`userState: ${JSON.stringify(userState)}`);
     throw new Error('useUser: not signed in');
   }
