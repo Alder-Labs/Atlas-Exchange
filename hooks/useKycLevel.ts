@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 
-import { useQuery } from 'react-query';
-
 import { useUserState } from '../lib/auth-token-context';
-import { useFetcher } from '../lib/fetcher';
+import { UserStateStatus } from '../lib/types/user-states';
 
 import { useLoginStatus } from './useLoginStatus';
 
@@ -51,7 +49,8 @@ export function useAuthStatus(): HookResult {
 
   return useMemo(() => {
     // Deal with userState
-    if (!userState.user) return { authStatus: AuthStatus.NotLoggedIn };
+    if (userState.status === UserStateStatus.SIGNED_OUT)
+      return { authStatus: AuthStatus.NotLoggedIn };
 
     // Deal with login status hook
     if (loginStatusIsLoading) return { authStatus: AuthStatus.Loading };
@@ -92,7 +91,7 @@ export function useAuthStatus(): HookResult {
         return { authStatus: AuthStatus.Unknown };
     }
   }, [
-    userState.user,
+    userState,
     loginStatusIsLoading,
     loginStatusError,
     loginStatusData?.user,

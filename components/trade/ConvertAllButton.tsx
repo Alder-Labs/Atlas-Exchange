@@ -19,15 +19,7 @@ interface ConvertAllButtonProps {
 export function ConvertAllButton(props: ConvertAllButtonProps) {
   const { onAmountChosen, disabled, className, coinId, buttonText } = props;
 
-  const userState = useUserState();
-  const loggedIn = !!userState.user;
-
-  const {
-    balancesMap,
-    refetch: refetchBalances,
-    isLoading: balancesIsLoading,
-    error: balanceError,
-  } = useBalances();
+  const { balancesMap } = useBalances();
 
   const handleClick = () => {
     const usdBalance = balancesMap?.[coinId]?.total;

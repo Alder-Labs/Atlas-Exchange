@@ -17,15 +17,7 @@ interface ConvertPercentageButtonsProps {
 export function ConvertPercentageButtons(props: ConvertPercentageButtonsProps) {
   const { onAmountChosen, disabled, className } = props;
 
-  const userState = useUserState();
-  const loggedIn = !!userState.user;
-
-  const {
-    balancesMap,
-    refetch: refetchBalances,
-    isLoading: balancesIsLoading,
-    error: balanceError,
-  } = useBalances();
+  const { balancesMap, isLoading: balancesIsLoading } = useBalances();
 
   const { authStatus } = useAuthStatus();
   const isDisabled =

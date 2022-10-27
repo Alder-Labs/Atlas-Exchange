@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { useUserState } from '../lib/auth-token-context';
 import { useFetcher } from '../lib/fetcher';
 import { QueryProps } from '../lib/queryProps';
+import { UserStateStatus } from '../lib/types/user-states';
 
 export interface Owner {
   addresses: Address[];
@@ -97,7 +98,8 @@ export function useBankAccounts(props: QueryProps<BankAccount[]> = {}) {
     {
       ...props,
       enabled:
-        userState.user?.status === 'logged-in' && (props.enabled ?? true),
+        userState.status === UserStateStatus.SIGNED_IN &&
+        (props.enabled ?? true),
     }
   );
 

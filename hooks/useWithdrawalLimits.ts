@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { useUserState } from '../lib/auth-token-context';
 import { useFetcher } from '../lib/fetcher';
 import { QueryProps } from '../lib/queryProps';
+import { UserStateStatus } from '../lib/types/user-states';
 
 import type { WithdrawLimits } from '../lib/types';
 
@@ -14,7 +15,8 @@ export function useWithdrawalLimits(props: QueryProps<WithdrawLimits> = {}) {
     {
       ...props,
       enabled:
-        userState.user?.status === 'logged-in' && (props.enabled ?? true),
+        userState.status === UserStateStatus.SIGNED_IN &&
+        (props.enabled ?? true),
     }
   );
 

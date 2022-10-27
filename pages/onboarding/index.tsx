@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { iso31661Alpha3ToAlpha2 } from 'iso-3166';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
@@ -16,12 +15,12 @@ import { FadeTransition } from '../../components/transitions/FadeTransition';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
-import { COUNTRY_PHONE_NUMBER_CODES } from '../../lib/country-phone-number';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { CustomPage } from '../../lib/types';
 import { AuthLevel } from '../../lib/types/auth-level';
 import { ModalState } from '../../lib/types/modalState';
+import { UserStateStatus } from '../../lib/types/user-states';
 
 import type { KycForm, KycRawForm } from '../../lib/types/kyc';
 
@@ -104,22 +103,19 @@ const OnboardingPage: CustomPage = () => {
       useMutationFetcher<KycForm, { token: string }>(`/kyc/level1`, {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (!userState.user) {
+            if (userState.status !== UserStateStatus.SIGNED_IN) {
               reject();
               return;
             }
-            userState.setUser(
-              (prev) =>
-                prev ? { status: 'logged-in', token: res.token } : null,
-              async (token) => {
-                if (token) {
-                  await refetchLoginStatus();
+            userState.updateToken(res.token).then(() => {
+              refetchLoginStatus()
+                .then(() => {
                   resolve(res);
-                } else {
+                })
+                .catch(() => {
                   reject();
-                }
-              }
-            );
+                });
+            });
           }),
       }),
       {}

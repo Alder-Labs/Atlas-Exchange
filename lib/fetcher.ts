@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useSardineSdkConfig } from './../components/sardine/useSardineSdkConfig';
 import { useUserState } from './auth-token-context';
 import { requireEnvVar } from './env';
+import { UserStateStatus } from './types/user-states';
 
 const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 export const createFetcher = <TQueryFnData>(
@@ -44,9 +45,11 @@ export function useFetcher<TQueryFnData>() {
   return useMemo(
     () =>
       createFetcher<TQueryFnData>(
-        userState?.user?.token,
+        userState.status !== UserStateStatus.SIGNED_OUT
+          ? userState.token
+          : undefined,
         data?.context.sessionKey
       ),
-    [userState?.user?.token, data?.context.sessionKey]
+    [userState, data?.context.sessionKey]
   );
 }

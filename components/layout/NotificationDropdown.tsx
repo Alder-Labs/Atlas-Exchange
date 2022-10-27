@@ -13,6 +13,7 @@ import { formatDate } from '../../lib/date';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { Notification } from '../../lib/types/notification';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Button, Spinner, Text, TextButton, Title } from '../base';
 import { Badge } from '../notifications/badge';
 
@@ -65,7 +66,7 @@ enum NotificationState {
 export function NotificationDropdown() {
   const router = useRouter();
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const {
     data: notifications,
