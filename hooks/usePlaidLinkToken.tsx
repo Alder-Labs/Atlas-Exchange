@@ -4,6 +4,7 @@ import { useMutation } from 'react-query';
 
 import { useUserState } from '../lib/auth-token-context';
 import { useMutationFetcher } from '../lib/mutation';
+import { UserStateStatus } from '../lib/types/user-states';
 
 export function usePlaidLinkToken() {
   const userState = useUserState();
@@ -26,12 +27,12 @@ export function usePlaidLinkToken() {
   );
 
   useEffect(() => {
-    if (userState.user?.status === 'logged-in') {
+    if (userState.status === UserStateStatus.SIGNED_IN) {
       mutate({
         products: ['auth'],
       });
     }
-  }, [mutate, userState.user?.status]);
+  }, [mutate, userState.status]);
 
   const getLinkToken = useCallback(async () => {
     if (plaidLinkTokenData) {

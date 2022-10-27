@@ -9,6 +9,7 @@ import { useUserState } from '../../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../../lib/mutation';
 import { toast } from '../../../../lib/toast';
 import { ModalState } from '../../../../lib/types/modalState';
+import { UserStateStatus } from '../../../../lib/types/user-states';
 import { Button, Text, TextInput } from '../../../base';
 import { TitledModal } from '../../../modals/TitledModal';
 
@@ -38,9 +39,9 @@ export const SmsAuth = () => {
   const onSignInWithMfa = useCallback(
     (smsCode: string) => {
       setIsLoggingIn(true);
-      if (userState.user) {
+      if (userState.status === UserStateStatus.NEEDS_MFA) {
         userState
-          .signinWithMfa({ code: smsCode })
+          .signInWithMfa({ code: smsCode })
           .then(async () => {
             await refetchLoginStatus();
             setModalState({ state: ModalState.Closed });
@@ -117,10 +118,10 @@ export const SmsAuth = () => {
       isOpen={modalState.state === ModalState.SmsAuth}
       darkenBackground={false}
       onGoBack={() => {
-        if (userState.user) {
+        if (userState.status !== UserStateStatus.SIGNED_OUT) {
           setIsSigningOut(true);
           userState
-            .signout()
+            .signOut()
             .catch((err: Error) => {
               console.error('Error signing out user', err);
               toast.error(`Error: ${err.message}`);

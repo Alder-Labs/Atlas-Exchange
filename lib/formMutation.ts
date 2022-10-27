@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
-import { useUser, useUserState } from './auth-token-context';
+import { useUserState } from './auth-token-context';
 import { requireEnvVar } from './env';
+import { UserStateStatus } from './types/user-states';
 
 const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 
@@ -48,8 +49,10 @@ export function useFormMutationFetcher<
     () =>
       createFormMutationFetcher<TRequestData, TQueryFnData>(
         path,
-        userState?.user?.token
+        userState.status !== UserStateStatus.SIGNED_OUT
+          ? userState.token
+          : undefined
       ),
-    [path, userState?.user?.token]
+    [path, userState]
   );
 }

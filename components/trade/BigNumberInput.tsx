@@ -1,15 +1,12 @@
 import {
   forwardRef,
   InputHTMLAttributes,
-  useCallback,
-  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react';
 
 import clsx from 'clsx';
-import FontFaceObserver from 'fontfaceobserver';
 import { Rifm } from 'rifm';
 import resolveConfig from 'tailwindcss/resolveConfig';
 

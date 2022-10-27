@@ -24,12 +24,11 @@ import { useMarket } from '../../../hooks/useMarket';
 import { useMarketCandles } from '../../../hooks/useMarketCandles';
 import { useUserState } from '../../../lib/auth-token-context';
 import { renderCurrency } from '../../../lib/currency';
-import { DurationInterval, DURATION_INFO } from '../../../lib/duration';
+import { DURATION_INFO, DurationInterval } from '../../../lib/duration';
 import { buyCoinIdAtom } from '../../../lib/jotai';
 import { toast } from '../../../lib/toast';
 import { Coin, CoinBalance, CustomPage } from '../../../lib/types';
-
-import type { NextPage } from 'next';
+import { UserStateStatus } from '../../../lib/types/user-states';
 
 const DynamicCandleChartDetailed: ComponentType<CandleChartDetailedProps> =
   dynamic(
@@ -44,9 +43,6 @@ const Page: CustomPage = () => {
   const router = useRouter();
   const { baseCurrency } = router.query;
   const quoteCurrency = 'USD';
-
-  const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
   const [durationInterval, setDurationInterval] =
     useState<DurationInterval>('1M');

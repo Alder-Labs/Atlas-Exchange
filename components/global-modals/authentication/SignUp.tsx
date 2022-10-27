@@ -25,6 +25,7 @@ import {
 import { toast } from '../../../lib/toast';
 import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types';
 import { ModalState } from '../../../lib/types/modalState';
+import { UserStateStatus } from '../../../lib/types/user-states';
 import { Button, InputCheckbox, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
@@ -115,10 +116,10 @@ const SignUpModal = (props: SignUpProps) => {
       return;
     }
 
-    if (!userState.user) {
+    if (userState.status === UserStateStatus.SIGNED_OUT) {
       setIsSigningUp(true);
       userState
-        .signup(inputData)
+        .signUp(inputData)
         .then(() => {
           router.push('/onboarding').then(() => {
             setModalState({ state: ModalState.Closed });

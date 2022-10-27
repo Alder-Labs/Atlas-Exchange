@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useBalances } from '../../hooks/useBalances';
 import { useUserState } from '../../lib/auth-token-context';
 import { renderCurrency } from '../../lib/currency';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Text } from '../base';
 
 interface AvailableFundsProps {
@@ -15,7 +16,7 @@ export function AvailableFunds(props: AvailableFundsProps) {
   const { coinId, label, className } = props;
 
   const userState = useUserState();
-  const loggedIn = !!userState.user;
+  const loggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const {
     balancesMap,

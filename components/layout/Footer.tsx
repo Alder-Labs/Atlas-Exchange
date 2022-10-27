@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import React from 'react';
-import { useDarkOrLightMode } from '../../lib/dark-mode';
+
+import Link from 'next/link';
 
 import { Text } from '../base';
 import { BrandLogo } from '../BrandLogo';
@@ -8,8 +8,6 @@ import { BrandLogo } from '../BrandLogo';
 import { SidePadding } from './SidePadding';
 
 export const Footer = () => {
-  const darkMode = useDarkOrLightMode();
-
   return (
     <footer>
       <SidePadding className="bg-grayLight-10 dark:bg-grayDark-10">

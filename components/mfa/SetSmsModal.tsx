@@ -18,6 +18,7 @@ import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType, RecaptchaActions } from '../../lib/types';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
@@ -91,21 +92,19 @@ export function SetSmsMfaForm() {
       {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (userState.user) {
-              userState.setUser(
-                (prev) => (prev ? { ...prev, token: res.token } : null),
-                async (token) => {
-                  if (token) {
-                    await refetchLoginStatus();
-                    resolve(res);
-                  } else {
-                    reject();
-                  }
-                }
-              );
-            } else {
+            if (userState.status !== UserStateStatus.SIGNED_IN) {
               reject();
+              return;
             }
+            userState.updateToken(res.token).then(() => {
+              refetchLoginStatus()
+                .then(() => {
+                  resolve(res);
+                })
+                .catch(() => {
+                  reject();
+                });
+            });
           }),
       }
     ),

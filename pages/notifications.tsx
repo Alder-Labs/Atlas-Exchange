@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { NextPage } from 'next';
 import { useMutation } from 'react-query';
 
-import { Text, Title, TextButton } from '../components/base';
+import { Text, TextButton, Title } from '../components/base';
 import { SidePadding } from '../components/layout/SidePadding';
 import { Table } from '../components/table';
 import { useNotifications } from '../hooks/useNotifications';
-import { useUserState } from '../lib/auth-token-context';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';
@@ -19,9 +17,6 @@ const formatTime = (time: string) => {
 };
 
 const Notifications: CustomPage = () => {
-  const userState = useUserState();
-  const isLoggedIn = !!userState.user;
-
   const { data: notifications, isLoading: notificationsAreLoading } =
     useNotifications({
       onError: (err: Error) => {

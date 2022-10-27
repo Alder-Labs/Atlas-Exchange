@@ -9,12 +9,13 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useMutation } from 'react-query';
 
-import { Button, TextButton, TextInput, Text } from '../components/base';
+import { Button, Text, TextButton, TextInput } from '../components/base';
 import { PasswordRequirements } from '../components/global-modals/authentication/SignUp';
 import { SidePadding } from '../components/layout/SidePadding';
 import { useUserState } from '../lib/auth-token-context';
 import { sardineDeviceIdAtom } from '../lib/jotai';
 import { useMutationFetcher } from '../lib/mutation';
+import { UserStateStatus } from '../lib/types/user-states';
 
 type PasswordResetForm = {
   code: string;
@@ -41,7 +42,7 @@ const ResetPasswordPage: NextPage = (props: {}) => {
     useState(false);
 
   const userState = useUserState();
-  const loggedIn = !!userState.user;
+  const loggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const [sardineDeviceId] = useAtom(sardineDeviceIdAtom);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -79,10 +80,10 @@ const ResetPasswordPage: NextPage = (props: {}) => {
       {
         onSuccess: (data) => {
           toast.success('Password reset successfully');
-          if (userState.user) {
+          if (userState.status === UserStateStatus.SIGNED_IN) {
             setIsSigningOut(true);
             userState
-              .signout()
+              .signOut()
               .catch((err: Error) => {
                 toast.error(`Error: ${err.message}`);
               })
