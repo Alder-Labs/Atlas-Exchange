@@ -21,7 +21,7 @@ import { SignUpResponse } from './types/signup';
 import { UserState, UserStateStatus } from './types/user-states';
 
 type User =
-  | { status: UserStateStatus.UNKNOWN }
+  | { status: 'UNKNOWN' }
   | { status: UserStateStatus.SIGNED_OUT }
   | { status: UserStateStatus.SUPPORT_ONLY; token: string }
   | { status: UserStateStatus.SIGNED_IN; token: string }
@@ -44,7 +44,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
 
   const [user, _setUser] = useStateCallback<User>({
-    status: UserStateStatus.UNKNOWN,
+    status: 'UNKNOWN',
   });
 
   const setUser = useCallback(
@@ -190,7 +190,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     if (
       !user ||
       user.status === UserStateStatus.SIGNED_OUT ||
-      user.status === UserStateStatus.UNKNOWN
+      user.status === 'UNKNOWN'
     ) {
       throw new Error('Not signed in');
     }
@@ -234,7 +234,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  if (user.status === UserStateStatus.UNKNOWN) {
+  if (user.status === 'UNKNOWN') {
     // User state has not loaded; render nothing
     return null;
   }

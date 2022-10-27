@@ -36,7 +36,7 @@ const DynamicCandleChartDetailed: ComponentType<CandleChartDetailedProps> =
       import('../../../components/market/CandleChartDetailed').then(
         (mod) => mod.CandleChartDetailed as any
       ),
-    { loading: () => <div style={{ height: '60%' }} /> }
+    { loading: () => <div style={{ height: '60%' }} />, ssr: false }
   );
 
 const Page: CustomPage = () => {

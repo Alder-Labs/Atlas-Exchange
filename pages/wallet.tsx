@@ -13,9 +13,9 @@ import { PortfolioPerformance } from '../components/wallet/PortfolioPerformance'
 import TradeTransactions from '../components/wallet/Trades';
 import WithdrawTransactions from '../components/wallet/Withdrawals';
 import { useUserState } from '../lib/auth-token-context';
+import { CustomPage } from '../lib/types';
 
 import type { NextPage } from 'next';
-import { CustomPage } from '../lib/types';
 
 enum TabType {
   Balances = 'Balances',
