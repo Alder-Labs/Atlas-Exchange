@@ -196,8 +196,11 @@ export function Table<T>(props: TableProps<T>) {
               ))}
           </TableBody>
         )}
-        {!loading && data.length > 0 && (
-          <TableBody>
+        {!loading && (
+          <TableBody className="relative">
+            {!loading && data.length === 0 && (
+              <div className="absolute top-0 w-full">{renderEmpty()}</div>
+            )}
             {renderedData.map((item, idx) => (
               <TableRow
                 onClick={() => onRowClick?.(item)}
@@ -239,7 +242,6 @@ export function Table<T>(props: TableProps<T>) {
               </TableRow>
             ))}
             {renderedData.length < pageSize &&
-              page !== 0 &&
               new Array(pageSize - renderedData.length)
                 .fill(0)
                 .map((_, idx) => (
@@ -254,10 +256,8 @@ export function Table<T>(props: TableProps<T>) {
         )}
         {/* Pagination UI */}
       </table>
-      {!loading && data.length === 0 && (
-        <div className="w-full">{renderEmpty()}</div>
-      )}
-      {paginated && data.length > 0 && (
+
+      {paginated && (
         <>
           <div className="h-2"></div>
           <div className={`mx-3 flex justify-between`}>
