@@ -21,6 +21,21 @@ import {
 import { SignUpResponse } from './types/signup';
 import { UserState, UserStateStatus } from './types/user-states';
 
+function clearLocalStorage() {
+  // Keep some keys (don't delete them)
+
+  const KEYS_TO_KEEP = [LocalStorageKey.WatchList];
+  const VALUES_TO_KEEP = KEYS_TO_KEEP.map(
+    (key) => localStorage.getItem(key) || ''
+  );
+
+  localStorage.clear();
+
+  KEYS_TO_KEEP.forEach((key, i) => {
+    localStorage.setItem(key, VALUES_TO_KEEP[i]);
+  });
+}
+
 type User =
   | { status: 'UNKNOWN' }
   | { status: UserStateStatus.SIGNED_OUT }
@@ -213,13 +228,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         })
         .then((res) => {
-          localStorage.clear();
+          clearLocalStorage();
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
-          localStorage.clear();
+          clearLocalStorage();
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           reject(err);
