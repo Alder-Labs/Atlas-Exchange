@@ -4,12 +4,13 @@ import { useQuery } from 'react-query';
 
 import { useUserState } from '../../lib/auth-token-context';
 import { requireEnvVar } from '../../lib/env';
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { SardineSdkConfig } from '../../lib/types/sardine';
 import { UserStateStatus } from '../../lib/types/user-states';
 
 const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 
-const SARDINE_LOCAL_STORAGE_KEY = 'sardineSdkConfig';
+const SARDINE_LOCAL_STORAGE_KEY = LocalStorageKey.SardineSdkConfig;
 
 export const useSardineSdkConfig = () => {
   const userState = useUserState();
