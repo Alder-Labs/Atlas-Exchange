@@ -15,7 +15,8 @@ import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType } from '../../lib/types';
-import { Text, Button, TextInput, Spinner } from '../base';
+import { UserStateStatus } from '../../lib/types/user-states';
+import { Button, Spinner, Text, TextInput } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
@@ -59,18 +60,16 @@ export function SetTotpModal(props: { mfa: MfaType }) {
       {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (userState.user) {
-              userState.setUser(
-                (prev) => (prev ? { ...prev, token: res.token } : null),
-                async (user) => {
-                  if (user) {
-                    await refetchLoginStatus();
+            if (userState.status === UserStateStatus.SIGNED_IN) {
+              userState.updateToken(res.token).then(() => {
+                refetchLoginStatus()
+                  .then((res) => {
                     resolve(res);
-                  } else {
+                  })
+                  .catch((err) => {
                     reject();
-                  }
-                }
-              );
+                  });
+              });
             } else {
               reject();
             }

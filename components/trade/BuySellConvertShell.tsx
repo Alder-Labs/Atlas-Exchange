@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useAtom } from 'jotai';
 import { createPortal } from 'react-dom';
@@ -7,6 +7,7 @@ import { useBalances } from '../../hooks/useBalances';
 import { AuthStatus } from '../../hooks/useKycLevel';
 import { useUserState } from '../../lib/auth-token-context';
 import { bscFocusedAtom, buyCoinIdAtom } from '../../lib/jotai';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Button } from '../base';
 
 import { AvailableFunds } from './AvailableFunds';
@@ -73,15 +74,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const userState = useUserState();
-  const loggedIn = !!userState.user;
-
-  const {
-    balancesMap,
-    refetch: refetchBalances,
-    isLoading: balancesIsLoading,
-    error: balanceError,
-  } = useBalances();
+  const { refetch: refetchBalances } = useBalances();
 
   const {
     isLoading,

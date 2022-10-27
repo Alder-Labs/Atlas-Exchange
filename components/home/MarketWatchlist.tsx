@@ -40,7 +40,6 @@ export type MarketWatchlistProps = React.HTMLAttributes<HTMLDivElement>;
 export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
   const router = useRouter();
 
-  const userState = useUserState();
   const { data: markets, isLoading } = useMarkets();
   const { coinsMap, isLoading: coinsIsLoading } = useCoins({
     refetchOnWindowFocus: false,
