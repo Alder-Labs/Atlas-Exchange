@@ -154,6 +154,10 @@ export const WalletBalances = (props: WalletBalancesProps) => {
             market = marketsMap[`${balance.coin}/USD`];
           }
 
+          if (coin.id === 'USD') {
+            coin.name = 'Buying Power';
+          }
+
           return {
             balance,
             coin,
@@ -162,11 +166,19 @@ export const WalletBalances = (props: WalletBalancesProps) => {
           };
         })
         .sort((a, b) => {
+          if (a.coin.id === 'USD') {
+            return -1;
+          }
+          if (b.coin.id === 'USD') {
+            return 1;
+          }
+
           const res = SORT_METHODS[sortMethod].func(a, b);
           if (sortReverse) {
             console.log('sortReverse', sortReverse);
             return res * -1;
           }
+
           return res;
         }),
     };
@@ -244,7 +256,7 @@ export const WalletBalances = (props: WalletBalancesProps) => {
               },
               renderCell: (row) => {
                 return (
-                  <div className="flex cursor-pointer flex-row items-center py-2">
+                  <div className="flex flex-row items-center py-2">
                     <CryptoIcon
                       className="hidden h-7 w-7 sm:block"
                       coinId={row.coin.id}
@@ -486,6 +498,9 @@ export const WalletBalances = (props: WalletBalancesProps) => {
             sortReverse,
           ]
         )}
+        allowRowClick={(row) => {
+          return row.coin.id !== 'USD';
+        }}
         onRowClick={(row) => {
           if (!(row.coin.fiat || row.coin.usdFungible)) {
             router.push(`/market/${row.coin.id}`);
