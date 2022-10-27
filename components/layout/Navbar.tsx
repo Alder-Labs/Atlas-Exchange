@@ -1,12 +1,12 @@
 import React, { ReactNode, useState } from 'react';
 
 import {
-  faXmark,
   faBell,
   faHomeLg,
   faNavicon,
   faUser,
   faWallet,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
@@ -19,6 +19,7 @@ import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Button, Text } from '../base';
 import { BrandLogo } from '../BrandLogo';
 import Drawer from '../Drawer';
@@ -109,7 +110,7 @@ interface NavbarProps {
 
 export function Navbar({ children }: NavbarProps) {
   const userState = useUserState();
-  const authenticated = !!userState.user;
+  const authenticated = userState.status === UserStateStatus.SIGNED_IN;
 
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
@@ -117,6 +118,7 @@ export function Navbar({ children }: NavbarProps) {
   const router = useRouter();
   const url = router.pathname;
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
 
   // Under basic mode, the user can only sign out and change app appearance.
@@ -262,14 +264,24 @@ export function Navbar({ children }: NavbarProps) {
                   </Button>
                 </>
               )}
-              {userState.user ? (
+              {userState.status !== UserStateStatus.SIGNED_OUT ? (
                 <Button
                   variant="outline"
                   rounded="md"
                   className="mx-4 mt-16"
                   onClick={() => {
                     setDrawerOpen(false);
-                    userState.signout();
+                    setIsSigningOut(true);
+                    userState
+                      .signOut()
+                      .catch((err: Error) => {
+                        toast.error(`Error: ${err.message}`);
+                      })
+                      .finally(() => {
+                        router.push('/').then(() => {
+                          setIsSigningOut(false);
+                        });
+                      });
                     setModalStateDetailed({ state: ModalState.SignIn });
                   }}
                 >

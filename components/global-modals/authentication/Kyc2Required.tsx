@@ -6,9 +6,7 @@ import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
-interface Kyc2RequiredProps {}
-
-export function Kyc2Required(props: Kyc2RequiredProps) {
+export function Kyc2Required(props: {}) {
   const router = useRouter();
   const [authModalState, setAuthModalState] = useModalState();
 

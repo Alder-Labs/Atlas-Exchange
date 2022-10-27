@@ -23,7 +23,7 @@ function GrayQRCodeContainer(props: { children: React.ReactNode }) {
   );
 }
 
-export const DepositCryptoAddress = (props: { coin: Coin }) => {
+export const CryptoDepositAddress = (props: { coin: Coin }) => {
   const { coin } = props;
   const router = useRouter();
 
@@ -40,6 +40,7 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
         toast.error(`Error: ${err.message}`);
       },
       refetchOnWindowFocus: false,
+      retry: false,
     }
   );
 
@@ -91,11 +92,12 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
           )}
           {!isLoading && error && (
             <GrayQRCodeContainer>
-              <div className="flex h-48 w-48 items-center justify-center">
-                <FontAwesomeIcon
-                  className="w-12 text-grayLight-90"
-                  icon={faBan}
-                />
+              <div className="flex h-48 w-48 flex-col items-center justify-center">
+                <FontAwesomeIcon className="h-12" icon={faBan} />
+                <div className="h-6" />
+                <Text className="text-center" weight="semibold">
+                  {error.message}
+                </Text>
               </div>
             </GrayQRCodeContainer>
           )}
@@ -148,4 +150,4 @@ export const DepositCryptoAddress = (props: { coin: Coin }) => {
   );
 };
 
-export default DepositCryptoAddress;
+export default CryptoDepositAddress;

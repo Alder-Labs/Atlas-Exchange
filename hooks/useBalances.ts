@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useAtom } from 'jotai';
 import { useQuery } from 'react-query';
@@ -7,6 +7,7 @@ import { useUserState } from '../lib/auth-token-context';
 import { useFetcher } from '../lib/fetcher';
 import { watchBalanceUntilAtom } from '../lib/jotai';
 import { QueryProps } from '../lib/queryProps';
+import { UserStateStatus } from '../lib/types/user-states';
 
 import type { CoinBalance } from '../lib/types';
 
@@ -38,7 +39,8 @@ export function useBalances(props: QueryProps<CoinBalance[]> = {}) {
   } = useQuery('/proxy/api/wallet/balances', useFetcher<CoinBalance[]>(), {
     refetchInterval: shouldWatch ? 1000 * 2 : false, // 2 seconds
     ...props,
-    enabled: userState.user?.status === 'logged-in' && (props.enabled ?? true),
+    enabled:
+      userState.status === UserStateStatus.SIGNED_IN && (props.enabled ?? true),
   });
 
   const balancesMap = useMemo(() => {

@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   faAngleRight,
-  faBan,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
