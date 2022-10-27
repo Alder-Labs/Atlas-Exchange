@@ -1,5 +1,5 @@
 export enum LocalStorageKey {
-  User = 'user',
+  User = 'userObject',
   TokenDate = 'tokenDate',
   KycForm = 'kycForm',
   SardineSdkConfig = 'sardineSdkConfig',
