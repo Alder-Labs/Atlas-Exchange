@@ -44,7 +44,6 @@ export function QuotePreview(props: QuotePreviewProps) {
     error: balanceError,
   } = useBalances();
 
-  console.log(quote);
   const currentDate = useCurrentDate();
   const secondsBetweenDates = Math.floor(
     (quote.expiry * 1000 - currentDate.getTime()) / 1000

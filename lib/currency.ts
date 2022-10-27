@@ -11,7 +11,6 @@ function renderAmount(
 ): string {
   const { minFixedDigits, maxFixedDigits, addCommas, roundingMode } = options;
   if (typeof amount === 'number') {
-    let amt = amount;
     const pow = Math.pow(10, maxFixedDigits);
     if (roundingMode === 'ceil') {
       amount = Math.ceil(amount * pow) / pow;
@@ -20,8 +19,6 @@ function renderAmount(
     } else if (roundingMode === 'round') {
       amount = Math.round(amount * pow) / pow;
     }
-    console.log(amount);
-    console.log('=', maxFixedDigits);
     // Truncate amount to between minFixedDigits and maxFixedDigits
     let res = amount.toFixed(
       Math.min(

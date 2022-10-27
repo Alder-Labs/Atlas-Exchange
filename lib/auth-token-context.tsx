@@ -185,7 +185,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return res.result;
         })
         .then((res) => {
-          console.log(res);
           setUser(
             {
               token: res.token,
