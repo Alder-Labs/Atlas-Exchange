@@ -18,50 +18,14 @@ import {
   SigninWithMfaParams,
 } from './types';
 import { SignUpResponse } from './types/signup';
+import { UserState, UserStateStatus } from './types/user-states';
 
 type User =
-  | { status: UserStateType.UNKNOWN }
-  | { status: UserStateType.SIGNED_OUT }
-  | { status: UserStateType.SUPPORT_ONLY; token: string }
-  | { status: UserStateType.SIGNED_IN; token: string }
-  | { status: UserStateType.NEEDS_MFA; token: string };
-
-export type UserState =
-  | SignedOutUserState
-  | NeedsMfaUserState
-  | SignedInUserState
-  | SupportOnlyUserState;
-
-export type SignedOutUserState = {
-  user: { status: UserStateType.SIGNED_OUT };
-  signIn: (params: SigninParams) => Promise<any>;
-  signUp: (params: SignupParams) => Promise<any>;
-};
-
-export type NeedsMfaUserState = {
-  user: { status: UserStateType.NEEDS_MFA; token: string };
-  signInWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-  signOut: () => Promise<void>;
-};
-
-export type SignedInUserState = {
-  user: { status: UserStateType.SIGNED_IN; token: string };
-  signOut: () => Promise<void>;
-  updateToken: (token: string) => void;
-};
-
-export type SupportOnlyUserState = {
-  user: { status: UserStateType.SUPPORT_ONLY; token: string };
-  signOut: () => Promise<void>;
-};
-
-export enum UserStateType {
-  SIGNED_OUT = 'SIGNED_OUT',
-  NEEDS_MFA = 'NEEDS_MFA',
-  SIGNED_IN = 'SIGNED_IN',
-  SUPPORT_ONLY = 'SUPPORT_ONLY',
-  UNKNOWN = 'UNKNOWN',
-}
+  | { status: UserStateStatus.UNKNOWN }
+  | { status: UserStateStatus.SIGNED_OUT }
+  | { status: UserStateStatus.SUPPORT_ONLY; token: string }
+  | { status: UserStateStatus.SIGNED_IN; token: string }
+  | { status: UserStateStatus.NEEDS_MFA; token: string };
 
 export type SignupParams = {
   email: string;
@@ -72,22 +36,6 @@ export type SignupParams = {
   password: string;
 } & RecaptchaParams;
 
-// type UserState =
-//   | {
-//       user: null;
-//       signin: (params: SigninParams) => Promise<SignInResponse>;
-//       signup: (params: SignupParams) => Promise<SignUpResponse>;
-//     }
-//   | {
-//       user: User;
-//       signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-//       setUser: (
-//         user: SetStateAction<User | null | undefined>,
-//         callback?: (user: User | null | undefined) => void
-//       ) => void;
-//       signout: () => Promise<void>;
-//     };
-
 const UserContext = createContext<UserState | undefined>(undefined);
 
 const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
@@ -95,20 +43,9 @@ const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
 
-  /**
-   * authToken has 3 possible states:
-   * 1. null: user is not signed in
-   * 2. string: user is signed in
-   * 3. undefined: state has not been initialized. In this case, UserProvider will
-   *    not render any children.
-   */
   const [user, _setUser] = useStateCallback<User>({
-    status: UserStateType.UNKNOWN,
+    status: UserStateStatus.UNKNOWN,
   });
-
-  // const [authToken, _setUser] = useStateCallback<
-  //   string | null | undefined
-  // >(undefined);
 
   const setUser = useCallback(
     (
@@ -117,11 +54,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     ) => {
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem(
-          'tokenDate',
-          // two day expiration
-          (Date.now() + 1000 * 60 * 60 * 24 * 2).toString()
-        );
+        localStorage.setItem('tokenDate', getTwoDaysFromNow());
       } else {
         localStorage.removeItem('user');
         localStorage.removeItem('tokenDate');
@@ -131,53 +64,43 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     [_setUser]
   );
 
+  // In an effect since localStorage is not available during SSR
+  // we can no longer check token expiration because its encrypted
   useEffect(() => {
-    // In an effect since localStorage is not available during SSR
-    // we can no longer check token expiration because its encrypted
-
     const cachedUser = JSON.parse(
       localStorage.getItem('user') || 'null'
     ) as User | null;
     const tokenDate = localStorage.getItem('tokenDate');
 
     if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
-      setUser({ status: UserStateType.SIGNED_OUT });
+      setUser({ status: UserStateStatus.SIGNED_OUT });
     } else {
       setUser(cachedUser);
     }
   }, [setUser]);
 
   const signup = (data: SignupParams) => {
-    const signupReq = {
-      email: data.email,
-      noPassword: false,
-      password: data.password,
-      acceptedWhitelabelTos: data.acceptedWhitelabelTos ? true : false,
-      clientUserId: data.clientUserId,
-      captcha: {
-        recaptcha_challenge: data.captcha.recaptcha_challenge,
-      },
-    };
-
+    const signupRequest = createSignupRequest(data);
     return new Promise<SignUpResponse>((resolve, reject) => {
       fetch(`${API_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(signupReq),
+        body: JSON.stringify(signupRequest),
       })
         .then((res) => {
           return res.json();
         })
         .then((res) => {
-          if (!res.success) {
-            throw new Error(res.error);
-          }
+          if (!res.success) throw new Error(res.error);
           return res.result;
         })
         .then((res: SignUpResponse) => {
-          setUser({ token: res.token, status: UserStateType.SIGNED_IN }, () => {
-            resolve(res);
-          });
+          setUser(
+            { token: res.token, status: UserStateStatus.SIGNED_IN },
+            () => {
+              resolve(res);
+            }
+          );
         })
         .catch((err) => {
           reject(err);
@@ -206,8 +129,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             {
               token: res.token,
               status: res.mfaRequired
-                ? UserStateType.NEEDS_MFA
-                : UserStateType.SIGNED_IN,
+                ? UserStateStatus.NEEDS_MFA
+                : UserStateStatus.SIGNED_IN,
             },
             () => {
               resolve(res);
@@ -221,7 +144,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signinWithMfa = ({ code }: SigninWithMfaParams) => {
-    if (!user || user.status !== UserStateType.NEEDS_MFA) {
+    if (!user || user.status !== UserStateStatus.NEEDS_MFA) {
       throw new Error('Not signed in');
     }
 
@@ -250,7 +173,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(
             {
               token: res.token,
-              status: UserStateType.SIGNED_IN,
+              status: UserStateStatus.SIGNED_IN,
             },
             () => {
               resolve();
@@ -266,8 +189,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const signout = () => {
     if (
       !user ||
-      user.status === UserStateType.SIGNED_OUT ||
-      user.status === UserStateType.UNKNOWN
+      user.status === UserStateStatus.SIGNED_OUT ||
+      user.status === UserStateStatus.UNKNOWN
     ) {
       throw new Error('Not signed in');
     }
@@ -291,19 +214,27 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res) => {
           localStorage.removeItem('token');
           queryClient.clear();
-          setUser({ status: UserStateType.SIGNED_OUT });
+          setUser({ status: UserStateStatus.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
           localStorage.removeItem('token');
           queryClient.clear();
-          setUser({ status: UserStateType.SIGNED_OUT });
+          setUser({ status: UserStateStatus.SIGNED_OUT });
           reject(err);
         });
     });
   };
 
-  if (user.status === UserStateType.UNKNOWN) {
+  const updateToken = (token: string) => {
+    return new Promise<void>((resolve, reject) => {
+      setUser({ status: UserStateStatus.SIGNED_IN, token }, () => {
+        resolve();
+      });
+    });
+  };
+
+  if (user.status === UserStateStatus.UNKNOWN) {
     // User state has not loaded; render nothing
     return null;
   }
@@ -311,24 +242,31 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <UserContext.Provider
       value={
-        user.status === UserStateType.SUPPORT_ONLY
+        user.status === UserStateStatus.SUPPORT_ONLY
           ? {
-              user: user,
+              status: user.status,
+              token: user.token,
               signOut: signout,
             }
-          : user.status === UserStateType.NEEDS_MFA
+          : user.status === UserStateStatus.NEEDS_MFA
           ? {
-              user: user,
+              status: user.status,
+              token: user.token,
               signInWithMfa: signinWithMfa,
               signOut: signout,
             }
-          : user.status === UserStateType.SIGNED_IN
+          : user.status === UserStateStatus.SIGNED_IN
           ? {
-              user: user,
+              status: user.status,
+              token: user.token,
               signOut: signout,
-              updateToken: () => {},
+              updateToken: updateToken,
             }
-          : { user: user, signIn: signin, signUp: signup }
+          : {
+              status: user.status,
+              signIn: signin,
+              signUp: signup,
+            }
       }
     >
       {children}
@@ -342,4 +280,21 @@ export function useUserState(): UserState {
     throw new Error('useUserState must be used within a UserProvider');
   }
   return context;
+}
+
+function createSignupRequest(data: SignupParams) {
+  return {
+    email: data.email,
+    noPassword: false,
+    password: data.password,
+    acceptedWhitelabelTos: data.acceptedWhitelabelTos ? true : false,
+    clientUserId: data.clientUserId,
+    captcha: {
+      recaptcha_challenge: data.captcha.recaptcha_challenge,
+    },
+  };
+}
+
+function getTwoDaysFromNow(): string {
+  return (Date.now() + 1000 * 60 * 60 * 24 * 2).toString();
 }

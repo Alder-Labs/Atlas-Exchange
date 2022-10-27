@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import { useBalances } from '../../../hooks/useBalances';
 import { useLoginStatus } from '../../../hooks/useLoginStatus';
-import { useMinimumWithdrawalSize } from '../../../hooks/useMinimumWithdrawalSize';
 import { useUserState } from '../../../lib/auth-token-context';
 import {
   countryCodesAlpha3,
@@ -14,6 +13,7 @@ import {
 import { renderCurrency } from '../../../lib/currency';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
+import { UserStateStatus } from '../../../lib/types/user-states';
 import { Button, Select, Text, TextInput } from '../../base';
 import { CURRENCY_OPTIONS } from '../../global-modals/deposit/Wire';
 import { ExistingMfaInput } from '../../mfa/ExistingMfaInput';
@@ -64,7 +64,7 @@ interface WithdrawWireInput {
 
 export const WithdrawWire = ({ onSuccess }: { onSuccess: () => void }) => {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const { register, handleSubmit, setValue, getValues, formState, control } =
     useForm<WithdrawWireInput>({

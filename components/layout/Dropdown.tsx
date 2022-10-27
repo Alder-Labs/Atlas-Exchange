@@ -9,9 +9,10 @@ import { useRouter } from 'next/router';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
+import { toast } from '../../lib/toast';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Text } from '../base';
 import { DarkModeModal } from '../DarkModeModal';
-import { toast } from '../../lib/toast';
 
 interface DropdownMenuItemProps {
   onClick: () => void;
@@ -49,7 +50,7 @@ export function Dropdown() {
   ].includes(router.pathname);
 
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
@@ -121,7 +122,7 @@ export function Dropdown() {
                             onClick={() => {
                               setIsSigningOut(true);
                               userState
-                                .signout()
+                                .signOut()
                                 .catch((err: Error) => {
                                   toast.error(`Error: ${err.message}`);
                                 })

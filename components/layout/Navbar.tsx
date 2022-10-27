@@ -1,12 +1,12 @@
 import React, { ReactNode, useState } from 'react';
 
 import {
-  faXmark,
   faBell,
   faHomeLg,
   faNavicon,
   faUser,
   faWallet,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
@@ -17,16 +17,17 @@ import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
+import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Button, Text } from '../base';
+import { BrandLogo } from '../BrandLogo';
 import Drawer from '../Drawer';
 
 import { Dropdown } from './Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
-import { BrandLogo } from '../BrandLogo';
-import { toast } from '../../lib/toast';
 
 export function IconButton(props: {
   icon: ReactNode;
@@ -109,7 +110,7 @@ interface NavbarProps {
 
 export function Navbar({ children }: NavbarProps) {
   const userState = useUserState();
-  const signedIn = !!userState.user;
+  const signedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
@@ -239,7 +240,7 @@ export function Navbar({ children }: NavbarProps) {
               >
                 Send / Receive
               </Button>
-              {userState.user ? (
+              {userState.status !== UserStateStatus.SIGNED_OUT ? (
                 <Button
                   variant="outline"
                   rounded="md"
@@ -248,7 +249,7 @@ export function Navbar({ children }: NavbarProps) {
                     setDrawerOpen(false);
                     setIsSigningOut(true);
                     userState
-                      .signout()
+                      .signOut()
                       .catch((err: Error) => {
                         toast.error(`Error: ${err.message}`);
                       })

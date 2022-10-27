@@ -10,7 +10,6 @@ import { Button, Text, Title } from '../base';
 export const SignupPrompt = ({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) => {
-  const router = useRouter();
   const [modalState, setModalState] = useModalState();
   return (
     <div className={clsx('', className)}>

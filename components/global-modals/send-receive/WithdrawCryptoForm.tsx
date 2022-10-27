@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useBalances } from '../../../hooks/useBalances';
 import { useWithdrawalLimits } from '../../../hooks/useWithdrawalLimits';
 import { useUserState } from '../../../lib/auth-token-context';
 import { toast } from '../../../lib/toast';
 import { Coin } from '../../../lib/types';
-import { Button, Select, TextInput, Text } from '../../base';
+import { UserStateStatus } from '../../../lib/types/user-states';
+import { Button, Select, Text, TextInput } from '../../base';
 import { CryptoIcon } from '../../CryptoIcon';
 
-import WithdrawCryptoConfirm, {
-  WithdrawCryptoInput,
-} from './WithdrawCryptoConfirm';
+import { WithdrawCryptoInput } from './WithdrawCryptoConfirm';
 
 interface WithdrawCryptoFormInput {
   size: string;
@@ -35,7 +34,7 @@ export const WithdrawCryptoForm = (props: {
   const { coin, buttonText, onCancel, onSuccess } = props;
 
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const [showConfirm, setShowConfirm] = useState(false);
   const { balancesMap, isLoading: balancesLoading } = useBalances();

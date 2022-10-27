@@ -12,8 +12,8 @@ import { useModalState } from '../../../hooks/useModalState';
 import { sardineDeviceIdAtom } from '../../../lib/jotai';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
-import { ModalState } from '../../../lib/types/modalState';
 import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types';
+import { ModalState } from '../../../lib/types/modalState';
 import { TextInput, Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 

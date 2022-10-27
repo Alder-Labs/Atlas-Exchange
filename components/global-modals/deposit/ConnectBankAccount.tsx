@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useRouter } from 'next/router';
 import { usePlaidLink } from 'react-plaid-link';
 import { useMutation } from 'react-query';
 
@@ -10,8 +9,8 @@ import { useUserState } from '../../../lib/auth-token-context';
 import { BRAND_NAME } from '../../../lib/constants';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
-import { Text, Button, InputCheckbox, Spinner } from '../../base';
-import { SidePadding } from '../../layout/SidePadding';
+import { UserStateStatus } from '../../../lib/types/user-states';
+import { Button, InputCheckbox, Spinner, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
 interface ConnectBankAccountProps {
@@ -33,7 +32,6 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
   }, [isOpen]);
 
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
 
   const { bankAccountsMap, refetch: refetchBankAccounts } = useBankAccounts();
 

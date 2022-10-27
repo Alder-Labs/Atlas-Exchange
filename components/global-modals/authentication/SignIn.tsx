@@ -14,10 +14,11 @@ import { useModalState } from '../../../hooks/useModalState';
 import { useUserState } from '../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
-import { SigninParams, SignInResponse } from '../../../lib/types';
+import { SignInResponse } from '../../../lib/types';
 import { ModalState } from '../../../lib/types/modalState';
-import { RecaptchaActions, RECAPTCHA_KEY } from '../../../lib/types/recaptcha';
-import { TextInput, TextButton, Button, Text } from '../../base';
+import { RECAPTCHA_KEY, RecaptchaActions } from '../../../lib/types/recaptcha';
+import { UserStateStatus } from '../../../lib/types/user-states';
+import { Button, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
 interface SignInProps {}
@@ -92,9 +93,9 @@ export function SignIn(props: SignInProps) {
       }
 
       setIsLoggingIn(true);
-      if (!userState.user) {
+      if (userState.status === UserStateStatus.SIGNED_OUT) {
         userState
-          .signin(inputData)
+          .signIn(inputData)
           .then((data) => {
             handleMfa(data);
           })

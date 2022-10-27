@@ -1,10 +1,11 @@
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useQuery } from 'react-query';
 
 import { useUserState } from '../../lib/auth-token-context';
 import { requireEnvVar } from '../../lib/env';
 import { SardineSdkConfig } from '../../lib/types/sardine';
+import { UserStateStatus } from '../../lib/types/user-states';
 
 const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 
@@ -12,8 +13,9 @@ const SARDINE_LOCAL_STORAGE_KEY = 'sardineSdkConfig';
 
 export const useSardineSdkConfig = () => {
   const userState = useUserState();
-  const isSignedIn = !!userState?.user;
-  const authToken = userState.user?.token;
+  const isSignedIn = userState.status === UserStateStatus.SIGNED_IN;
+  const authToken =
+    userState.status !== UserStateStatus.SIGNED_OUT && userState.token;
 
   const existingSardineSdkConfig = useMemo(() => {
     const existingSardineSdkConfigString = localStorage.getItem(

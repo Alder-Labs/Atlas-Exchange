@@ -12,6 +12,7 @@ import { renderCurrency } from '../../../lib/currency';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
 import { ModalState } from '../../../lib/types/modalState';
+import { UserStateStatus } from '../../../lib/types/user-states';
 import { Button, Text, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 import { SelectBankAccount } from '../../select-bank-account/SelectBankAccount';
@@ -40,7 +41,7 @@ function addCommas(nStr: string) {
 
 export function WithdrawAch() {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const { data: bankAccounts } = useBankAccounts();
 
