@@ -6,18 +6,26 @@ export type DepositAddress = {
 };
 
 export type DepositTransaction = {
-  coin: string;
-  confirmations: number;
-  confirmTime: string;
-  fee: number;
   id: number;
-  sentTime: string;
-  size: string;
+  coin: string;
+  size: number | null;
   status: string;
   time: string;
-  method: string;
-  txid: string;
-  notes: string;
+  confirmedTime: string | null;
+  uploadedFile: string | null;
+  uploadedFileName: string | null;
+  cancelReason: string;
+  fiat: true;
+  ach: boolean;
+  type: string;
+  supportTicketId: number | null;
+} | {
+  id: number;
+  coin: string;
+  size: number | null;
+  time: string;
+  notes: string | null;
+  status: string;
 };
 
 export type DepositLimits = {

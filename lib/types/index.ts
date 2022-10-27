@@ -5,6 +5,7 @@ export * from './coin';
 export * from './deposit';
 export * from './login-status';
 export * from './quote';
+export * from './oauth';
 export * from './recaptcha';
 export * from './signin';
 export * from './snapshot';
