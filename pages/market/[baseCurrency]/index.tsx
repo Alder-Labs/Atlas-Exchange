@@ -192,34 +192,37 @@ const Page: CustomPage = () => {
                     {' '}
                   </Text>
                 )}
-                {priceChange < 0 && (
-                  <div className={'flex flex-row'}>
-                    <FontAwesomeIcon
-                      icon={faArrowDown}
-                      className={
-                        'mr-2 w-3 -rotate-45 text-redLight dark:text-redDark '
-                      }
-                    />
-                    <Text color={'red'}>
-                      {`-$${Math.floor(Math.abs(priceChange) * 100) / 100}`} (
-                      {Math.floor(priceChangePercent * 100) / 100}%)
-                    </Text>
-                  </div>
-                )}
-                {priceChange >= 0 && (
-                  <div className={'flex flex-row'}>
-                    <FontAwesomeIcon
-                      icon={faArrowUp}
-                      className={
-                        'mr-2 w-3 rotate-45 text-greenLight dark:text-greenDark'
-                      }
-                    />
-                    <Text color={'green'}>
-                      {`+$${Math.floor(priceChange * 100) / 100}`} (
-                      {Math.floor(priceChangePercent * 100) / 100}%)
-                    </Text>
-                  </div>
-                )}
+
+                <Text
+                  className={
+                    priceChange >= 0
+                      ? 'text-marketUp text-xl'
+                      : 'text-marketDown text-xl'
+                  }
+                  color={
+                    priceChange >= 0
+                      ? priceChange === 0
+                        ? 'normal'
+                        : 'green'
+                      : 'red'
+                  }
+                  weight="medium"
+                  isLoading={candleDataIsLoading}
+                  loadingWidth={'6rem'}
+                >
+                  {priceChange >= 0
+                    ? `+$${renderCurrency({
+                        amount: priceChange,
+                        coinId: baseCurrency as string,
+                        showCoinId: false,
+                      })}`
+                    : `-$${renderCurrency({
+                        amount: Math.abs(priceChange),
+                        coinId: baseCurrency as string,
+                        showCoinId: false,
+                      })}`}{' '}
+                  ({Math.floor(priceChangePercent * 100) / 100}%)
+                </Text>
               </div>
               <div className="mt-4 flex justify-end sm:mt-0">
                 <DurationIntervalSelector
