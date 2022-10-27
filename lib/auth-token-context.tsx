@@ -11,6 +11,7 @@ import { useQueryClient } from 'react-query';
 import { useStateCallback } from '../hooks/useStateCallback';
 
 import { requireEnvVar } from './env';
+import { LocalStorageKey } from './local-storage-keys';
 import {
   RecaptchaParams,
   SigninParams,
@@ -53,11 +54,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       callback?: (user: User | null | undefined) => void
     ) => {
       if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('tokenDate', getTwoDaysFromNow());
+        localStorage.setItem(LocalStorageKey.User, JSON.stringify(user));
+        localStorage.setItem(LocalStorageKey.TokenDate, getTwoDaysFromNow());
       } else {
-        localStorage.removeItem('user');
-        localStorage.removeItem('tokenDate');
+        localStorage.removeItem(LocalStorageKey.User);
+        localStorage.removeItem(LocalStorageKey.TokenDate);
       }
       _setUser(user, callback);
     },
@@ -68,9 +69,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // we can no longer check token expiration because its encrypted
   useEffect(() => {
     const cachedUser = JSON.parse(
-      localStorage.getItem('user') || 'null'
+      localStorage.getItem(LocalStorageKey.User) || 'null'
     ) as User | null;
-    const tokenDate = localStorage.getItem('tokenDate');
+    const tokenDate = localStorage.getItem(LocalStorageKey.TokenDate);
 
     if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
       setUser({ status: UserStateStatus.SIGNED_OUT });
@@ -212,13 +213,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         })
         .then((res) => {
-          localStorage.removeItem('token');
+          localStorage.clear();
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
-          localStorage.removeItem('token');
+          localStorage.clear();
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           reject(err);

@@ -1,7 +1,7 @@
-const WATCHLIST_KEY = 'user_asset_watchlist';
+import { LocalStorageKey } from './local-storage-keys';
 
 export function getWatchlist(): Record<string, boolean> {
-  const val = localStorage.getItem(WATCHLIST_KEY);
+  const val = localStorage.getItem(LocalStorageKey.WatchList);
   if (!val) {
     return {};
   }
@@ -10,5 +10,5 @@ export function getWatchlist(): Record<string, boolean> {
 }
 
 export function saveWatchlist(watchlist: Record<string, boolean>) {
-  localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlist));
+  localStorage.setItem(LocalStorageKey.WatchList, JSON.stringify(watchlist));
 }

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import { LocalStorageKey } from './local-storage-keys';
+
 export function getDarkModeSystemPreference() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
@@ -8,7 +10,7 @@ export function getDarkModeSystemPreference() {
 
 // If localStorage.theme is not 'dark' or 'light', set it to the system preference
 export function getDarkModeSetting() {
-  const theme = localStorage.getItem('theme');
+  const theme = localStorage.getItem(LocalStorageKey.DarkModeTheme);
   if (theme === 'dark' || theme === 'light') {
     return theme;
   } else {
@@ -53,20 +55,23 @@ export function useDarkOrLightMode() {
 
 export function setDarkMode(mode: 'dark' | 'light' | 'auto') {
   if (mode === 'auto') {
-    localStorage.removeItem('theme');
+    localStorage.removeItem(LocalStorageKey.DarkModeTheme);
   } else {
-    localStorage.setItem('theme', mode);
+    localStorage.setItem(LocalStorageKey.DarkModeTheme, mode);
   }
 
   refreshDarkMode();
 }
 
 export function refreshDarkMode() {
-  const isAuto = !('theme' in localStorage);
+  const isAuto = !(LocalStorageKey.DarkModeTheme in localStorage);
   const systemPreferenceIsDark =
     isAuto && getDarkModeSystemPreference() === 'dark';
 
-  if (localStorage.getItem('theme') === 'dark' || systemPreferenceIsDark) {
+  if (
+    localStorage.getItem(LocalStorageKey.DarkModeTheme) === 'dark' ||
+    systemPreferenceIsDark
+  ) {
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');

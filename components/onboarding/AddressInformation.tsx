@@ -6,6 +6,7 @@ import {
   countryCodesAlpha3,
   countryRegionsAlpha3,
 } from '../../lib/country-codes';
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { KycAddress } from '../../lib/types/kyc';
 import { Text, TextInput, Button, Select } from '../base';
 import { SelectAutocomplete } from '../base/SelectAutocomplete';
@@ -20,7 +21,9 @@ interface AddressInformationProps
 export function AddressInformation(props: AddressInformationProps) {
   const { onContinue, ...rest } = props;
 
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(
+    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
+  );
   const {
     register,
     control,
@@ -32,10 +35,11 @@ export function AddressInformation(props: AddressInformationProps) {
 
   // Append Phone to KYC Form Data
   const onSubmit = (data: KycAddress) => {
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
 
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         country: data.country,
@@ -62,9 +66,10 @@ export function AddressInformation(props: AddressInformationProps) {
   useEffect(() => {
     const [country, stateProvinceRegion, streetAddress, city, postalCode] =
       vals;
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         country,

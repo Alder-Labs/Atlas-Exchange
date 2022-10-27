@@ -15,6 +15,7 @@ import {
   COUNTRY_PHONE_NUMBER_CODES,
 } from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { KycPhone } from '../../lib/types/kyc';
@@ -42,14 +43,16 @@ interface EnterPhoneNumberProps
 }
 
 function setDefaultSmsCountryToAddressCountry() {
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(
+    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
+  );
   const countryPhoneCode =
     COUNTRY_PHONE_NUMBER_CODES[iso31661Alpha3ToAlpha2[cachedForm.country]];
   // set country code phone number to the country user has selected
   cachedForm.countryCode = countryPhoneCode;
   // update localstorage with changes
   localStorage.setItem(
-    'kycForm',
+    LocalStorageKey.KycForm,
     JSON.stringify({
       ...cachedForm,
     })
@@ -60,7 +63,9 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
   const { onFinish, ...rest } = props;
 
   setDefaultSmsCountryToAddressCountry();
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(
+    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
+  );
 
   const {
     setValue,
@@ -80,10 +85,11 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
   const [loading, setLoading] = useState(false);
   const onSubmit = (data: KycPhone) => {
     setLoading(true);
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
 
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         phoneNumber: data.phoneNumber,
@@ -103,9 +109,10 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
   });
   useEffect(() => {
     const [phoneNumber, countryCode, smsCode] = vals;
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         phoneNumber,

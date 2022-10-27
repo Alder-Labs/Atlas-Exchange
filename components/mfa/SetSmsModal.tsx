@@ -15,6 +15,7 @@ import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
 import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType, RecaptchaActions } from '../../lib/types';
@@ -54,7 +55,9 @@ export function SetSmsMfaForm() {
 
   const userState = useUserState();
 
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(
+    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
+  );
   const {
     register,
     clearErrors,
