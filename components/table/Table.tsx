@@ -66,6 +66,7 @@ interface TableProps<T> extends React.HTMLAttributes<HTMLTableElement> {
   tableClassName?: string;
   data: T[];
   onRowClick?: (row: T) => void;
+  allowRowClick?: (row: T) => boolean;
 
   loading?: boolean;
   renderEmpty?: () => ReactNode;
@@ -201,46 +202,52 @@ export function Table<T>(props: TableProps<T>) {
             {!loading && data.length === 0 && (
               <div className="absolute top-0 w-full">{renderEmpty()}</div>
             )}
-            {renderedData.map((item, idx) => (
-              <TableRow
-                onClick={() => onRowClick?.(item)}
-                key={idx}
-                className={clsx({
-                  [`${rowHeightClassName}`]: true,
-                  'transition hover:bg-grayLight-10 dark:hover:bg-grayDark-20':
-                    true,
-                  'cursor-pointer': onRowClick !== undefined,
-                })}
-              >
-                {!noHeader && <TableCell className="w-3"></TableCell>}
+            {renderedData.map((item, idx) => {
+              const clickable =
+                onRowClick &&
+                (!props.allowRowClick || props.allowRowClick(item));
 
-                {columns.map((column, idx) => {
-                  const styles = clsx(getColumnStyles(column), {
+              return (
+                <TableRow
+                  onClick={clickable ? () => onRowClick?.(item) : undefined}
+                  key={idx}
+                  className={clsx({
                     [`${rowHeightClassName}`]: true,
-                  });
+                    'transition hover:bg-grayLight-10 dark:hover:bg-grayDark-20':
+                      true,
+                    'cursor-pointer': clickable,
+                  })}
+                >
+                  {!noHeader && <TableCell className="w-3"></TableCell>}
 
-                  switch (column.type) {
-                    case 'string': {
-                      return (
-                        <TableCell key={idx} className={clsx(styles, '')}>
-                          <Text size="md">{column.getCellValue(item)}</Text>
-                        </TableCell>
-                      );
+                  {columns.map((column, idx) => {
+                    const styles = clsx(getColumnStyles(column), {
+                      [`${rowHeightClassName}`]: true,
+                    });
+
+                    switch (column.type) {
+                      case 'string': {
+                        return (
+                          <TableCell key={idx} className={clsx(styles, '')}>
+                            <Text size="md">{column.getCellValue(item)}</Text>
+                          </TableCell>
+                        );
+                      }
+                      case 'custom': {
+                        return (
+                          <TableCell key={idx} className={styles}>
+                            {column.renderCell(item)}
+                          </TableCell>
+                        );
+                      }
+                      default:
+                        return null;
                     }
-                    case 'custom': {
-                      return (
-                        <TableCell key={idx} className={styles}>
-                          {column.renderCell(item)}
-                        </TableCell>
-                      );
-                    }
-                    default:
-                      return null;
-                  }
-                })}
-                {!noHeader && <TableCell className="w-3"></TableCell>}
-              </TableRow>
-            ))}
+                  })}
+                  {!noHeader && <TableCell className="w-3"></TableCell>}
+                </TableRow>
+              );
+            })}
             {renderedData.length < pageSize &&
               new Array(pageSize - renderedData.length)
                 .fill(0)
