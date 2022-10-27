@@ -280,7 +280,7 @@ const Page: CustomPage = () => {
 
           <div className="flex flex-col items-start py-8 sm:p-8">
             <BuySellConvert
-              className="h-[24em] w-full lg:w-64"
+              className="w-full lg:w-64"
               fromCoinId="USD"
               toCoinId={coinId}
             />

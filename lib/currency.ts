@@ -56,7 +56,9 @@ function getMaxFixedDigits(coinId: string, amount: string | number) {
       return 2;
     }
   } else {
-    if (magnitude < 1) {
+    if (magnitude < 0.000001) {
+      return 16;
+    } else if (magnitude < 1) {
       return 8;
     } else if (magnitude < 1000) {
       return 2;
