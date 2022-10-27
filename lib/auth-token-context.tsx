@@ -20,7 +20,7 @@ import {
 import { SignUpResponse } from './types/signup';
 
 type User =
-  | undefined
+  | { status: UserStateType.UNKNOWN }
   | { status: UserStateType.SIGNED_OUT }
   | { status: UserStateType.SUPPORT_ONLY; token: string }
   | { status: UserStateType.SIGNED_IN; token: string }
@@ -60,6 +60,7 @@ export enum UserStateType {
   NEEDS_MFA = 'NEEDS_MFA',
   SIGNED_IN = 'SIGNED_IN',
   SUPPORT_ONLY = 'SUPPORT_ONLY',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export type SignupParams = {
@@ -101,7 +102,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
    * 3. undefined: state has not been initialized. In this case, UserProvider will
    *    not render any children.
    */
-  const [user, _setUser] = useStateCallback<User>(undefined);
+  const [user, _setUser] = useStateCallback<User>({
+    status: UserStateType.UNKNOWN,
+  });
 
   // const [authToken, _setUser] = useStateCallback<
   //   string | null | undefined
@@ -261,7 +264,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signout = () => {
-    if (!user || user.status === UserStateType.SIGNED_OUT) {
+    if (
+      !user ||
+      user.status === UserStateType.SIGNED_OUT ||
+      user.status === UserStateType.UNKNOWN
+    ) {
       throw new Error('Not signed in');
     }
 
@@ -296,7 +303,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  if (typeof user === 'undefined') {
+  if (user.status === UserStateType.UNKNOWN) {
     // User state has not loaded; render nothing
     return null;
   }
