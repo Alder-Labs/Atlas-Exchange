@@ -396,12 +396,14 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                         amount: row.balance.usdValue,
                         coinId: 'USD',
                         showCoinId: false,
+                        roundingMode: 'floor',
                       })}
                     </Text>
                     <Text size="sm" color="secondary" className="block">
                       {renderCurrency({
                         amount: row.balance.total,
                         coinId: row.balance.coin,
+                        roundingMode: 'floor',
                       })}
                     </Text>
                   </div>
