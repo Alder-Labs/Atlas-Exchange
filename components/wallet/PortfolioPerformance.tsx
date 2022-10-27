@@ -14,6 +14,7 @@ import { priceDataWithDateIntervals } from '../market/utils';
 const resolveConfig = require('tailwindcss/resolveConfig');
 
 const tailwindConfig = require('../../tailwind.config.js');
+
 const fullConfig = resolveConfig(tailwindConfig);
 
 const now = Math.floor(Date.now() / 1000);
@@ -29,7 +30,7 @@ const DynamicCandleChartDetailed: ComponentType<CandleChartDetailedProps> =
       import('../market/CandleChartDetailed').then(
         (mod) => mod.CandleChartDetailed as any
       ),
-    { loading: () => <div style={{ height: 300 }} /> }
+    { loading: () => <div style={{ height: 300 }} />, ssr: false }
   );
 
 export const PortfolioPerformance = () => {

@@ -39,5 +39,4 @@ export enum UserStateStatus {
   NEEDS_MFA = 'NEEDS_MFA',
   SIGNED_IN = 'SIGNED_IN',
   SUPPORT_ONLY = 'SUPPORT_ONLY',
-  UNKNOWN = 'UNKNOWN',
 }

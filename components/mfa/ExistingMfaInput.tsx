@@ -11,7 +11,7 @@ import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { RecaptchaActions } from '../../lib/types';
-import { Button, TextInput } from '../base';
+import { Button, Spinner, TextInput } from '../base';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 
@@ -112,6 +112,14 @@ function SmsMfaInput(props: SmsMfaProps) {
   );
 }
 
+function LoadingPlaceholder() {
+  return (
+    <div className="flex w-full items-center justify-center">
+      <Spinner />
+    </div>
+  );
+}
+
 function SmsMfaInputWrapper(props: SmsMfaProps) {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
@@ -123,15 +131,11 @@ function SmsMfaInputWrapper(props: SmsMfaProps) {
 export function ExistingMfaInput(props: ExistingMfaProps) {
   const { data: loginStatus, isLoading: loginStatusLoading } = useLoginStatus();
 
-  // TODO: Making loading cooler
-  if (!loginStatus) {
-    return <></>;
+  if (!loginStatus?.loggedIn) {
+    return <LoadingPlaceholder />;
   }
-  if (!loginStatus.loggedIn) {
-    return <></>;
-  }
-  if (!loginStatus.user) {
-    return <></>;
+  if (!loginStatus?.user) {
+    return <LoadingPlaceholder />;
   }
 
   return (

@@ -2,6 +2,7 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { Text } from '../base';
 import { BrandLogo } from '../BrandLogo';
 
@@ -34,7 +35,7 @@ export const Footer = () => {
                 <a
                   href="https://hackerone.com/atlas"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   Report a bug
                 </a>
