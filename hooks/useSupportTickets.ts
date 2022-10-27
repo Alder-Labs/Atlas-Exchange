@@ -5,12 +5,12 @@ import { useQuery } from 'react-query';
 import { useFetcher } from '../lib/fetcher';
 import { QueryProps } from '../lib/queryProps';
 
-import type { SupportTicket } from '../lib/types';
+import type { Support } from '../lib/types';
 
-export function useSupportTickets(props: QueryProps<SupportTicket[]> = {}) {
+export function useSupportTickets(props: QueryProps<Support[]> = {}) {
   const { data, error, isLoading, refetch } = useQuery(
     '/proxy/api/support/tickets',
-    useFetcher<SupportTicket[]>(),
+    useFetcher<Support[]>(),
     props
   );
 

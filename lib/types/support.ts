@@ -19,11 +19,11 @@ export type SupportMessageCreate = {
 
 // Response from fetching all support tickets
 export type SupportTicketWithMessages = {
-  ticket: SupportTicket;
+  ticket: Support;
   messages: SupportTicketMessage[];
 };
 
-export type SupportTicket = {
+export type Support = {
   id: string;
   title: string;
   time: string;
@@ -42,4 +42,12 @@ export type SupportTicketMessage = {
   uploadedFileName: string | null;
   authorIsCustomer: boolean;
   time: string;
+};
+
+export type RequestSupportOnlyToken = {
+  captcha: {
+    recaptcha_challenge: string;
+  };
+  deviceId?: string;
+  email: string;
 };

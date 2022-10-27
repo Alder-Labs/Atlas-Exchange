@@ -298,7 +298,7 @@ export function PasswordRequirements({ password }: { password: string }) {
     <div className="flex flex-col items-start gap-1">
       <PasswordRequirement
         satisfied={noSpaces}
-        errorMessage="Must contain spaces"
+        errorMessage="Must not contain spaces"
       />
       <PasswordRequirement
         satisfied={atLeast8Chars}
