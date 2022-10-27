@@ -4,4 +4,5 @@ export interface QueryProps<T> {
   enabled?: boolean;
   refetchOnWindowFocus?: boolean;
   refetchInterval?: number | false;
+  retry?: boolean;
 }

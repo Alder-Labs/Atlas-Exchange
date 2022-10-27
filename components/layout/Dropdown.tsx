@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 
 import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,8 @@ import { useRouter } from 'next/router';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
+import { toast } from '../../lib/toast';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Text } from '../base';
 import { DarkModeModal } from '../DarkModeModal';
 
@@ -48,8 +50,9 @@ export function Dropdown() {
   ].includes(router.pathname);
 
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
 
@@ -117,7 +120,17 @@ export function Dropdown() {
                           <button
                             className={styles}
                             onClick={() => {
-                              userState.signout();
+                              setIsSigningOut(true);
+                              userState
+                                .signOut()
+                                .catch((err: Error) => {
+                                  toast.error(`Error: ${err.message}`);
+                                })
+                                .finally(() => {
+                                  router.push('/').then(() => {
+                                    setIsSigningOut(false);
+                                  });
+                                });
                             }}
                           >
                             <Text color="error">Log out</Text>

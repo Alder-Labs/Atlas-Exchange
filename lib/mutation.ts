@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 
-import { useSardineSdkConfig } from './../components/sardine/useSardineSdkConfig';
-import { useUser, useUserState } from './auth-token-context';
+import { useSardineSdkConfig } from '../components/sardine/useSardineSdkConfig';
+
+import { useUserState } from './auth-token-context';
 import { requireEnvVar } from './env';
+import { UserStateStatus } from './types/user-states';
 
 interface MutationFetcherOptions {
   method?: 'POST' | 'DELETE';
@@ -61,9 +63,11 @@ export function useMutationFetcher<TRequestData, TQueryFnData>(
       createMutationFetcher<TRequestData, TQueryFnData>(
         path,
         options ?? { method: 'POST' },
-        userState?.user?.token,
+        userState.status !== UserStateStatus.SIGNED_OUT
+          ? userState.token
+          : undefined,
         data?.context.sessionKey
       ),
-    [options, path, userState?.user?.token, data?.context.sessionKey]
+    [path, options, userState, data?.context.sessionKey]
   );
 }

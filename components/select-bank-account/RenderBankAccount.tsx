@@ -9,15 +9,10 @@ import {
   BankAccountStatus,
   useBankAccounts,
 } from '../../hooks/useBankAccounts';
-import { useModal } from '../../hooks/useModal';
-import { useUserState } from '../../lib/auth-token-context';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { Text, Button, TextButton } from '../base';
-import { TitledModal } from '../modals/TitledModal';
 import { Tooltip } from '../Tooltip';
-
-import { EnterBillingInfo } from './EnterBillingInfo';
 
 interface RenderBankAccountProps {
   accountId: number;

@@ -2,145 +2,211 @@ import { MfaType } from './signin';
 
 interface Position {}
 
-export interface Account {
+export type Account = {
   accountIdentifier: number;
-  username: string;
+  accountType: null;
+  backstopProvider: boolean;
+  chargeInterestOnNegativeUsd: boolean;
   collateral: number;
   freeCollateral: number;
-  totalAccountValue: number;
-  totalPositionSize: number;
+  futuresLeverage: number;
   initialMarginRequirement: number;
+  leverage: number;
+  liquidating: boolean;
   maintenanceMarginRequirement: number;
+  makerFee: number;
   marginFraction: number | null;
   openMarginFraction: number | null;
-  liquidating: boolean;
-  backstopProvider: boolean;
-  positions: Position[];
-  takerFee: number;
-  makerFee: number;
-  leverage: number;
-  futuresLeverage: number;
   positionLimit: number | null;
   positionLimitUsed: number | null;
-  useFttCollateral: boolean;
-  chargeInterestOnNegativeUsd: boolean;
+  positions: Position[];
+  spotLendingEnabled: boolean;
   spotMarginEnabled: boolean;
   spotMarginWithdrawalsEnabled: boolean;
-  spotLendingEnabled: boolean;
-  accountType: null;
-}
+  takerFee: number;
+  totalAccountValue: number;
+  totalPositionSize: number;
+  useFttCollateral: boolean;
+  username: string;
+};
 
-export interface User {
-  mobileHasDeposited: null;
-  mobileHasTraded: null;
-  agreedToTrumpExtension: null;
-  coachellaPurchaseAgreement: null;
-  defaultFiat: null;
-  agreedToMarginAndLocAgreement: null;
-  ukClientTypeResponse: null;
-  paidNftListingFee: null;
-  hkClientType: null;
-  displayName: string;
-  fiatVerified: boolean;
-  email: string;
-  mid: string;
-  kycApplicationStatus: string;
-  kycLevel: number;
-  kycType: null;
-  kycName: null;
-  referralCode: number;
-  referred: boolean;
-  referrerId: null;
-  vip: number;
-  vipManualMinimum: number;
-  mmManualMinimum: number;
-  mmLevel: number;
-  feeTier: number;
-  ftt: number;
-  jurisdiction: null;
-  appliedJurisdiction: null;
-  monthlyVolume: number;
-  monthlyMakerVolume: number;
-  monthlyLtVolume: number;
-  monthlyLeveragedTokenCreationVolume: number;
-  monthlyLeveragedTokenRedemptionVolume: number;
-  dailyVolume: number;
-  dailyMakerVolume: number;
+export type User = {
+  agreedToMarginAndLocAgreement: string | null;
+  agreedToTrumpExtension: string | null;
+  appliedJurisdiction: string | null;
+  cancelAllOrdersButtonEnabled: boolean;
+  canOtcTradeOptions: boolean;
+  chatApp: string | null;
+  chatHandle: string | null;
+  chatUserId: string | null;
+  coachellaPurchaseAgreement: string | null;
+  confirmTrades: boolean;
+  dagStatus: string | null;
   dailyLeveragedTokenCreationVolume: number;
   dailyLeveragedTokenRedemptionVolume: number;
+  dailyLocInterestRate: number;
+  dailyMakerVolume: number;
+  dailyVolume: number;
+  defaultFiat: string | null;
+  demo: string | null;
+  displayName: string;
+  email: string;
+  feeTier: number;
+  fiatVerified: boolean;
+  ftt: number;
+  hkClientType: string | null;
+  hkStatusMobile: string | null;
+  hkStatus: string | null;
+  japanKycStatus: string | null;
+  jurisdiction: string | null;
+  kycApplicationStatus: string;
+  kycLevel: number;
+  kycName: string;
+  kycType: string;
+  language: string;
   mfa: MfaType;
-  requireMfaForWithdrawals: boolean;
-  requireWithdrawalPassword: boolean;
-  requireWhitelistedWithdrawals: boolean;
-  whitelistedAddressDelayDays: null;
+  mid: string;
+  mmLevel: number;
+  mmManualMinimum: number;
+  mobileHasDeposited: string | null;
+  mobileHasTraded: string | null;
+  monthlyLeveragedTokenCreationVolume: number;
+  monthlyLeveragedTokenRedemptionVolume: number;
+  monthlyLtVolume: number;
+  monthlyMakerVolume: number;
+  monthlyVolume: number;
+  neverRequireEmailLinks: boolean;
+  nuveiPofRejected: boolean;
+  nuveiUploadedPof: boolean;
+  optionsEnabled: boolean;
+  originCode: string | null;
+  paidNftListingFee: string | null;
+  passedLtQuiz: boolean;
   randomSlug: string;
+  referralCode: number;
+  referred: boolean;
+  referrerId: string | null;
+  requireMfaForWithdrawals: boolean;
+  requireWhitelistedWithdrawals: boolean;
+  requireWithdrawalPassword: boolean;
   showInLeaderboard: boolean;
-  useRealNameInLeaderboard: boolean;
-  chatUserId: null;
+  smallOrderLimitMinimum: number | null;
+  smallOrderMultiplier: number | null;
+  stocksWhitelistedInsto: string | null;
+  tinAttempted: boolean;
+  ukClientType: string | null;
+  ukClientTypeResponse: string | null;
   useBodPriceChange: boolean;
-  confirmTrades: boolean;
-  cancelAllOrdersButtonEnabled: boolean;
-}
-
-type StatusLoggedOut = {
-  loggedIn: false;
-  account: null;
-  user: null;
-  subaccount: null;
-  country: string;
-  state: string;
-  supportOnly: false;
-  mfaRequired: null;
-  requiresEmailLink: false;
-  jurisdictionRestriction: null;
-  maxLeverage: null;
-  readOnly: true;
-  restrictedToSubaccount: false;
-  withdrawalEnabled: false;
-  internalTransfersEnabled: false;
-  onlyAllowSupportOnly: false;
-  nftTradingEnabled: false;
+  useRealNameInLeaderboard: boolean;
+  verifiedPhone: boolean;
+  vip: number;
+  vipManualMinimum: number;
+  whitelabelUser: boolean;
+  whitelistedAddressDelayDays: number | null;
+  whitelistedSeller: boolean;
 };
 
-type StatusMfaRequired = {
-  loggedIn: false;
-  account: null;
-  user: null;
-  subaccount: null;
+type LoginStatusShared = {
   country: string;
-  state: string;
-  supportOnly: false;
-  mfaRequired: MfaType;
-  requiresEmailLink: false;
-  jurisdictionRestriction: null;
-  maxLeverage: null;
-  readOnly: false;
-  restrictedToSubaccount: boolean;
-  withdrawalEnabled: boolean;
   internalTransfersEnabled: boolean;
-  onlyAllowSupportOnly: boolean;
-  nftTradingEnabled: boolean;
-};
-
-type StatusLoggedIn = {
-  loggedIn: true;
-  account: Account;
-  user: User;
-  subaccount: null;
-  country: string;
-  state: string;
-  supportOnly: boolean;
-  mfaRequired: MfaType;
-  requiresEmailLink: boolean;
   jurisdictionRestriction: string | null;
   maxLeverage: null;
   mfa: MfaType;
-  readOnly: false;
-  restrictedToSubaccount: boolean;
-  withdrawalEnabled: boolean;
-  internalTransfersEnabled: boolean;
-  onlyAllowSupportOnly: boolean;
+  mfaRequired: MfaType;
   nftTradingEnabled: boolean;
+  onlyAllowSupportOnly: boolean;
+  readOnly: false;
+  requiresEmailLink: boolean;
+  restrictedToSubaccount: boolean;
+  state: string;
+  subaccount: null;
+  supportOnly: boolean;
+  withdrawalEnabled: boolean;
 };
 
-export type LoginStatus = StatusLoggedOut | StatusMfaRequired | StatusLoggedIn;
+export type LoginStatus = (
+  | {
+      loggedIn: false;
+      account: null;
+      user: null;
+    }
+  | {
+      loggedIn: true;
+      account: Account;
+      user: User;
+    }
+) &
+  LoginStatusShared;
+
+export type AccountReduced = Pick<
+  Account,
+  | 'accountIdentifier'
+  | 'accountType'
+  | 'makerFee'
+  | 'positions'
+  | 'takerFee'
+  | 'totalAccountValue'
+  | 'totalPositionSize'
+  | 'username'
+>;
+
+export type UserReduced = Pick<
+  User,
+  | 'agreedToTrumpExtension'
+  | 'appliedJurisdiction'
+  | 'coachellaPurchaseAgreement'
+  | 'confirmTrades'
+  | 'dagStatus'
+  | 'defaultFiat'
+  | 'displayName'
+  | 'email'
+  | 'feeTier'
+  | 'fiatVerified'
+  | 'kycApplicationStatus'
+  | 'kycLevel'
+  | 'kycName'
+  | 'kycType'
+  | 'language'
+  | 'mfa'
+  | 'mid'
+  | 'mobileHasDeposited'
+  | 'mobileHasTraded'
+  | 'randomSlug'
+  | 'requireMfaForWithdrawals'
+  | 'requireWhitelistedWithdrawals'
+  | 'requireWithdrawalPassword'
+  | 'useBodPriceChange'
+  | 'verifiedPhone'
+  | 'whitelabelUser'
+  | 'whitelistedAddressDelayDays'
+  | 'whitelistedSeller'
+>;
+
+type LoginStatusSharedReduced = Pick<
+  LoginStatusShared,
+  | 'country'
+  | 'jurisdictionRestriction'
+  | 'mfa'
+  | 'mfaRequired'
+  | 'nftTradingEnabled'
+  | 'onlyAllowSupportOnly'
+  | 'readOnly'
+  | 'requiresEmailLink'
+  | 'supportOnly'
+  | 'state'
+  | 'withdrawalEnabled'
+>;
+
+export type LoginStatusReduced = (
+  | {
+      loggedIn: false;
+      account: null;
+      user: null;
+    }
+  | {
+      loggedIn: true;
+      account: AccountReduced;
+      user: UserReduced;
+    }
+) &
+  LoginStatusSharedReduced;

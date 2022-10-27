@@ -9,8 +9,6 @@ import { BrandLogo } from '../BrandLogo';
 import { SidePadding } from './SidePadding';
 
 export const Footer = () => {
-  const darkMode = useDarkOrLightMode();
-
   return (
     <footer>
       <SidePadding className="bg-grayLight-10 dark:bg-grayDark-10">

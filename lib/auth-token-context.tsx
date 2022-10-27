@@ -6,7 +6,6 @@ import {
   useEffect,
 } from 'react';
 
-import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 
 import { useStateCallback } from '../hooks/useStateCallback';
@@ -19,11 +18,14 @@ import {
   SigninWithMfaParams,
 } from './types';
 import { SignUpResponse } from './types/signup';
+import { UserState, UserStateStatus } from './types/user-states';
 
-interface User {
-  token: string;
-  status: 'needs-mfa' | 'logged-in';
-}
+type User =
+  | { status: 'UNKNOWN' }
+  | { status: UserStateStatus.SIGNED_OUT }
+  | { status: UserStateStatus.SUPPORT_ONLY; token: string }
+  | { status: UserStateStatus.SIGNED_IN; token: string }
+  | { status: UserStateStatus.NEEDS_MFA; token: string };
 
 export type SignupParams = {
   email: string;
@@ -34,22 +36,6 @@ export type SignupParams = {
   password: string;
 } & RecaptchaParams;
 
-type UserState =
-  | {
-      user: null;
-      signin: (params: SigninParams) => Promise<SignInResponse>;
-      signup: (params: SignupParams) => Promise<SignUpResponse>;
-    }
-  | {
-      user: User;
-      signinWithMfa: (params: SigninWithMfaParams) => Promise<void>;
-      setUser: (
-        user: SetStateAction<User | null | undefined>,
-        callback?: (user: User | null | undefined) => void
-      ) => void;
-      signout: () => void;
-    };
-
 const UserContext = createContext<UserState | undefined>(undefined);
 
 const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
@@ -57,31 +43,18 @@ const API_URL = requireEnvVar('NEXT_PUBLIC_API_URL');
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
 
-  /**
-   * authToken has 3 possible states:
-   * 1. null: user is not signed in
-   * 2. string: user is signed in
-   * 3. undefined: state has not been initialized. In this case, UserProvider will
-   *    not render any children.
-   */
-  const [user, _setUser] = useStateCallback<User | null | undefined>(undefined);
-
-  // const [authToken, _setUser] = useStateCallback<
-  //   string | null | undefined
-  // >(undefined);
+  const [user, _setUser] = useStateCallback<User>({
+    status: 'UNKNOWN',
+  });
 
   const setUser = useCallback(
     (
-      user: SetStateAction<User | null | undefined>,
+      user: SetStateAction<User>,
       callback?: (user: User | null | undefined) => void
     ) => {
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem(
-          'tokenDate',
-          // two day expiration
-          (Date.now() + 1000 * 60 * 60 * 24 * 2).toString()
-        );
+        localStorage.setItem('tokenDate', getTwoDaysFromNow());
       } else {
         localStorage.removeItem('user');
         localStorage.removeItem('tokenDate');
@@ -91,52 +64,43 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     [_setUser]
   );
 
+  // In an effect since localStorage is not available during SSR
+  // we can no longer check token expiration because its encrypted
   useEffect(() => {
-    // In an effect since localStorage is not available during SSR
     const cachedUser = JSON.parse(
       localStorage.getItem('user') || 'null'
     ) as User | null;
-    // we can no longer check token expiration because its encrypted
     const tokenDate = localStorage.getItem('tokenDate');
 
-    if (tokenDate && Number(tokenDate) <= Date.now()) {
-      setUser(null);
+    if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
+      setUser({ status: UserStateStatus.SIGNED_OUT });
     } else {
       setUser(cachedUser);
     }
   }, [setUser]);
 
   const signup = (data: SignupParams) => {
-    const signupReq = {
-      email: data.email,
-      noPassword: false,
-      password: data.password,
-      acceptedWhitelabelTos: data.acceptedWhitelabelTos ? true : false,
-      clientUserId: data.clientUserId,
-      captcha: {
-        recaptcha_challenge: data.captcha.recaptcha_challenge,
-      },
-    };
-
+    const signupRequest = createSignupRequest(data);
     return new Promise<SignUpResponse>((resolve, reject) => {
       fetch(`${API_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(signupReq),
+        body: JSON.stringify(signupRequest),
       })
         .then((res) => {
           return res.json();
         })
         .then((res) => {
-          if (!res.success) {
-            throw new Error(res.error);
-          }
+          if (!res.success) throw new Error(res.error);
           return res.result;
         })
         .then((res: SignUpResponse) => {
-          setUser({ token: res.token, status: 'logged-in' }, () => {
-            resolve(res);
-          });
+          setUser(
+            { token: res.token, status: UserStateStatus.SIGNED_IN },
+            () => {
+              resolve(res);
+            }
+          );
         })
         .catch((err) => {
           reject(err);
@@ -164,7 +128,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(
             {
               token: res.token,
-              status: res.mfaRequired ? 'needs-mfa' : 'logged-in',
+              status: res.mfaRequired
+                ? UserStateStatus.NEEDS_MFA
+                : UserStateStatus.SIGNED_IN,
             },
             () => {
               resolve(res);
@@ -178,7 +144,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signinWithMfa = ({ code }: SigninWithMfaParams) => {
-    if (!user) {
+    if (!user || user.status !== UserStateStatus.NEEDS_MFA) {
       throw new Error('Not signed in');
     }
 
@@ -207,7 +173,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(
             {
               token: res.token,
-              status: 'logged-in',
+              status: UserStateStatus.SIGNED_IN,
             },
             () => {
               resolve();
@@ -220,16 +186,55 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const router = useRouter();
   const signout = () => {
-    // Clear localstorage, including removing client-side session token
-    localStorage.clear();
-    queryClient.clear();
-    setUser(null);
-    router.push('/');
+    if (
+      !user ||
+      user.status === UserStateStatus.SIGNED_OUT ||
+      user.status === 'UNKNOWN'
+    ) {
+      throw new Error('Not signed in');
+    }
+
+    return new Promise<void>((resolve, reject) => {
+      fetch(`${API_URL}/users/signout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({}),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          if (!res.success) throw new Error(res.error);
+          return;
+        })
+        .then((res) => {
+          localStorage.removeItem('token');
+          queryClient.clear();
+          setUser({ status: UserStateStatus.SIGNED_OUT });
+          resolve(res);
+        })
+        .catch((err) => {
+          localStorage.removeItem('token');
+          queryClient.clear();
+          setUser({ status: UserStateStatus.SIGNED_OUT });
+          reject(err);
+        });
+    });
   };
 
-  if (typeof user === 'undefined') {
+  const updateToken = (token: string) => {
+    return new Promise<void>((resolve, reject) => {
+      setUser({ status: UserStateStatus.SIGNED_IN, token }, () => {
+        resolve();
+      });
+    });
+  };
+
+  if (user.status === 'UNKNOWN') {
     // User state has not loaded; render nothing
     return null;
   }
@@ -237,17 +242,30 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <UserContext.Provider
       value={
-        user
+        user.status === UserStateStatus.SUPPORT_ONLY
           ? {
-              user: user,
-              signinWithMfa: signinWithMfa,
-              signout: signout,
-              setUser,
+              status: user.status,
+              token: user.token,
+              signOut: signout,
+            }
+          : user.status === UserStateStatus.NEEDS_MFA
+          ? {
+              status: user.status,
+              token: user.token,
+              signInWithMfa: signinWithMfa,
+              signOut: signout,
+            }
+          : user.status === UserStateStatus.SIGNED_IN
+          ? {
+              status: user.status,
+              token: user.token,
+              signOut: signout,
+              updateToken: updateToken,
             }
           : {
-              user: null,
-              signin,
-              signup,
+              status: user.status,
+              signIn: signin,
+              signUp: signup,
             }
       }
     >
@@ -264,12 +282,19 @@ export function useUserState(): UserState {
   return context;
 }
 
-// Must be signed in
-export function useUser() {
-  const userState = useUserState();
-  if (userState.user === null) {
-    console.log(`userState: ${JSON.stringify(userState)}`);
-    throw new Error('useUser: not signed in');
-  }
-  return userState.user;
+function createSignupRequest(data: SignupParams) {
+  return {
+    email: data.email,
+    noPassword: false,
+    password: data.password,
+    acceptedWhitelabelTos: data.acceptedWhitelabelTos ? true : false,
+    clientUserId: data.clientUserId,
+    captcha: {
+      recaptcha_challenge: data.captcha.recaptcha_challenge,
+    },
+  };
+}
+
+function getTwoDaysFromNow(): string {
+  return (Date.now() + 1000 * 60 * 60 * 24 * 2).toString();
 }

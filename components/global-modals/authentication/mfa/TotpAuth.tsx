@@ -5,6 +5,7 @@ import { useModalState } from '../../../../hooks/useModalState';
 import { useUserState } from '../../../../lib/auth-token-context';
 import { toast } from '../../../../lib/toast';
 import { ModalState } from '../../../../lib/types/modalState';
+import { UserStateStatus } from '../../../../lib/types/user-states';
 import { Button, Text, TextInput } from '../../../base';
 import { TitledModal } from '../../../modals/TitledModal';
 
@@ -12,6 +13,7 @@ export const TotpAuth = () => {
   const userState = useUserState();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
 
   const [modalState, setModalState] = useModalState();
@@ -21,9 +23,9 @@ export const TotpAuth = () => {
   const onSignInWithMfa = useCallback(
     (code: string) => {
       setIsLoggingIn(true);
-      if (userState.user) {
+      if (userState.status === UserStateStatus.NEEDS_MFA) {
         userState
-          .signinWithMfa({ code: code })
+          .signInWithMfa({ code: code })
           .then(async () => {
             await refetchLoginStatus();
             setModalState({ state: ModalState.Closed });
@@ -70,8 +72,16 @@ export const TotpAuth = () => {
       isOpen={modalState.state === ModalState.TotpAuth}
       darkenBackground={false}
       onGoBack={() => {
-        if (userState.user) {
-          userState.signout();
+        if (userState.status !== UserStateStatus.SIGNED_OUT) {
+          setIsSigningOut(true);
+          userState
+            .signOut()
+            .catch((err: Error) => {
+              toast.error(`Error: ${err.message}`);
+            })
+            .finally(() => {
+              setIsSigningOut(false);
+            });
           setModalState({ state: ModalState.SignIn });
         }
       }}

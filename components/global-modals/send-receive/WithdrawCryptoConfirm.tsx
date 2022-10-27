@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 
 import { useWithdrawalFees } from '../../../hooks/useWithdrawalFees';
