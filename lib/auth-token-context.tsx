@@ -212,13 +212,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         })
         .then((res) => {
-          localStorage.removeItem('token');
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
-          localStorage.removeItem('token');
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           reject(err);
