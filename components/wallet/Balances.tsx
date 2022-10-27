@@ -175,7 +175,6 @@ export const WalletBalances = (props: WalletBalancesProps) => {
 
           const res = SORT_METHODS[sortMethod].func(a, b);
           if (sortReverse) {
-            console.log('sortReverse', sortReverse);
             return res * -1;
           }
 
