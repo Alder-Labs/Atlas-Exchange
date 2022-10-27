@@ -23,8 +23,6 @@ export interface QuotePreviewProps {
 }
 
 export function QuotePreview(props: QuotePreviewProps) {
-  const userState = useUserState();
-
   const {
     quote,
     onBack,
@@ -46,6 +44,7 @@ export function QuotePreview(props: QuotePreviewProps) {
     error: balanceError,
   } = useBalances();
 
+  console.log(quote);
   const currentDate = useCurrentDate();
   const secondsBetweenDates = Math.floor(
     (quote.expiry * 1000 - currentDate.getTime()) / 1000
@@ -147,7 +146,7 @@ export function QuotePreview(props: QuotePreviewProps) {
           >
             {renderCurrency({
               coinId: quote.toCoin ?? '',
-              amount: quote.proceeds ?? 0,
+              amount: quote.proceeds,
             })}
           </Text>
         </div>

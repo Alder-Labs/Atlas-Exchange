@@ -103,7 +103,7 @@ export function BuySellConvert(props: BuySellConvertProps) {
           </Tab.Panels>
         </Tab.Group>
         <div
-          className="pointer-events-none absolute inset-0 z-30"
+          className="pointer-events-none absolute inset-0 z-30 h-full"
           id={PREVIEW_CONTAINER_ID}
         ></div>
       </div>
