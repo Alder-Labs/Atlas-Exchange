@@ -15,6 +15,7 @@ import { FadeTransition } from '../../components/transitions/FadeTransition';
 import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { CustomPage } from '../../lib/types';
@@ -180,7 +181,7 @@ const OnboardingPage: CustomPage = () => {
                 <EnterPhoneNumber
                   onFinish={async () => {
                     const prevRawKycFormData: string | null =
-                      localStorage.getItem('kycForm');
+                      localStorage.getItem(LocalStorageKey.KycForm);
                     if (!prevRawKycFormData) {
                       toast.error('No kyc data...');
                       return;
@@ -208,7 +209,7 @@ const OnboardingPage: CustomPage = () => {
 
                     return submitKycLevel1(kycLevel1Data)
                       .then((res) => {
-                        localStorage.removeItem('kycForm');
+                        localStorage.removeItem(LocalStorageKey.KycForm);
                         setModalState({
                           state: ModalState.Kyc1Complete,
                         });

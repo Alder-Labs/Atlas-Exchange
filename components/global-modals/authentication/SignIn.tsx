@@ -69,46 +69,45 @@ export function SignIn(props: SignInProps) {
     },
   });
 
-  const onSignIn = () =>
-    handleSubmit(async (data) => {
-      let inputData = {
-        ...data,
-        captcha: {
-          recaptcha_challenge: '',
-        },
-      };
+  const onSignIn = handleSubmit(async (data) => {
+    let inputData = {
+      ...data,
+      captcha: {
+        recaptcha_challenge: '',
+      },
+    };
 
-      if (!executeRecaptcha) {
-        toast.error('Error: reCAPTCHA not loaded.');
-        return;
-      }
+    if (!executeRecaptcha) {
+      toast.error('Error: reCAPTCHA not loaded.');
+      return;
+    }
 
-      try {
-        inputData.captcha.recaptcha_challenge = await executeRecaptcha(
-          RecaptchaActions.LOGIN
-        );
-      } catch (e) {
-        toast.error('Error: reCAPTCHA failed. Please contact Support.');
-        return;
-      }
+    try {
+      inputData.captcha.recaptcha_challenge = await executeRecaptcha(
+        RecaptchaActions.LOGIN
+      );
+    } catch (e) {
+      toast.error('Error: reCAPTCHA failed. Please contact Support.');
+      return;
+    }
 
-      setIsLoggingIn(true);
-      if (userState.status === UserStateStatus.SIGNED_OUT) {
-        userState
-          .signIn(inputData)
-          .then((data) => {
-            handleMfa(data);
-          })
-          .catch((err: Error) => {
-            toast.error(`Error: ${err.message}`);
-          })
-          .finally(() => {
-            setIsLoggingIn(false);
-          });
-      } else {
-        setIsLoggingIn(false);
-      }
-    });
+    setIsLoggingIn(true);
+    if (userState.status === UserStateStatus.SIGNED_OUT) {
+      userState
+        .signIn(inputData)
+        .then((data) => {
+          handleMfa(data);
+        })
+        .catch((err: Error) => {
+          toast.error(`Error: ${err.message}`);
+        })
+        .finally(() => {
+          setIsLoggingIn(false);
+        });
+    } else {
+      setIsLoggingIn(false);
+    }
+  });
 
   const { isLoading: changePasswordLoading, mutate: changePassword } =
     useMutation(
@@ -140,7 +139,7 @@ export function SignIn(props: SignInProps) {
   return (
     <div className="px-4 pb-6">
       <div className="h-8"></div>
-      <form onSubmit={onSignIn()} className="mx-auto w-full">
+      <form onSubmit={onSignIn} className="mx-auto w-full">
         <TextInput
           id="email-input"
           placeholder={'Email'}

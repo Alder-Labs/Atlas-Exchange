@@ -1,10 +1,11 @@
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Rifm } from 'rifm';
 
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { KycSsn } from '../../lib/types/kyc';
 import { Text, TextInput, Button } from '../base';
 import { TextBubble } from '../Warning';
@@ -34,7 +35,9 @@ interface SocialSecurityProps
 export function SocialSecurity(props: SocialSecurityProps) {
   const { onContinue, ...rest } = props;
 
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(
+    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
+  );
 
   const {
     handleSubmit,
@@ -46,10 +49,11 @@ export function SocialSecurity(props: SocialSecurityProps) {
 
   // Append Phone Data to KYC Form Data
   const onSubmit = (data: KycSsn) => {
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
 
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         socialSecurityNumber: data.socialSecurityNumber,
@@ -65,9 +69,10 @@ export function SocialSecurity(props: SocialSecurityProps) {
   });
   useEffect(() => {
     const [socialSecurityNumber] = vals;
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         socialSecurityNumber,

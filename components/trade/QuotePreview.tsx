@@ -23,8 +23,6 @@ export interface QuotePreviewProps {
 }
 
 export function QuotePreview(props: QuotePreviewProps) {
-  const userState = useUserState();
-
   const {
     quote,
     onBack,
@@ -147,7 +145,7 @@ export function QuotePreview(props: QuotePreviewProps) {
           >
             {renderCurrency({
               coinId: quote.toCoin ?? '',
-              amount: quote.proceeds ?? 0,
+              amount: quote.proceeds,
             })}
           </Text>
         </div>
