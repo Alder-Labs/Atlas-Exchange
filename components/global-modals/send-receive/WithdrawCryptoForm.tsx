@@ -156,7 +156,7 @@ export const WithdrawCryptoForm = (props: {
                   setValue('size', getCoinBalance(coin).toString());
                 }}
               >
-                <Text color="brand">
+                <Text color="info" className="hover:underline">
                   Balance: {getCoinBalance(coin).toString()} {coin.id}
                 </Text>
               </div>

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
+import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { KycPersonForm } from '../../lib/types/kyc';
 import { Text, TextInput, Button, TextLabel } from '../base';
 import { SelectAutocomplete } from '../base/SelectAutocomplete';
@@ -45,7 +46,9 @@ const yearOptions = Array.from(Array(150).keys()).map((i) => ({
 export function PersonalDetails(props: PersonalDetailsProps) {
   const { onContinue } = props;
 
-  const cachedForm = JSON.parse(localStorage.getItem('kycForm') || '{}');
+  const cachedForm = JSON.parse(
+    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
+  );
   const {
     control,
     register,
@@ -55,10 +58,11 @@ export function PersonalDetails(props: PersonalDetailsProps) {
 
   // Store person data locally for future submission
   const onSubmit = (data: KycPersonForm) => {
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
 
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         fullLegalName: data.fullLegalName,
@@ -76,9 +80,10 @@ export function PersonalDetails(props: PersonalDetailsProps) {
   });
   useEffect(() => {
     const [fullLegalName, day, month, year] = vals;
-    const prevRawKycFormData: string = localStorage.getItem('kycForm') || '{}';
+    const prevRawKycFormData: string =
+      localStorage.getItem(LocalStorageKey.KycForm) || '{}';
     localStorage.setItem(
-      'kycForm',
+      LocalStorageKey.KycForm,
       JSON.stringify({
         ...JSON.parse(prevRawKycFormData),
         fullLegalName,

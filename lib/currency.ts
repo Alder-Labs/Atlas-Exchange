@@ -11,12 +11,14 @@ function renderAmount(
 ): string {
   const { minFixedDigits, maxFixedDigits, addCommas, roundingMode } = options;
   if (typeof amount === 'number') {
+    const pow = Math.pow(10, maxFixedDigits);
     if (roundingMode === 'ceil') {
-      amount = Math.ceil(amount * 10 ** maxFixedDigits) / 10 ** maxFixedDigits;
+      amount = Math.ceil(amount * pow) / pow;
     } else if (roundingMode === 'floor') {
-      amount = Math.floor(amount * 10 ** maxFixedDigits) / 10 ** maxFixedDigits;
+      amount = Math.floor(amount * pow) / pow;
+    } else if (roundingMode === 'round') {
+      amount = Math.round(amount * pow) / pow;
     }
-
     // Truncate amount to between minFixedDigits and maxFixedDigits
     let res = amount.toFixed(
       Math.min(
@@ -24,12 +26,14 @@ function renderAmount(
         maxFixedDigits
       )
     );
+
     if (addCommas) {
       const [whole, decimal] = res.split('.');
       res =
         whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
         (decimal ? '.' + decimal : '');
     }
+
     return res;
   } else {
     return amount;
@@ -37,16 +41,23 @@ function renderAmount(
 }
 
 function getMaxFixedDigits(coinId: string, amount: string | number) {
+  if (typeof amount === 'string') {
+    return 0;
+  }
+
+  const magnitude = Math.abs(amount);
   if (coinId === 'USD') {
-    if (amount <= 0.1) {
+    if (magnitude <= 0.1) {
       return 8;
     } else {
       return 2;
     }
   } else {
-    if (amount < 1) {
+    if (magnitude < 0.000001) {
+      return 16;
+    } else if (magnitude < 1) {
       return 8;
-    } else if (amount < 1000) {
+    } else if (magnitude < 1000) {
       return 2;
     } else {
       return 0;
@@ -55,9 +66,14 @@ function getMaxFixedDigits(coinId: string, amount: string | number) {
 }
 
 function getMinFixedDigits(coinId: string, amount: string | number) {
-  if (amount < 1) {
+  if (typeof amount === 'string') {
+    return 0;
+  }
+
+  const magnitude = Math.abs(amount);
+  if (magnitude < 1) {
     return 2;
-  } else if (amount < 1000) {
+  } else if (magnitude < 1000) {
     return 2;
   } else {
     return 0;
@@ -80,6 +96,7 @@ export function renderCurrency({
   minFixedDigits?: number;
   addCommas?: boolean;
   roundingMode?: RoundingMode;
+  removeTrailingZeroes?: boolean;
 }): string {
   const amountString = renderAmount(amount, {
     minFixedDigits,

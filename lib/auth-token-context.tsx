@@ -11,6 +11,7 @@ import { useQueryClient } from 'react-query';
 import { useStateCallback } from '../hooks/useStateCallback';
 
 import { requireEnvVar } from './env';
+import { LocalStorageKey } from './local-storage-keys';
 import {
   MfaType,
   RecaptchaParams,
@@ -21,6 +22,21 @@ import {
 } from './types';
 import { SignUpResponse } from './types/signup';
 import { UserState, UserStateStatus } from './types/user-states';
+
+function clearLocalStorage() {
+  // Keep some keys (don't delete them)
+
+  const KEYS_TO_KEEP = [LocalStorageKey.WatchList];
+  const VALUES_TO_KEEP = KEYS_TO_KEEP.map(
+    (key) => localStorage.getItem(key) || ''
+  );
+
+  localStorage.clear();
+
+  KEYS_TO_KEEP.forEach((key, i) => {
+    localStorage.setItem(key, VALUES_TO_KEEP[i]);
+  });
+}
 
 type User =
   | { status: 'UNKNOWN' }
@@ -55,11 +71,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       callback?: (user: User | null | undefined) => void
     ) => {
       if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('tokenDate', getTwoDaysFromNow());
+        localStorage.setItem(LocalStorageKey.User, JSON.stringify(user));
+        localStorage.setItem(LocalStorageKey.TokenDate, getTwoDaysFromNow());
       } else {
-        localStorage.removeItem('user');
-        localStorage.removeItem('tokenDate');
+        localStorage.removeItem(LocalStorageKey.User);
+        localStorage.removeItem(LocalStorageKey.TokenDate);
       }
       _setUser(user, callback);
     },
@@ -69,12 +85,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // In an effect since localStorage is not available during SSR
   // we can no longer check token expiration because its encrypted
   useEffect(() => {
-    const cachedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const cachedUser = JSON.parse(
+      localStorage.getItem(LocalStorageKey.User) || '{}'
+    );
     if (!validCachedUser(cachedUser)) {
       setUser({ status: UserStateStatus.SIGNED_OUT });
     }
 
-    const tokenDate = localStorage.getItem('tokenDate');
+    const tokenDate = localStorage.getItem(LocalStorageKey.TokenDate);
     if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
       setUser({ status: UserStateStatus.SIGNED_OUT });
     } else {
@@ -225,11 +243,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         })
         .then((res) => {
+          clearLocalStorage();
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
+          clearLocalStorage();
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           reject(err);

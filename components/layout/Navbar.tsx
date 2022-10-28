@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 import {
   faBell,
@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { useLoginStatus } from '../../hooks/useLoginStatus';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
@@ -134,6 +135,12 @@ export function Navbar({ children }: NavbarProps) {
     );
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const isDesktop = useMediaQuery({ showIfBiggerThan: 'lg' });
+  useEffect(() => {
+    if (isDesktop) {
+      setDrawerOpen(false);
+    }
+  }, [isDesktop]);
 
   const darkMode = useDarkOrLightMode();
 
