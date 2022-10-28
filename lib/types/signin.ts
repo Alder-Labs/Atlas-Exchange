@@ -1,3 +1,4 @@
+import { UserReduced } from './login-status';
 import { RecaptchaParams } from './recaptcha';
 
 export type MfaType = 'email' | 'sms' | 'totp' | null;
@@ -16,4 +17,9 @@ export type SignInResponse = {
   captchaSubstitute: string | null;
   mfaMethod: MfaType;
   mfaRequired: boolean;
+};
+
+export type SignInWithMfaResponse = {
+  token: string;
+  target: UserReduced;
 };

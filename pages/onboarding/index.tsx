@@ -104,7 +104,7 @@ const OnboardingPage: CustomPage = () => {
       useMutationFetcher<KycForm, { token: string }>(`/kyc/level1`, {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (userState.status !== UserStateStatus.SIGNED_IN) {
+            if (userState.status === UserStateStatus.SIGNED_OUT) {
               reject();
               return;
             }

@@ -136,7 +136,7 @@ export function SetSmsMfaForm() {
     }
 
     let inputData = {
-      phoneNumber: countryCode + phoneNumber,
+      phoneNumber: `+${countryCode}${phoneNumber}`,
       captcha: {
         recaptcha_challenge: '',
       },
@@ -159,7 +159,7 @@ export function SetSmsMfaForm() {
 
   const onSubmit = (data: SetSmsMfaForm) => {
     const reqData: SetSmsMfaRequest = {
-      phoneNumber: `${data.countryCode}${data.phoneNumber}`,
+      phoneNumber: `+${data.countryCode}${data.phoneNumber}`,
       code: data.code,
       existingCode: existingMfaCode,
     };

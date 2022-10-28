@@ -87,9 +87,8 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
             <FontAwesomeIcon icon={faCircleInfo} className="mr-4 h-5" />
           </Text>
           <Text>
-            Country of residence and phone number country code are different.
             Please provide a proof of address document(s) to continue and
-            complete Indentity Verification Level 2.
+            complete Identity Verification Level 2.
           </Text>
         </div>
       </TextBubble>
