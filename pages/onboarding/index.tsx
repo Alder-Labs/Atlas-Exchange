@@ -103,7 +103,7 @@ const OnboardingPage: CustomPage = () => {
       useMutationFetcher<KycForm, { token: string }>(`/kyc/level1`, {
         onFetchSuccess: (res) =>
           new Promise((resolve, reject) => {
-            if (userState.status !== UserStateStatus.SIGNED_IN) {
+            if (userState.status === UserStateStatus.SIGNED_OUT) {
               reject();
               return;
             }
@@ -214,6 +214,7 @@ const OnboardingPage: CustomPage = () => {
                       router.push('/');
                     })
                     .catch((err: Error) => {
+                      console.log('err', err);
                       if (
                         err.message === 'Phone number does not match country' ||
                         err.message ===
