@@ -11,14 +11,14 @@ import { SetSmsModal } from '../components/mfa/SetSmsModal';
 import { SetTotpModal } from '../components/mfa/SetTotpModal';
 import { SetWithdrawalPasswordModal } from '../components/mfa/SetWithdrawalPasswordModal';
 import { AuthStatus, useAuthStatus } from '../hooks/useKycLevel';
-import { useLoginStatus } from '../hooks/useLoginStatus';
 import { useStripeVerificationStatus } from '../hooks/useStripeVerificationStatus';
+import { useUserState } from '../lib/auth-token-context';
 import { useDarkOrLightMode } from '../lib/dark-mode';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
+import { CustomPage } from '../lib/types';
 
 import type { NextPage } from 'next';
-import { CustomPage } from '../lib/types';
 
 const AccountNavbarTab = ({
   label,
@@ -113,7 +113,9 @@ const AccountOption = ({
 };
 
 const SecurityTabContent = () => {
-  const { data: loginStatus } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatus = userState.loginStatusData;
+
   const { isLoading: changePasswordLoading, mutate: changePassword } =
     useMutation(
       useMutationFetcher<{}, {}>(
@@ -198,7 +200,9 @@ const SecurityTabContent = () => {
 const IdentityTabContent = () => {
   const router = useRouter();
 
-  const { data: loginStatusData } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatusData = userState.loginStatusData;
+
   const status = useAuthStatus();
   const { authStatus } = status;
   const { data: stripeVerificationStatus } = useStripeVerificationStatus();
@@ -430,12 +434,8 @@ const Account: CustomPage = () => {
     { Identity: <IdentityTabContent /> },
   ];
 
-  const {
-    data: loginStatusData,
-    error: loginStatusError,
-    refetch: loginStatusRefetch,
-    isLoading: loginStatusIsLoading,
-  } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatusData = userState.loginStatusData;
 
   const displayName = loginStatusData?.user?.displayName;
   const feeTier = loginStatusData?.user?.feeTier;
@@ -444,15 +444,11 @@ const Account: CustomPage = () => {
     <SidePadding>
       <div className="sm:px-8">
         <div className="h-8" />
-        <Title isLoading={loginStatusIsLoading} loadingWidth={'12rem'}>
+        <Title loadingWidth={'12rem'}>
           {displayName ? `${displayName}` : ''}
         </Title>
         <div className="h-1" />
-        <Text
-          color="secondary"
-          isLoading={loginStatusIsLoading}
-          loadingWidth="8rem"
-        >
+        <Text color="secondary" loadingWidth="8rem">
           Fee tier: Level {feeTier}
         </Text>
         <div className={'min-h-screen max-w-3xl'}>

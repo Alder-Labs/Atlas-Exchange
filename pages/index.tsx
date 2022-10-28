@@ -11,8 +11,9 @@ import { SidePadding } from '../components/layout/SidePadding';
 import { LoaderTripleLine } from '../components/loaders/LoaderTripleLine';
 import { BuySellConvert } from '../components/trade/BuySellConvert';
 import { useBalances } from '../hooks/useBalances';
-import { useLoginStatus } from '../hooks/useLoginStatus';
+import { useUserState } from '../lib/auth-token-context';
 import { CustomPage } from '../lib/types';
+import { UserStateStatus } from '../lib/types/user-states';
 
 enum HomePromptType {
   LOADING,
@@ -23,7 +24,8 @@ enum HomePromptType {
 }
 
 const Home: CustomPage = () => {
-  const { data: loginStatus } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatus = userState.loginStatusData;
 
   const { balancesMap } = useBalances({
     enabled: loginStatus?.loggedIn ?? false,
@@ -31,29 +33,20 @@ const Home: CustomPage = () => {
   });
 
   const renderHomePrompt = useMemo(() => {
-    const promptType: HomePromptType = !loginStatus
-      ? HomePromptType.LOADING
-      : !loginStatus.loggedIn
-      ? HomePromptType.SIGNUP
-      : loginStatus.loggedIn && loginStatus.user.kycLevel === 0
-      ? HomePromptType.ONBOARDING
-      : balancesMap?.['USD']?.total ?? 0 > 0
-      ? HomePromptType.BUYING_POWER
-      : HomePromptType.DEPOSIT;
-
-    switch (promptType) {
-      case HomePromptType.LOADING:
-        return <LoaderTripleLine />;
-      case HomePromptType.SIGNUP:
-        return <SignupPrompt />;
-      case HomePromptType.ONBOARDING:
-        return <OnboardingPrompt />;
-      case HomePromptType.DEPOSIT:
-        return <DepositPrompt />;
-      case HomePromptType.BUYING_POWER:
-        return <BuyingPowerPrompt amount={balancesMap?.['USD'].total ?? 0} />;
+    if (userState.status === UserStateStatus.SIGNED_OUT) {
+      return <SignupPrompt />;
+    } else if (userState.loginStatusData?.user?.kycLevel === 0) {
+      return <OnboardingPrompt />;
+    } else if (!balancesMap?.['USD']?.total) {
+      return <DepositPrompt />;
+    } else {
+      return <BuyingPowerPrompt amount={balancesMap?.['USD'].total ?? 0} />;
     }
-  }, [balancesMap, loginStatus]);
+  }, [
+    balancesMap,
+    userState.loginStatusData?.user?.kycLevel,
+    userState.status,
+  ]);
 
   return (
     <>

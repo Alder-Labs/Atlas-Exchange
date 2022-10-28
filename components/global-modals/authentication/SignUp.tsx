@@ -14,7 +14,6 @@ import {
 } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
 import { useModalState } from '../../../hooks/useModalState';
 import { SignupParams, useUserState } from '../../../lib/auth-token-context';
 import { BRAND_NAME } from '../../../lib/constants';
@@ -51,7 +50,7 @@ interface SignUpProps {}
 
 const SignUpModal = (props: SignUpProps) => {
   const router = useRouter();
-  const { data: loginStatus } = useLoginStatus();
+
   const userState = useUserState();
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [modalState, setModalState] = useModalState();
@@ -109,7 +108,8 @@ const SignUpModal = (props: SignUpProps) => {
       captcha: { recaptcha_challenge: recaptchaToken },
     };
 
-    const alpha3Code = iso31661Alpha2ToAlpha3[loginStatus?.country ?? ''];
+    const alpha3Code =
+      iso31661Alpha2ToAlpha3[userState?.loginStatusData?.country ?? ''];
     const countryName = ALPHA3_TO_COUNTRY_NAME[alpha3Code];
     if (EU_COUNTRIES.has(alpha3Code)) {
       toast.error(`Error: Registration is not allowed in ${countryName}`);
@@ -120,8 +120,8 @@ const SignUpModal = (props: SignUpProps) => {
       setIsSigningUp(true);
       userState
         .signUp(inputData)
-        .then(() => {
-          router.push('/onboarding').then(() => {
+        .then(async () => {
+          await router.push('/onboarding').then(() => {
             setModalState({ state: ModalState.Closed });
           });
         })

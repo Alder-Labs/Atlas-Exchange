@@ -13,7 +13,6 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
@@ -112,11 +111,9 @@ interface NavbarProps {
 export function Navbar({ children }: NavbarProps) {
   const userState = useUserState();
   const router = useRouter();
-  const { data: loginStatusData, isLoading: loadingLoginStatusData } =
-    useLoginStatus();
 
   const authenticated =
-    loginStatusData?.loggedIn &&
+    userState.loginStatusData?.loggedIn &&
     [UserStateStatus.NEEDS_MFA, UserStateStatus.SIGNED_IN].includes(
       userState?.status
     );
@@ -195,9 +192,9 @@ export function Navbar({ children }: NavbarProps) {
               </button>
             </div>
             <div className="mx-6 mb-6 flex w-full items-center">
-              <Text isLoading={loadingLoginStatusData} loadingWidth="8rem">
-                {loginStatusData?.loggedIn
-                  ? loginStatusData.user.displayName
+              <Text loadingWidth="8rem">
+                {userState.status === UserStateStatus.SIGNED_IN
+                  ? userState.loginStatusData?.user?.displayName
                   : 'Not logged in'}
               </Text>
             </div>
