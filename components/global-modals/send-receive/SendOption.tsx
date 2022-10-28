@@ -3,12 +3,12 @@ import React from 'react';
 import { faBan, faBitcoinSign } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
+import { useModalState } from '../../../hooks/useModalState';
 import { MfaType } from '../../../lib/types';
+import { ModalState } from '../../../lib/types/modalState';
 import { Text } from '../../base';
 import { MenuIconLeft, MenuIconRight } from '../../global-modals/deposit/Menu';
 import { MenuItem, MenuItemProps } from '../../modals/MenuModalItem';
-import { useModalState } from '../../../hooks/useModalState';
-import { ModalState } from '../../../lib/types/modalState';
 
 export const SendOption = (props: {
   onClick: () => void;

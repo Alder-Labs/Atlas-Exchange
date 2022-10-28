@@ -1,6 +1,14 @@
 import { SignupParams } from '../auth-token-context';
 
-import { MfaType, SigninParams, SigninWithMfaParams } from './signin';
+import { LoginStatusReduced } from './login-status';
+import {
+  MfaType,
+  SigninParams,
+  SignInResponse,
+  SigninWithMfaParams,
+  SignInWithMfaResponse,
+} from './signin';
+import { SignUpResponse } from './signup';
 
 export type UserState =
   | SignedOutUserState
@@ -10,16 +18,19 @@ export type UserState =
 
 export type SignedOutUserState = {
   status: UserStateStatus.SIGNED_OUT;
-  signIn: (params: SigninParams) => Promise<any>;
-  signUp: (params: SignupParams) => Promise<any>;
+  loginStatusData?: LoginStatusReduced;
+  signIn: (params: SigninParams) => Promise<SignInResponse>;
+  signUp: (params: SignupParams) => Promise<SignUpResponse>;
   updateToken: (token: string) => Promise<void>;
 };
 
 export type NeedsMfaUserState = {
   status: UserStateStatus.NEEDS_MFA;
   token: string;
-  mfa: MfaType;
-  signInWithMfa: (params: SigninWithMfaParams) => Promise<any>;
+  loginStatusData: LoginStatusReduced;
+  signInWithMfa: (
+    params: SigninWithMfaParams
+  ) => Promise<SignInWithMfaResponse>;
   signOut: () => Promise<void>;
   updateToken: (token: string) => Promise<void>;
 };
@@ -27,6 +38,7 @@ export type NeedsMfaUserState = {
 export type SignedInUserState = {
   status: UserStateStatus.SIGNED_IN;
   token: string;
+  loginStatusData: LoginStatusReduced;
   signOut: () => Promise<void>;
   updateToken: (token: string) => Promise<void>;
 };
@@ -34,6 +46,7 @@ export type SignedInUserState = {
 export type SupportOnlyUserState = {
   status: UserStateStatus.SUPPORT_ONLY;
   token: string;
+  loginStatusData: LoginStatusReduced;
   signOut: () => Promise<void>;
   updateToken: (token: string) => Promise<void>;
 };

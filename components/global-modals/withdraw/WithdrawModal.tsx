@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
 import { AuthStatus, useAuthStatus } from '../../../hooks/useKycLevel';
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
 import { useModalState } from '../../../hooks/useModalState';
 import { useUserState } from '../../../lib/auth-token-context';
 import { ModalState } from '../../../lib/types/modalState';
@@ -24,8 +23,6 @@ import { WithdrawWireSuccess } from './WithdrawWireSuccess';
 export const WithdrawModal = () => {
   const router = useRouter();
   const [modalState, setModalState, handlers] = useModalState();
-  const { data: loginStatus, isLoading: loginStatusIsLoading } =
-    useLoginStatus();
 
   const MenuStyle = clsx({
     'divide-y divide-grayLight-40 overflow-hidden dark:divide-grayDark-40':

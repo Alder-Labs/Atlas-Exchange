@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import QRCode from 'react-qr-code';
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
 import { WEBSITE_URL } from '../../lib/constants';
@@ -34,7 +33,6 @@ export function SetTotpModal(props: { mfa: MfaType }) {
   const router = useRouter();
   const darkMode = useDarkOrLightMode();
   const userState = useUserState();
-  const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
   const [open, handlers] = useModal(false);
   const [otpCode, setOtpCode] = useState('');
   const [existingMfaCode, setExistingMfaCode] = useState('');
@@ -49,8 +47,8 @@ export function SetTotpModal(props: { mfa: MfaType }) {
   }, [getTotpSeed, open]);
 
   const otpUrl =
-    totpSeed && loginData?.user?.email
-      ? `otpauth://totp/${loginData?.user?.email}?secret=${totpSeed}&issuer=${TOTP_ISSUER}`
+    totpSeed && userState.loginStatusData?.user?.email
+      ? `otpauth://totp/${userState.loginStatusData?.user?.email}?secret=${totpSeed}&issuer=${TOTP_ISSUER}`
       : null;
 
   // Set TOTP as mfa method
@@ -58,22 +56,9 @@ export function SetTotpModal(props: { mfa: MfaType }) {
     useMutationFetcher<SetTotpMfaRequest, { token: string }>(
       '/api/mfa/set_totp_mfa',
       {
-        onFetchSuccess: (res) =>
-          new Promise((resolve, reject) => {
-            if (userState.status === UserStateStatus.SIGNED_IN) {
-              userState.updateToken(res.token).then(() => {
-                refetchLoginStatus()
-                  .then((res) => {
-                    resolve(res);
-                  })
-                  .catch((err) => {
-                    reject();
-                  });
-              });
-            } else {
-              reject();
-            }
-          }),
+        onFetchSuccess: (res) => {
+          return userState.updateToken(res.token);
+        },
       }
     ),
     {

@@ -10,7 +10,6 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
 import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
@@ -49,7 +48,6 @@ export function SetSmsMfaForm() {
   const [open, handlers] = useModal(false);
 
   const [existingMfaCode, setExistingMfaCode] = useState('');
-  const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -93,22 +91,9 @@ export function SetSmsMfaForm() {
     useMutationFetcher<SetSmsMfaRequest, { token: string }>(
       '/api/mfa/sms/setup/verify',
       {
-        onFetchSuccess: (res) =>
-          new Promise((resolve, reject) => {
-            if (userState.status !== UserStateStatus.SIGNED_IN) {
-              reject();
-              return;
-            }
-            userState.updateToken(res.token).then(() => {
-              refetchLoginStatus()
-                .then(() => {
-                  resolve(res);
-                })
-                .catch(() => {
-                  reject();
-                });
-            });
-          }),
+        onFetchSuccess: async (res) => {
+          return userState.updateToken(res.token);
+        },
       }
     ),
     {

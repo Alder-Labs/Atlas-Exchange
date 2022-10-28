@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
 import { useCoins } from '../../../hooks/useCoins';
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
 import { useModalState } from '../../../hooks/useModalState';
+import { useUserState } from '../../../lib/auth-token-context';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import CryptoSelectMenu from '../../deposit/CryptoSelectMenu';
@@ -19,9 +19,8 @@ import WithdrawCryptoForm from './WithdrawCryptoForm';
 
 const SendModal = () => {
   const router = useRouter();
+  const userState = useUserState();
   const [modalState, setModalState, handlers] = useModalState();
-  const { data: loginStatus, isLoading: loginStatusIsLoading } =
-    useLoginStatus();
   const { coinsMap, isLoading } = useCoins({
     refetchOnWindowFocus: false,
   });
@@ -46,13 +45,12 @@ const SendModal = () => {
     },
   };
 
-  if (!loginStatus?.user) {
-    // router.push('/');
-    return <></>;
-  }
+  const kycLevel = userState.loginStatusData?.user?.kycLevel;
+  const mfa = userState.loginStatusData?.mfa;
 
-  const kycLevel = loginStatus.user.kycLevel;
-  const mfa = loginStatus.mfa;
+  if (!kycLevel || !mfa) {
+    return null;
+  }
 
   return (
     <>

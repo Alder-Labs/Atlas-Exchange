@@ -6,7 +6,7 @@ import {
 } from 'react-google-recaptcha-v3';
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
+import { useUserState } from '../../lib/auth-token-context';
 import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
@@ -129,7 +129,8 @@ function SmsMfaInputWrapper(props: SmsMfaProps) {
 }
 
 export function ExistingMfaInput(props: ExistingMfaProps) {
-  const { data: loginStatus, isLoading: loginStatusLoading } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatus = userState.loginStatusData;
 
   if (!loginStatus?.loggedIn) {
     return <LoadingPlaceholder />;
