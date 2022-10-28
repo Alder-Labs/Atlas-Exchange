@@ -43,8 +43,10 @@ export enum ModalState {
   SendCryptoSuccess = 'Send4',
 
   // Support
-  SupportOnlySignin = 'SupportOnlySignin',
-  SupportOnlySigninSuccess = 'SupportOnlySigninSuccess',
+  GetSupportOnlyLink = 'GetSupportOnlyLink',
+  GetSupportOnlyLinkSuccess = 'GetSupportOnlyLinkSuccess',
+  CreatePublicTicket = 'CreatePublicTicket',
+  CreatePublicTicketSuccess = 'CreatePublicTicketSuccess',
 }
 
 type ModalStateWithPayload =

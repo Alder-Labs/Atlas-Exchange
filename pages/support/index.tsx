@@ -193,7 +193,7 @@ export function PublicSupport() {
         <Button
           size="md"
           onClick={() =>
-            setModalStateDetailed({ state: ModalState.SupportOnlySignin })
+            setModalStateDetailed({ state: ModalState.GetSupportOnlyLink })
           }
         >
           Request a link
