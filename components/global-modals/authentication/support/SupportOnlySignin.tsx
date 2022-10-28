@@ -138,7 +138,7 @@ const SupportOnlySigninForm = (props: {
           Request Support Link
         </Button>
 
-        {showNoAccountFound ? (
+        {showNoAccountFound && (
           <>
             <div className={'h-12'} />
             <Text>Email not showing up? Please click CONTACT US below.</Text>
@@ -152,8 +152,6 @@ const SupportOnlySigninForm = (props: {
               Contact us
             </Button>
           </>
-        ) : (
-          <></>
         )}
       </div>
     </form>
