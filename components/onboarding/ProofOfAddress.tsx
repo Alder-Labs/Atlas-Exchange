@@ -8,8 +8,8 @@ import { FilePond } from 'react-filepond';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useFormMutationFetcher } from '../../lib/formMutation';
 import { ALPHA3_TO_COUNTRY_NAME } from '../../lib/country-codes';
+import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
 import { Text, Button, TextLabel } from '../base';
 import { TextBubble } from '../Warning';
@@ -84,9 +84,8 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
             <FontAwesomeIcon icon={faCircleInfo} className="mr-4 h-5" />
           </Text>
           <Text>
-            Country of residence and phone number country code are different.
             Please provide a proof of address document(s) to continue and
-            complete Indentity Verification Level 2.
+            complete Identity Verification Level 2.
           </Text>
         </div>
       </TextBubble>

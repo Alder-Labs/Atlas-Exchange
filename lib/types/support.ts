@@ -43,3 +43,24 @@ export type SupportTicketMessage = {
   authorIsCustomer: boolean;
   time: string;
 };
+
+export type RequestSupportOnlyToken = {
+  captcha: {
+    recaptcha_challenge: string;
+  };
+  deviceId?: string;
+  email: string;
+};
+
+// If a user cannot access their email, they may still submit a support ticket
+// with this request schema
+export type PublicCreateTicket = {
+  deviceId?: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  userMessage: string;
+  captcha: {
+    recaptcha_challenge: string;
+  };
+};
