@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { uuid4 } from '@sentry/utils';
 import {
@@ -21,7 +21,7 @@ import { ModalState } from '../../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../../base';
 import { TitledModal } from '../../../modals/TitledModal';
 
-const SupportOnlySigninModal = () => {
+const GetSupportOnlyLink = () => {
   const [modalState, setModalState] = useModalState();
 
   return (
@@ -31,7 +31,7 @@ const SupportOnlySigninModal = () => {
         setModalState({ state: ModalState.Closed });
       }}
       darkenBackground={false}
-      isOpen={modalState.state === ModalState.SupportOnlySignin}
+      isOpen={modalState.state === ModalState.GetSupportOnlyLink}
     >
       <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <SupportOnlySigninForm />
@@ -51,7 +51,9 @@ const SupportOnlySigninForm = () => {
     defaultValues: { email: '' },
   });
 
+  const [modalState, setModalState] = useModalState();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const [showNoAccountFound, setShowNoAccountFound] = useState(false);
 
   const { isLoading: requestEmailIsLoading, mutate: requestEmail } =
     useMutation(
@@ -64,6 +66,7 @@ const SupportOnlySigninForm = () => {
         },
         onError: (err: Error) => {
           toast.error(`Error: ${err.message}`);
+          setShowNoAccountFound(true);
         },
       }
     );
@@ -89,6 +92,10 @@ const SupportOnlySigninForm = () => {
     }
   }
 
+  function goToCreatePublicTicket() {
+    setModalState({ state: ModalState.CreatePublicTicket });
+  }
+
   return (
     <form onSubmit={handleSubmit(onRequestSupportLink)}>
       <div className="p-6">
@@ -107,6 +114,25 @@ const SupportOnlySigninForm = () => {
         >
           Request Support Link
         </Button>
+
+        {showNoAccountFound ? (
+          <>
+            <div className={'h-12'} />
+            <Text>Email not showing up? Please click CONTACT US below.</Text>
+            <div className={'h-6'} />
+            <Button
+              disabled={watch('email').length <= 0}
+              type="button"
+              className="w-full"
+              loading={requestEmailIsLoading}
+              onClick={goToCreatePublicTicket}
+            >
+              Contact us
+            </Button>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </form>
   );
@@ -115,4 +141,4 @@ function getDeviceId() {
   return localStorage.getItem('deviceId') || undefined;
 }
 
-export default SupportOnlySigninModal;
+export default GetSupportOnlyLink;
