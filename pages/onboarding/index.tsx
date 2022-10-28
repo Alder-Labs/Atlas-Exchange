@@ -126,120 +126,122 @@ const OnboardingPage: CustomPage = () => {
   return (
     <>
       <SidePadding className="grow bg-grayLight-10 dark:bg-black">
-        <div className="h-8 sm:h-24"></div>
-        <div className="grid-rows mb-32 grid w-full sm:grid-cols-3">
-          <div className="hidden flex-none pr-20 dark:bg-black sm:col-span-1 sm:block sm:pt-24">
-            <StageNavigator
-              // enabledStages={ALL_STAGES.map((stage) => stage.value)}
-              currentStage={currentStage}
-              stages={ENABLED_STAGES}
-              // enabledStages={ENABLED_STAGES}
-              onStageClick={(newStage) => {
-                navStage(newStage);
-              }}
-            />
-          </div>
-          <div className="flex w-full flex-col items-start sm:col-span-2 sm:py-16">
-            <FadeTransition
-              show={stageDisplayed === OnboardingStage.PERSONAL_DETAILS}
-            >
-              <PersonalDetails
-                onContinue={() => {
-                  navStage(OnboardingStage.ADDRESS_INFORMATION);
+        <div className="sm:px-8">
+          <div className="h-8 sm:h-24"></div>
+          <div className="grid-rows mb-32 grid w-full sm:grid-cols-3">
+            <div className="hidden flex-none pr-20 dark:bg-black sm:col-span-1 sm:block sm:pt-24">
+              <StageNavigator
+                // enabledStages={ALL_STAGES.map((stage) => stage.value)}
+                currentStage={currentStage}
+                stages={ENABLED_STAGES}
+                // enabledStages={ENABLED_STAGES}
+                onStageClick={(newStage) => {
+                  navStage(newStage);
                 }}
               />
-            </FadeTransition>
-            <FadeTransition
-              show={stageDisplayed === OnboardingStage.ADDRESS_INFORMATION}
-            >
-              <AddressInformation
-                onContinue={() => {
-                  navStage(OnboardingStage.SOCIAL_SECURITY);
-                }}
-                onBack={() => {
-                  navStage(OnboardingStage.PERSONAL_DETAILS);
-                }}
-              />
-            </FadeTransition>
-            <FadeTransition
-              show={stageDisplayed === OnboardingStage.SOCIAL_SECURITY}
-            >
-              <SocialSecurity
-                onContinue={() => {
-                  navStage(OnboardingStage.PHONE_NUMBER);
-                }}
-                onBack={() => {
-                  navStage(OnboardingStage.ADDRESS_INFORMATION);
-                }}
-              />
-            </FadeTransition>
-            <FadeTransition
-              show={stageDisplayed === OnboardingStage.PHONE_NUMBER}
-            >
-              <EnterPhoneNumber
-                onFinish={async () => {
-                  const prevRawKycFormData: string | null =
-                    localStorage.getItem('kycForm');
-                  if (!prevRawKycFormData) {
-                    toast.error('No kyc data...');
-                    return;
-                  }
+            </div>
+            <div className="flex w-full flex-col items-start sm:col-span-2 sm:py-16">
+              <FadeTransition
+                show={stageDisplayed === OnboardingStage.PERSONAL_DETAILS}
+              >
+                <PersonalDetails
+                  onContinue={() => {
+                    navStage(OnboardingStage.ADDRESS_INFORMATION);
+                  }}
+                />
+              </FadeTransition>
+              <FadeTransition
+                show={stageDisplayed === OnboardingStage.ADDRESS_INFORMATION}
+              >
+                <AddressInformation
+                  onContinue={() => {
+                    navStage(OnboardingStage.SOCIAL_SECURITY);
+                  }}
+                  onBack={() => {
+                    navStage(OnboardingStage.PERSONAL_DETAILS);
+                  }}
+                />
+              </FadeTransition>
+              <FadeTransition
+                show={stageDisplayed === OnboardingStage.SOCIAL_SECURITY}
+              >
+                <SocialSecurity
+                  onContinue={() => {
+                    navStage(OnboardingStage.PHONE_NUMBER);
+                  }}
+                  onBack={() => {
+                    navStage(OnboardingStage.ADDRESS_INFORMATION);
+                  }}
+                />
+              </FadeTransition>
+              <FadeTransition
+                show={stageDisplayed === OnboardingStage.PHONE_NUMBER}
+              >
+                <EnterPhoneNumber
+                  onFinish={async () => {
+                    const prevRawKycFormData: string | null =
+                      localStorage.getItem('kycForm');
+                    if (!prevRawKycFormData) {
+                      toast.error('No kyc data...');
+                      return;
+                    }
 
-                  const rawKycData = JSON.parse(
-                    prevRawKycFormData
-                  ) as KycRawForm;
+                    const rawKycData = JSON.parse(
+                      prevRawKycFormData
+                    ) as KycRawForm;
 
-                  const dob = new Date(
-                    `${rawKycData.month}/${rawKycData.day}/${rawKycData.year}`
-                  );
+                    const dob = new Date(
+                      `${rawKycData.month}/${rawKycData.day}/${rawKycData.year}`
+                    );
 
-                  if (!dob) {
-                    toast.error('Invalid date of birth...');
-                    return;
-                  }
+                    if (!dob) {
+                      toast.error('Invalid date of birth...');
+                      return;
+                    }
 
-                  rawKycData.countryCode = `+${rawKycData.countryCode}`;
-                  const kycLevel1Data: KycForm = {
-                    ...rawKycData,
-                    dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
-                    phoneNumber: `${rawKycData.countryCode}${rawKycData.phoneNumber}`,
-                  };
+                    rawKycData.countryCode = `+${rawKycData.countryCode}`;
+                    const kycLevel1Data: KycForm = {
+                      ...rawKycData,
+                      dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
+                      phoneNumber: `${rawKycData.countryCode}${rawKycData.phoneNumber}`,
+                    };
 
-                  return submitKycLevel1(kycLevel1Data)
-                    .then((res) => {
-                      localStorage.removeItem('kycForm');
-                      setModalState({
-                        state: ModalState.Kyc1Complete,
+                    return submitKycLevel1(kycLevel1Data)
+                      .then((res) => {
+                        localStorage.removeItem('kycForm');
+                        setModalState({
+                          state: ModalState.Kyc1Complete,
+                        });
+                        router.push('/');
+                      })
+                      .catch((err: Error) => {
+                        if (
+                          err.message ===
+                            'Phone number does not match country' ||
+                          err.message ===
+                            'Please complete level 2 and provide proof of address'
+                        ) {
+                          navStage(OnboardingStage.PROOF_OF_ADDRESS);
+                          return;
+                        }
+                        toast.error(`Error: ${err.message}`);
                       });
-                      router.push('/');
-                    })
-                    .catch((err: Error) => {
-                      console.log('err', err);
-                      if (
-                        err.message === 'Phone number does not match country' ||
-                        err.message ===
-                          'Please complete level 2 and provide proof of address'
-                      ) {
-                        navStage(OnboardingStage.PROOF_OF_ADDRESS);
-                        return;
-                      }
-                      toast.error(`Error: ${err.message}`);
-                    });
-                }}
-                onBack={() => {
-                  navStage(OnboardingStage.SOCIAL_SECURITY);
-                }}
-              />
-            </FadeTransition>
-            <FadeTransition
-              show={stageDisplayed === OnboardingStage.PROOF_OF_ADDRESS}
-            >
-              <ProofOfAddress
-                onContinue={() => {
-                  router.push('/onboarding/identity-verification');
-                }}
-              />
-            </FadeTransition>
+                  }}
+                  onBack={() => {
+                    navStage(OnboardingStage.SOCIAL_SECURITY);
+                  }}
+                />
+              </FadeTransition>
+              <FadeTransition
+                show={stageDisplayed === OnboardingStage.PROOF_OF_ADDRESS}
+              >
+                <ProofOfAddress
+                  onContinue={() => {
+                    router.push('/onboarding/identity-verification');
+                  }}
+                />
+              </FadeTransition>
+            </div>
           </div>
         </div>
       </SidePadding>

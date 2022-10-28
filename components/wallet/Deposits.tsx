@@ -95,7 +95,7 @@ export const DepositTransactions = () => {
           label: 'Amount',
           getCellValue: (row) =>
             renderCurrency({
-              amount: row.size,
+              amount: row.size ?? 0,
               coinId: row.coin,
             }),
         },
