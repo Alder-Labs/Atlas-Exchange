@@ -1,6 +1,6 @@
 import { SignupParams } from '../auth-token-context';
 
-import { SigninParams, SigninWithMfaParams } from './signin';
+import { MfaType, SigninParams, SigninWithMfaParams } from './signin';
 
 export type UserState =
   | SignedOutUserState
@@ -18,7 +18,8 @@ export type SignedOutUserState = {
 export type NeedsMfaUserState = {
   status: UserStateStatus.NEEDS_MFA;
   token: string;
-  signInWithMfa: (params: SigninWithMfaParams) => Promise<void>;
+  mfa: MfaType;
+  signInWithMfa: (params: SigninWithMfaParams) => Promise<any>;
   signOut: () => Promise<void>;
   updateToken: (token: string) => Promise<void>;
 };
@@ -42,5 +43,4 @@ export enum UserStateStatus {
   NEEDS_MFA = 'NEEDS_MFA',
   SIGNED_IN = 'SIGNED_IN',
   SUPPORT_ONLY = 'SUPPORT_ONLY',
-  UNKNOWN = 'UNKNOWN',
 }

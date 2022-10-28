@@ -3,32 +3,36 @@ import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
-export function Kyc1Complete() {
-  const [modalState, setModalState] = useModalState();
+interface Kyc1CompleteProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const onClose = () => {
-    setModalState({ state: ModalState.Closed });
-  };
+export function Kyc1Complete(props: Kyc1CompleteProps) {
+  const [modalState, setModalState, handlers] = useModalState();
+
+  const { isOpen, onClose } = props;
+
   return (
     <TitledModal
-      isOpen={modalState.state === ModalState.Kyc1Complete}
+      isOpen={isOpen}
       onClose={onClose}
       title="Level 1 Verification Complete"
       darkenBackground={false}
     >
       <div className="flex flex-col items-center px-6 py-8">
         <div className="h-2"></div>
-        <Text>You may now deposit funds to start trading.</Text>
+        <Text>You may now send and receive crypto!</Text>
         <div className="h-10"></div>
         <Button
           onClick={() => {
-            setModalState({ state: ModalState.DepositFiat });
+            setModalState({ state: ModalState.SendReceiveCrypto });
           }}
           className="w-full"
         >
-          Deposit funds
+          Send/Receive Crypto
         </Button>
-        <div className="h-2"></div>
+        <div className="h-2" />
         <Button onClick={onClose} variant="secondary" className="w-full">
           Continue to app
         </Button>

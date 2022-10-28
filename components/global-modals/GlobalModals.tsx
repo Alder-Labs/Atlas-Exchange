@@ -31,7 +31,12 @@ export const GlobalModals = () => {
       )}
 
       {/* One off modals */}
-      <Kyc1Complete />
+      <Kyc1Complete
+        isOpen={modalState.state === ModalState.Kyc1Complete}
+        onClose={() => {
+          setModalState({ state: ModalState.Closed });
+        }}
+      />
 
       {/* Auth */}
       <SignInWrapper />
