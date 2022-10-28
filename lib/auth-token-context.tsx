@@ -67,11 +67,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // In an effect since localStorage is not available during SSR
   // we can no longer check token expiration because its encrypted
   useEffect(() => {
-    const cachedUser = JSON.parse(
-      localStorage.getItem('user') || 'null'
-    ) as User | null;
-    const tokenDate = localStorage.getItem('tokenDate');
+    const cachedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!validCachedUser(cachedUser)) {
+      setUser({ status: UserStateStatus.SIGNED_OUT });
+    }
 
+    const tokenDate = localStorage.getItem('tokenDate');
     if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
       setUser({ status: UserStateStatus.SIGNED_OUT });
     } else {
@@ -280,6 +281,25 @@ export function useUserState(): UserState {
     throw new Error('useUserState must be used within a UserProvider');
   }
   return context;
+}
+
+function validUserStateState(data: string): boolean {
+  for (const status in UserStateStatus) {
+    if (status === data) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function validCachedUser(data: any): boolean {
+  if (!data.status) {
+    return false;
+  }
+  if (!validUserStateState(data.status)) {
+    return false;
+  }
+  return true;
 }
 
 function createSignupRequest(data: SignupParams) {
