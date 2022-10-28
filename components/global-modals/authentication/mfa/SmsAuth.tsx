@@ -105,12 +105,13 @@ export const SmsAuth = () => {
    */
   useEffect(() => {
     if (
-      loginStatusData?.mfaRequired === 'sms' &&
+      userState.status === UserStateStatus.NEEDS_MFA &&
+      userState.mfa === 'sms' &&
       modalState.state === ModalState.Closed
     ) {
       setModalState({ state: ModalState.SmsAuth });
     }
-  }, [loginStatusData, modalState, setModalState]);
+  }, [modalState, setModalState, userState]);
 
   return (
     <TitledModal

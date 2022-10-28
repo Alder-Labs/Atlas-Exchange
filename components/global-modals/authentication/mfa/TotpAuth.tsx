@@ -59,12 +59,13 @@ export const TotpAuth = () => {
    */
   useEffect(() => {
     if (
-      loginStatusData?.mfaRequired === 'totp' &&
+      userState.status === UserStateStatus.NEEDS_MFA &&
+      userState.mfa === 'sms' &&
       modalState.state === ModalState.Closed
     ) {
       setModalState({ state: ModalState.TotpAuth });
     }
-  }, [loginStatusData, modalState.state, setModalState]);
+  }, [modalState.state, setModalState, userState]);
 
   return (
     <TitledModal
