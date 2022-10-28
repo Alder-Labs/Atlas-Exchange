@@ -12,7 +12,7 @@ import { TotpAuth } from './authentication/mfa/TotpAuth';
 import { SignInWrapper } from './authentication/SignIn';
 import SignUpModal from './authentication/SignUp';
 import CreatePublicTicket from './authentication/support/CreatePublicTicket';
-import GetSupportOnlyLink from './authentication/support/GetSupportOnlyLink';
+import SupportOnlySignin from './authentication/support/SupportOnlySignin';
 import { ConnectBankAccount } from './deposit/ConnectBankAccount';
 import DepositModal from './deposit/DepositModal';
 import { Kyc1Complete } from './one-off/Kyc1Complete';
@@ -56,7 +56,7 @@ export const GlobalModals = () => {
       <SendModal />
 
       {/* Support Modals */}
-      <GetSupportOnlyLink />
+      <SupportOnlySignin />
       <CreatePublicTicket />
     </div>
   );

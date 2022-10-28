@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import { useModalState } from '../../../../hooks/useModalState';
+import { getDeviceId } from '../../../../lib/localStorage';
 import { useMutationFetcher } from '../../../../lib/mutation';
 import { getReCaptchaTokenOrError } from '../../../../lib/reCaptcha';
 import { toast } from '../../../../lib/toast';
@@ -21,26 +22,46 @@ import { ModalState } from '../../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../../base';
 import { TitledModal } from '../../../modals/TitledModal';
 
-const GetSupportOnlyLink = () => {
-  const [modalState, setModalState] = useModalState();
+const SupportOnlySignin = () => {
+  const [modalState, setModalState, handlers] = useModalState();
+
+  const [email, setEmail] = useState<string>('');
 
   return (
-    <TitledModal
-      title="Request a Support Link"
-      onClose={() => {
-        setModalState({ state: ModalState.Closed });
-      }}
-      darkenBackground={false}
-      isOpen={modalState.state === ModalState.GetSupportOnlyLink}
-    >
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-        <SupportOnlySigninForm />
-      </GoogleReCaptchaProvider>
-    </TitledModal>
+    <>
+      <TitledModal
+        title="Request a Support Link"
+        onClose={() => {
+          setModalState({ state: ModalState.Closed });
+        }}
+        darkenBackground={false}
+        isOpen={modalState.state === ModalState.GetSupportOnlyLink}
+      >
+        <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+          <SupportOnlySigninForm setEmail={setEmail} />
+        </GoogleReCaptchaProvider>
+      </TitledModal>
+
+      <TitledModal
+        title="Email Sent"
+        onClose={() => {
+          setModalState({ state: ModalState.Closed });
+        }}
+        onGoBack={() => {
+          handlers.goBack();
+        }}
+        darkenBackground={false}
+        isOpen={modalState.state === ModalState.GetSupportOnlyLinkSuccess}
+      >
+        <SupportOnlySigninSuccess email={email} />
+      </TitledModal>
+    </>
   );
 };
 
-const SupportOnlySigninForm = () => {
+const SupportOnlySigninForm = (props: {
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const {
     watch,
     reset,
@@ -51,7 +72,8 @@ const SupportOnlySigninForm = () => {
     defaultValues: { email: '' },
   });
 
-  const [modalState, setModalState] = useModalState();
+  const { setEmail } = props;
+  const [, setModalState] = useModalState();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [showNoAccountFound, setShowNoAccountFound] = useState(false);
 
@@ -80,6 +102,7 @@ const SupportOnlySigninForm = () => {
     });
 
     if (captchaRes.ok) {
+      setEmail(data.email);
       requestEmail({
         captcha: { recaptcha_challenge: captchaRes.token },
         deviceId,
@@ -124,7 +147,6 @@ const SupportOnlySigninForm = () => {
               disabled={watch('email').length <= 0}
               type="button"
               className="w-full"
-              loading={requestEmailIsLoading}
               onClick={goToCreatePublicTicket}
             >
               Contact us
@@ -137,8 +159,28 @@ const SupportOnlySigninForm = () => {
     </form>
   );
 };
-function getDeviceId() {
-  return localStorage.getItem('deviceId') || undefined;
-}
 
-export default GetSupportOnlyLink;
+const SupportOnlySigninSuccess = (props: { email: string }) => {
+  const { email } = props;
+  const [, setModalState] = useModalState();
+
+  function goToCreatePublicTicket() {
+    setModalState({ state: ModalState.CreatePublicTicket });
+  }
+
+  return (
+    <div className="p-6">
+      <Text>
+        We have sent a support link to {email}. Please check your inbox.
+      </Text>
+      <div className={'h-6'} />
+      <Text>Email not showing up? Please click CONTACT US below.</Text>
+      <div className={'h-6'} />
+      <Button type="button" className="w-full" onClick={goToCreatePublicTicket}>
+        Contact us
+      </Button>
+    </div>
+  );
+};
+
+export default SupportOnlySignin;
