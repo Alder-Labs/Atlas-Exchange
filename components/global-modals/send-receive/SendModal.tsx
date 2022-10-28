@@ -66,8 +66,9 @@ const SendModal = () => {
           <Text>Go to your wallet to view your updated balance.</Text>
           <div className="h-6"></div>
           <Button
-            onClick={() => {
-              router.push('/wallet');
+            onClick={async () => {
+              await router.push('/wallet');
+              setModalState({ state: ModalState.Closed });
             }}
             className="w-full"
           >

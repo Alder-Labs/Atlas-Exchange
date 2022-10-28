@@ -50,11 +50,14 @@ export function Dropdown() {
   ].includes(router.pathname);
 
   const userState = useUserState();
-  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
 
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
+
+  const isLoggedIn =
+    loginStatusData?.loggedIn &&
+    userState.status !== UserStateStatus.SIGNED_OUT;
 
   const [isOpen, handlers] = useModal(false);
 

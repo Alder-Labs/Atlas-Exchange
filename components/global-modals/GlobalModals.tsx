@@ -11,6 +11,8 @@ import { SmsAuth } from './authentication/mfa/SmsAuth';
 import { TotpAuth } from './authentication/mfa/TotpAuth';
 import { SignInWrapper } from './authentication/SignIn';
 import SignUpModal from './authentication/SignUp';
+import CreatePublicTicket from './authentication/support/CreatePublicTicket';
+import SupportOnlySignin from './authentication/support/SupportOnlySignin';
 import { ConnectBankAccount } from './deposit/ConnectBankAccount';
 import DepositModal from './deposit/DepositModal';
 import { Kyc1Complete } from './one-off/Kyc1Complete';
@@ -29,7 +31,12 @@ export const GlobalModals = () => {
       )}
 
       {/* One off modals */}
-      <Kyc1Complete />
+      <Kyc1Complete
+        isOpen={modalState.state === ModalState.Kyc1Complete}
+        onClose={() => {
+          setModalState({ state: ModalState.Closed });
+        }}
+      />
 
       {/* Auth */}
       <SignInWrapper />
@@ -52,6 +59,10 @@ export const GlobalModals = () => {
 
       {/* Send and Receive */}
       <SendModal />
+
+      {/* Support Modals */}
+      <SupportOnlySignin />
+      <CreatePublicTicket />
     </div>
   );
 };

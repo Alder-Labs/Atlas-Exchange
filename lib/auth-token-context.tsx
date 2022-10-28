@@ -13,10 +13,12 @@ import { useStateCallback } from '../hooks/useStateCallback';
 import { requireEnvVar } from './env';
 import { LocalStorageKey } from './local-storage-keys';
 import {
+  MfaType,
   RecaptchaParams,
   SigninParams,
   SignInResponse,
   SigninWithMfaParams,
+  SignInWithMfaResponse,
 } from './types';
 import { SignUpResponse } from './types/signup';
 import { UserState, UserStateStatus } from './types/user-states';
@@ -41,7 +43,7 @@ type User =
   | { status: UserStateStatus.SIGNED_OUT }
   | { status: UserStateStatus.SUPPORT_ONLY; token: string }
   | { status: UserStateStatus.SIGNED_IN; token: string }
-  | { status: UserStateStatus.NEEDS_MFA; token: string };
+  | { status: UserStateStatus.NEEDS_MFA; token: string; mfa: MfaType };
 
 export type SignupParams = {
   email: string;
@@ -84,10 +86,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // we can no longer check token expiration because its encrypted
   useEffect(() => {
     const cachedUser = JSON.parse(
-      localStorage.getItem(LocalStorageKey.User) || 'null'
-    ) as User | null;
-    const tokenDate = localStorage.getItem(LocalStorageKey.TokenDate);
+      localStorage.getItem(LocalStorageKey.User) || '{}'
+    );
+    if (!validCachedUser(cachedUser)) {
+      setUser({ status: UserStateStatus.SIGNED_OUT });
+    }
 
+    const tokenDate = localStorage.getItem(LocalStorageKey.TokenDate);
     if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
       setUser({ status: UserStateStatus.SIGNED_OUT });
     } else {
@@ -112,7 +117,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         })
         .then((res: SignUpResponse) => {
           setUser(
-            { token: res.token, status: UserStateStatus.SIGNED_IN },
+            { token: res.token, status: UserStateStatus.NEEDS_MFA, mfa: null },
             () => {
               resolve(res);
             }
@@ -141,17 +146,28 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return res.result;
         })
         .then((res: SignInResponse) => {
-          setUser(
-            {
-              token: res.token,
-              status: res.mfaRequired
-                ? UserStateStatus.NEEDS_MFA
-                : UserStateStatus.SIGNED_IN,
-            },
-            () => {
-              resolve(res);
-            }
-          );
+          if (res.mfaRequired) {
+            setUser(
+              {
+                token: res.token,
+                status: UserStateStatus.NEEDS_MFA,
+                mfa: res.mfaMethod,
+              },
+              () => {
+                resolve(res);
+              }
+            );
+          } else {
+            setUser(
+              {
+                token: res.token,
+                status: UserStateStatus.SIGNED_IN,
+              },
+              () => {
+                resolve(res);
+              }
+            );
+          }
         })
         .catch((err) => {
           reject(err);
@@ -164,7 +180,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('Not signed in');
     }
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<SignInWithMfaResponse>((resolve, reject) => {
       fetch(`${API_URL}/users/login_with_mfa`, {
         method: 'POST',
         headers: {
@@ -191,7 +207,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               status: UserStateStatus.SIGNED_IN,
             },
             () => {
-              resolve();
+              resolve(res);
             }
           );
         })
@@ -254,36 +270,44 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return null;
   }
 
+  function getUserStateAndFunctions(): UserState {
+    switch (user.status) {
+      case UserStateStatus.SUPPORT_ONLY:
+        return {
+          status: user.status,
+          token: user.token,
+          signOut: signout,
+          updateToken: updateToken,
+        };
+      case UserStateStatus.NEEDS_MFA:
+        return {
+          status: user.status,
+          token: user.token,
+          mfa: user.mfa,
+          signInWithMfa: signinWithMfa,
+          signOut: signout,
+          updateToken: updateToken,
+        };
+      case UserStateStatus.SIGNED_IN:
+        return {
+          status: user.status,
+          token: user.token,
+          signOut: signout,
+          updateToken: updateToken,
+        };
+      case UserStateStatus.SIGNED_OUT:
+      case 'UNKNOWN':
+        return {
+          status: UserStateStatus.SIGNED_OUT,
+          signIn: signin,
+          signUp: signup,
+          updateToken: updateToken,
+        };
+    }
+  }
+
   return (
-    <UserContext.Provider
-      value={
-        user.status === UserStateStatus.SUPPORT_ONLY
-          ? {
-              status: user.status,
-              token: user.token,
-              signOut: signout,
-            }
-          : user.status === UserStateStatus.NEEDS_MFA
-          ? {
-              status: user.status,
-              token: user.token,
-              signInWithMfa: signinWithMfa,
-              signOut: signout,
-            }
-          : user.status === UserStateStatus.SIGNED_IN
-          ? {
-              status: user.status,
-              token: user.token,
-              signOut: signout,
-              updateToken: updateToken,
-            }
-          : {
-              status: user.status,
-              signIn: signin,
-              signUp: signup,
-            }
-      }
-    >
+    <UserContext.Provider value={getUserStateAndFunctions()}>
       {children}
     </UserContext.Provider>
   );
@@ -295,6 +319,25 @@ export function useUserState(): UserState {
     throw new Error('useUserState must be used within a UserProvider');
   }
   return context;
+}
+
+function validUserStateState(data: string): boolean {
+  for (const status in UserStateStatus) {
+    if (status === data) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function validCachedUser(data: any): boolean {
+  if (!data.status) {
+    return false;
+  }
+  if (!validUserStateState(data.status)) {
+    return false;
+  }
+  return true;
 }
 
 function createSignupRequest(data: SignupParams) {
