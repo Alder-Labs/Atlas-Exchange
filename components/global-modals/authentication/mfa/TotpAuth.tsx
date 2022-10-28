@@ -62,7 +62,7 @@ export const TotpAuth = () => {
       loginStatusData?.mfaRequired === 'totp' &&
       modalState.state === ModalState.Closed
     ) {
-      setModalState({ state: ModalState.SmsAuth });
+      setModalState({ state: ModalState.TotpAuth });
     }
   }, [loginStatusData, modalState.state, setModalState]);
 
