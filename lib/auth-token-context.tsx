@@ -96,7 +96,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         })
         .then((res: SignUpResponse) => {
           setUser(
-            { token: res.token, status: UserStateStatus.SIGNED_IN },
+            { token: res.token, status: UserStateStatus.NEEDS_MFA },
             () => {
               resolve(res);
             }
@@ -245,6 +245,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               status: user.status,
               token: user.token,
               signOut: signout,
+              updateToken: updateToken,
             }
           : user.status === UserStateStatus.NEEDS_MFA
           ? {
@@ -252,6 +253,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               token: user.token,
               signInWithMfa: signinWithMfa,
               signOut: signout,
+              updateToken: updateToken,
             }
           : user.status === UserStateStatus.SIGNED_IN
           ? {
@@ -264,6 +266,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               status: user.status,
               signIn: signin,
               signUp: signup,
+              updateToken: updateToken,
             }
       }
     >

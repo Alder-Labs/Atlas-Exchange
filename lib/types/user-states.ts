@@ -12,6 +12,7 @@ export type SignedOutUserState = {
   status: UserStateStatus.SIGNED_OUT;
   signIn: (params: SigninParams) => Promise<any>;
   signUp: (params: SignupParams) => Promise<any>;
+  updateToken: (token: string) => Promise<void>;
 };
 
 export type NeedsMfaUserState = {
@@ -19,6 +20,7 @@ export type NeedsMfaUserState = {
   token: string;
   signInWithMfa: (params: SigninWithMfaParams) => Promise<void>;
   signOut: () => Promise<void>;
+  updateToken: (token: string) => Promise<void>;
 };
 
 export type SignedInUserState = {
@@ -32,6 +34,7 @@ export type SupportOnlyUserState = {
   status: UserStateStatus.SUPPORT_ONLY;
   token: string;
   signOut: () => Promise<void>;
+  updateToken: (token: string) => Promise<void>;
 };
 
 export enum UserStateStatus {
