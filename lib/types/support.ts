@@ -19,11 +19,11 @@ export type SupportMessageCreate = {
 
 // Response from fetching all support tickets
 export type SupportTicketWithMessages = {
-  ticket: Support;
+  ticket: SupportTicket;
   messages: SupportTicketMessage[];
 };
 
-export type Support = {
+export type SupportTicket = {
   id: string;
   title: string;
   time: string;
