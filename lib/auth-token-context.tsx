@@ -99,7 +99,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         })
         .then((res: SignUpResponse) => {
           setUser(
-            { token: res.token, status: UserStateStatus.SIGNED_IN },
+            { token: res.token, status: UserStateStatus.NEEDS_MFA, mfa: null },
             () => {
               resolve(res);
             }
@@ -225,13 +225,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         })
         .then((res) => {
-          localStorage.removeItem('token');
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           resolve(res);
         })
         .catch((err) => {
-          localStorage.removeItem('token');
           queryClient.clear();
           setUser({ status: UserStateStatus.SIGNED_OUT });
           reject(err);
@@ -259,6 +257,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           status: user.status,
           token: user.token,
           signOut: signout,
+          updateToken: updateToken,
         };
       case UserStateStatus.NEEDS_MFA:
         return {
@@ -267,6 +266,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           mfa: user.mfa,
           signInWithMfa: signinWithMfa,
           signOut: signout,
+          updateToken: updateToken,
         };
       case UserStateStatus.SIGNED_IN:
         return {
@@ -281,6 +281,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           status: UserStateStatus.SIGNED_OUT,
           signIn: signin,
           signUp: signup,
+          updateToken: updateToken,
         };
     }
   }

@@ -13,4 +13,4 @@ export * from './wire';
 export * from './withdraw';
 export * from './page';
 export * from './market';
-export * from './support-ticket';
+export * from './support';
