@@ -15,15 +15,14 @@ export async function getReCaptchaTokenOrError({
   if (executeRecaptcha) {
     try {
       captchaToken = await executeRecaptcha(reCaptchaAction);
+      if (!captchaToken) {
+        errors.push('executeRecaptcha returned undefined');
+      }
     } catch (e) {
       errors.push('executeRecaptcha failed');
     }
   } else {
     errors.push('executeRecaptcha not loaded');
-  }
-
-  if (!captchaToken) {
-    errors.push('executeRecaptcha returned undefined');
   }
 
   return errors.length === 0
