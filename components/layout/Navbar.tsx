@@ -110,12 +110,15 @@ interface NavbarProps {
 
 export function Navbar({ children }: NavbarProps) {
   const userState = useUserState();
-  const authenticated = userState.status === UserStateStatus.SIGNED_IN;
-
+  const router = useRouter();
   const { data: loginStatusData, isLoading: loadingLoginStatusData } =
     useLoginStatus();
 
-  const router = useRouter();
+  const authenticated =
+    loginStatusData?.loggedIn &&
+    [UserStateStatus.NEEDS_MFA, UserStateStatus.SIGNED_IN].includes(
+      userState?.status
+    );
   const url = router.pathname;
 
   const [isSigningOut, setIsSigningOut] = useState(false);
