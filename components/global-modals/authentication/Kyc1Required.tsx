@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import { useModalState } from '../../../hooks/useModalState';
+import { useModalState } from '../../../hooks/modal';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';

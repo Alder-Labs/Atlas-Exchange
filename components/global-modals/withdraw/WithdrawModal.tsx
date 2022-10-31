@@ -7,11 +7,10 @@ import {
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { AuthStatus, useAuthStatus } from '../../../hooks/useKycLevel';
-import { useModalState } from '../../../hooks/useModalState';
-import { useUserState } from '../../../lib/auth-token-context';
+import { AuthStatus, useAuthStatus } from '../../../hooks/kyc';
+import { useModalState } from '../../../hooks/modal';
 import { ModalState } from '../../../lib/types/modalState';
-import { Button, Text, TextInput } from '../../base';
+import { Text } from '../../base';
 import { DisabledMenuItemOverlay, MenuItem } from '../../modals/MenuModalItem';
 import { TitledModal } from '../../modals/TitledModal';
 import { MenuIconLeft } from '../deposit/Menu';

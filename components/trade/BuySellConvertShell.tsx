@@ -3,11 +3,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
 import { createPortal } from 'react-dom';
 
-import { useBalances } from '../../hooks/useBalances';
-import { AuthStatus } from '../../hooks/useKycLevel';
-import { useUserState } from '../../lib/auth-token-context';
+import { AuthStatus } from '../../hooks/kyc';
+import { useBalances } from '../../hooks/wallet';
 import { bscFocusedAtom, buyCoinIdAtom } from '../../lib/jotai';
-import { UserStateStatus } from '../../lib/types/user-states';
 import { Button } from '../base';
 
 import { AvailableFunds } from './AvailableFunds';

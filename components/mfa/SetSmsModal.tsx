@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
+import { iso31661Alpha2ToAlpha3 } from 'iso-3166';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
@@ -10,8 +11,8 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModal } from '../../hooks/useModal';
-import { useLoginStatus } from '../../hooks/useLoginStatus';
+import { useModal } from '../../hooks/modal';
+import { useUserState } from '../../lib/auth-token-context';
 import {
   countryPhoneNumberCodes,
   ALPHA2_TO_PHONE_CODES,
@@ -24,8 +25,6 @@ import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
-import { iso31661Alpha2ToAlpha3 } from 'iso-3166';
-import { useUserState } from '../../lib/auth-token-context';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 interface SetSmsMfaFormType {

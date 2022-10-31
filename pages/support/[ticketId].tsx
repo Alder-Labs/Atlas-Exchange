@@ -23,7 +23,7 @@ import {
 } from '../../components/base';
 import { SidePadding } from '../../components/layout/SidePadding';
 import { Message } from '../../components/support/Message';
-import { useSupportMessages } from '../../hooks/useSupportMessages';
+import { useSupportMessages } from '../../hooks/support/useSupportMessages';
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
@@ -178,7 +178,7 @@ const SupportTicketPage: CustomPage = () => {
               ticketIsOpen
                 ? 'Reply'
                 : 'This ticket has been closed. Please open a new ticket if you ' +
-                  'need assistance.'
+                'need assistance.'
             }
             disabled={!ticketIsOpen}
             textAreaClassName={'h-24'}

@@ -3,14 +3,10 @@ import React, { ReactNode, useState } from 'react';
 import {
   faArrowLeft,
   faArrowRight,
-  faArrowRightFromBracket,
-  faArrowsLeftRight,
-  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 
-import { useElementSize } from '../../hooks/useElementSize';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { Text } from '../base';
 import { LoaderSingleLine } from '../loaders';
@@ -38,15 +34,15 @@ export type ColumnDef<T> = {
    */
   widthClassName?: string;
 } & (
-  | {
+    | {
       type: 'string';
       getCellValue: (row: T) => string;
     }
-  | {
+    | {
       type: 'custom';
       renderCell: (row: T) => ReactNode;
     }
-);
+  );
 
 function getColumnStyles(column: ColumnDef<any>) {
   return clsx({

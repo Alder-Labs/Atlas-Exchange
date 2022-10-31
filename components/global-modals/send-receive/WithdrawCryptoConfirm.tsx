@@ -4,7 +4,7 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMutation } from 'react-query';
 
-import { useWithdrawalFees } from '../../../hooks/useWithdrawalFees';
+import { useWithdrawalFees } from '../../../hooks/transfer';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
 import { Coin } from '../../../lib/types';
@@ -122,9 +122,8 @@ export const WithdrawCryptoConfirm = (props: {
                 isLoading={feeLoading || !withdrawalFee}
                 loadingWidth={128}
                 left="Estimated network fee"
-                right={`${
-                  withdrawalFee?.fee
-                } ${withdrawalFee?.method.toUpperCase()}`}
+                right={`${withdrawalFee?.fee
+                  } ${withdrawalFee?.method.toUpperCase()}`}
               />
               {withdrawalFee && withdrawalFee.congested && (
                 <Warning>

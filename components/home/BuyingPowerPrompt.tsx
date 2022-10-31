@@ -2,7 +2,7 @@ import React from 'react';
 
 import clsx from 'clsx';
 
-import { useModalState } from '../../hooks/useModalState';
+import { useModalState } from '../../hooks/modal';
 import { renderCurrency } from '../../lib/currency';
 import { ModalState } from '../../lib/types/modalState';
 import { Button, Text } from '../base';

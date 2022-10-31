@@ -1,29 +1,21 @@
 import { useEffect, useState } from 'react';
 
 import { useAtom } from 'jotai';
-import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
-import { Rifm } from 'rifm';
 
-import { useBalances } from '../../../hooks/useBalances';
-import { useBankAccounts } from '../../../hooks/useBankAccounts';
-import { useDepositLimits } from '../../../hooks/useDepositLimits';
-import { useModal } from '../../../hooks/useModal';
-import { useModalState } from '../../../hooks/useModalState';
+import { useModalState } from '../../../hooks/modal';
+import { useBankAccounts, useDepositLimits } from '../../../hooks/transfer';
+import { useBalances } from '../../../hooks/wallet';
 import { useUserState } from '../../../lib/auth-token-context';
 import { BRAND_NAME } from '../../../lib/constants';
 import { renderCurrency } from '../../../lib/currency';
 import { watchBalanceUntilAtom } from '../../../lib/jotai';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
-import { CustomPage } from '../../../lib/types';
-import { AuthLevel } from '../../../lib/types/auth-level';
 import { ModalState } from '../../../lib/types/modalState';
 import { Text, TextInput, Button, TextButton } from '../../base';
-import { SidePadding } from '../../layout/SidePadding';
 import { TitledModal } from '../../modals/TitledModal';
 import { SelectBankAccount } from '../../select-bank-account/SelectBankAccount';
-import { TitledCard } from '../../TitledCard';
 import { BigNumberInput } from '../../trade/BigNumberInput';
 
 interface EnterAmountProps {
@@ -141,8 +133,8 @@ export function EnterAmount(props: EnterAmountProps) {
         onGoBack={
           showBackButton
             ? () => {
-                setModalState({ state: ModalState.DepositFiat });
-              }
+              setModalState({ state: ModalState.DepositFiat });
+            }
             : undefined
         }
       >

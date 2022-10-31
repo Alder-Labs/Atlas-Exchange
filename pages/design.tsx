@@ -6,7 +6,7 @@ import { DarkModeButton } from '../components/DarkModeButton';
 import { TitledActionModal } from '../components/modals/TitledActionModal';
 import { TitledModal } from '../components/modals/TitledModal';
 import { Table } from '../components/table';
-import { useModal } from '../hooks/useModal';
+import { useModal } from '../hooks/modal';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';
 

@@ -7,7 +7,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../../hooks/useModalState';
+import { useModalState } from '../../../../hooks/modal';
 import { BRAND_NAME } from '../../../../lib/constants';
 import { getDeviceId } from '../../../../lib/localStorage';
 import { useMutationFetcher } from '../../../../lib/mutation';

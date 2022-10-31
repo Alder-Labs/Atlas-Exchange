@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
-import { AuthStatus, useAuthStatus } from '../../../hooks/useKycLevel';
-import { useModalState } from '../../../hooks/useModalState';
+import { AuthStatus, useAuthStatus } from '../../../hooks/kyc';
+import { useModalState } from '../../../hooks/modal';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
@@ -21,15 +21,15 @@ export function Kyc2Required(props: {}) {
     status.level2AppStatus === 'actions-needed'
       ? 'Finish your KYC Level 2 application to continue.'
       : status.level2AppStatus === 'pending'
-      ? 'Your KYC Level 2 application is pending. Please wait for approval.'
-      : 'Please upload identity documents in order to perform this action.';
+        ? 'Your KYC Level 2 application is pending. Please wait for approval.'
+        : 'Please upload identity documents in order to perform this action.';
 
   const action =
     status.level2AppStatus === 'actions-needed'
       ? 'Finish Application'
       : status.level2AppStatus === 'pending'
-      ? 'View Application Status'
-      : 'Upload Documents';
+        ? 'View Application Status'
+        : 'Upload Documents';
 
   return (
     <TitledModal

@@ -2,7 +2,7 @@ import React, { cloneElement, TextareaHTMLAttributes } from 'react';
 
 import clsx from 'clsx';
 
-import { useElementSize } from '../../hooks/useElementSize';
+import { useElementSize } from '../../hooks/utils';
 
 import { TextLabel } from './TextLabel';
 
