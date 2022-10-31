@@ -101,7 +101,7 @@ export const SendOption = (props: {
 
   const kycLevelOneOption = {
     ...kycLevelTwoOption,
-    subtitle: '$2000 limit per day',
+    subtitle: '$10,000 limit per day',
     description: (
       <>
         <Text color="secondary" className="text-start">
