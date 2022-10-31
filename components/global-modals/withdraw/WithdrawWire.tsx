@@ -4,7 +4,6 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import { useBalances } from '../../../hooks/useBalances';
-import { useLoginStatus } from '../../../hooks/useLoginStatus';
 import { useUserState } from '../../../lib/auth-token-context';
 import {
   countryCodesAlpha3,
@@ -75,7 +74,6 @@ export const WithdrawWire = ({ onSuccess }: { onSuccess: () => void }) => {
       },
     });
 
-  const { data: loginStatus } = useLoginStatus();
   const { balancesMap, isLoading: loadingBalances } = useBalances();
 
   const [countryRegions, setCountryRegions] = useState<
@@ -367,7 +365,7 @@ export const WithdrawWire = ({ onSuccess }: { onSuccess: () => void }) => {
         )} */}
 
         <div className="h-8" />
-        {loginStatus?.user?.requireMfaForWithdrawals && (
+        {userState.loginStatusData?.user?.requireMfaForWithdrawals && (
           <ExistingMfaInput
             label="MFA Code *"
             placeholder="MFA Code"

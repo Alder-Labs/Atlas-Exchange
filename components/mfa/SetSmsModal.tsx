@@ -10,23 +10,23 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
-import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
+import {
+  countryPhoneNumberCodes,
+  COUNTRY_PHONE_NUMBER_CODES,
+} from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
-import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType, RecaptchaActions } from '../../lib/types';
-import { UserStateStatus } from '../../lib/types/user-states';
 import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
-interface SetSmsMfaForm {
+interface SetSmsMfaFormType {
   countryCode: string;
   phoneNumber: string;
   code: string;
@@ -45,19 +45,24 @@ interface RequestPhoneVerification {
   };
 }
 
-export function SetSmsMfaForm() {
-  const [open, handlers] = useModal(false);
+function getDefaultCountryCode(country?: string) {
+  if (!country) {
+    return '+1';
+  }
+  const countryPhoneCode = COUNTRY_PHONE_NUMBER_CODES[country];
+
+  return countryPhoneCode;
+}
+
+export function SetSmsMfaForm(props: { onSuccess: () => void }) {
+  const { onSuccess } = props;
 
   const [existingMfaCode, setExistingMfaCode] = useState('');
-  const { refetch: refetchLoginStatus, data: loginData } = useLoginStatus();
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const userState = useUserState();
 
-  const cachedForm = JSON.parse(
-    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
-  );
   const {
     register,
     clearErrors,
@@ -66,7 +71,11 @@ export function SetSmsMfaForm() {
     handleSubmit,
     control,
     formState,
-  } = useForm<SetSmsMfaForm>({ defaultValues: cachedForm });
+  } = useForm<SetSmsMfaFormType>({
+    defaultValues: {
+      countryCode: getDefaultCountryCode(userState.loginStatusData?.country),
+    },
+  });
 
   const { errors } = formState;
   const {
@@ -93,28 +102,15 @@ export function SetSmsMfaForm() {
     useMutationFetcher<SetSmsMfaRequest, { token: string }>(
       '/api/mfa/sms/setup/verify',
       {
-        onFetchSuccess: (res) =>
-          new Promise((resolve, reject) => {
-            if (userState.status !== UserStateStatus.SIGNED_IN) {
-              reject();
-              return;
-            }
-            userState.updateToken(res.token).then(() => {
-              refetchLoginStatus()
-                .then(() => {
-                  resolve(res);
-                })
-                .catch(() => {
-                  reject();
-                });
-            });
-          }),
+        onFetchSuccess: async (res) => {
+          return userState.updateToken(res.token);
+        },
       }
     ),
     {
       onSuccess: (res) => {
         toast.success('Successfully enabled SMS MFA');
-        handlers.close();
+        onSuccess();
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
@@ -157,7 +153,7 @@ export function SetSmsMfaForm() {
     requestPhoneVerification(inputData);
   };
 
-  const onSubmit = (data: SetSmsMfaForm) => {
+  const onSubmit = (data: SetSmsMfaFormType) => {
     const reqData: SetSmsMfaRequest = {
       phoneNumber: `+${data.countryCode}${data.phoneNumber}`,
       code: data.code,
@@ -285,7 +281,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
         onClose={handlers.close}
       >
         <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-          <SetSmsMfaForm />
+          <SetSmsMfaForm onSuccess={handlers.close} />
         </GoogleReCaptchaProvider>
       </TitledModal>
     </>

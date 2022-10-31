@@ -105,6 +105,7 @@ export function SignIn(props: SignInProps) {
           setIsLoggingIn(false);
         });
     } else {
+      toast.error('Error: User is already logged in.');
       setIsLoggingIn(false);
     }
   });

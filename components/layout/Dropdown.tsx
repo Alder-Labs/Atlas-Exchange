@@ -6,7 +6,6 @@ import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
 import { toast } from '../../lib/toast';
@@ -50,10 +49,9 @@ export function Dropdown() {
   ].includes(router.pathname);
 
   const userState = useUserState();
+  const loginStatusData = userState.loginStatusData;
 
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const { data: loginStatusData, isLoading: loadingLoginStatusData } =
-    useLoginStatus();
 
   const isLoggedIn =
     loginStatusData?.loggedIn &&
@@ -155,7 +153,7 @@ export function Dropdown() {
                     icon={faUser}
                     className="h-3.5 w-3.5 dark:text-grayDark-80"
                   />
-                  <Text isLoading={loadingLoginStatusData} loadingWidth="8rem">
+                  <Text loadingWidth="8rem">
                     {loginStatusData?.loggedIn
                       ? loginStatusData.user.displayName
                       : '---'}

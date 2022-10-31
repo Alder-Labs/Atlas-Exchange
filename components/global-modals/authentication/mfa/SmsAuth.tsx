@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 import { useCurrentDate } from '../../../../hooks/useCurrentDate';
-import { useLoginStatus } from '../../../../hooks/useLoginStatus';
 import { useModalState } from '../../../../hooks/useModalState';
 import { useUserState } from '../../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../../lib/mutation';
@@ -18,8 +17,6 @@ const SECONDS_BETWEEN_RESEND_CODE = 59;
 export const SmsAuth = () => {
   const userState = useUserState();
   const [modalState, setModalState] = useModalState();
-  const { refetch: refetchLoginStatus, data: loginStatusData } =
-    useLoginStatus();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -43,7 +40,6 @@ export const SmsAuth = () => {
         userState
           .signInWithMfa({ code: smsCode })
           .then(async () => {
-            await refetchLoginStatus();
             setModalState({ state: ModalState.Closed });
           })
           .catch((err: Error) => {
@@ -57,7 +53,7 @@ export const SmsAuth = () => {
         setIsLoggingIn(false);
       }
     },
-    [refetchLoginStatus, setModalState, userState]
+    [setModalState, userState]
   );
 
   const handleSubmit = useCallback(() => {
@@ -106,7 +102,7 @@ export const SmsAuth = () => {
   useEffect(() => {
     if (
       userState.status === UserStateStatus.NEEDS_MFA &&
-      userState.mfa === 'sms' &&
+      userState.loginStatusData.mfaRequired === 'sms' &&
       modalState.state === ModalState.Closed
     ) {
       setModalState({ state: ModalState.SmsAuth });

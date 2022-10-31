@@ -12,7 +12,6 @@ import { ProofOfAddress } from '../../components/onboarding/ProofOfAddress';
 import { SocialSecurity } from '../../components/onboarding/SocialSecurity';
 import { StageNavigator } from '../../components/onboarding/StageNavigator';
 import { FadeTransition } from '../../components/transitions/FadeTransition';
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModalState } from '../../hooks/useModalState';
 import { useUserState } from '../../lib/auth-token-context';
 import { LocalStorageKey } from '../../lib/local-storage-keys';
@@ -70,7 +69,8 @@ const ENABLED_STAGES = Object.values(OnboardingStage)
 
 const OnboardingPage: CustomPage = () => {
   const router = useRouter();
-  const { data: loginStatus, isLoading: loginIsLoading } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatus = userState.loginStatusData;
 
   const { updateQueryParams } = useUpdateQueryParams();
   const currentStage =
@@ -96,33 +96,17 @@ const OnboardingPage: CustomPage = () => {
     updateQueryParams({ stage });
   };
 
-  const userState = useUserState();
-
-  const { refetch: refetchLoginStatus } = useLoginStatus();
   const { isLoading: submitKycLevel1IsLoading, mutateAsync: submitKycLevel1 } =
     useMutation(
       useMutationFetcher<KycForm, { token: string }>(`/kyc/level1`, {
-        onFetchSuccess: (res) =>
-          new Promise((resolve, reject) => {
-            if (userState.status === UserStateStatus.SIGNED_OUT) {
-              reject();
-              return;
-            }
-            userState.updateToken(res.token).then(() => {
-              refetchLoginStatus()
-                .then(() => {
-                  resolve(res);
-                })
-                .catch(() => {
-                  reject();
-                });
-            });
-          }),
+        onFetchSuccess: (res) => {
+          return userState.updateToken(res.token);
+        },
       }),
       {}
     );
 
-  if (loginIsLoading || !loginStatus) return <></>;
+  if (!loginStatus) return <></>;
 
   return (
     <>

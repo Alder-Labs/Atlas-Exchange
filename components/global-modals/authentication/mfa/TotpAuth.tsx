@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useLoginStatus } from '../../../../hooks/useLoginStatus';
 import { useModalState } from '../../../../hooks/useModalState';
 import { useUserState } from '../../../../lib/auth-token-context';
 import { toast } from '../../../../lib/toast';
@@ -17,8 +16,6 @@ export const TotpAuth = () => {
   const [mfaCode, setMfaCode] = useState('');
 
   const [modalState, setModalState] = useModalState();
-  const { refetch: refetchLoginStatus, data: loginStatusData } =
-    useLoginStatus();
 
   const onSignInWithMfa = useCallback(
     (code: string) => {
@@ -27,7 +24,6 @@ export const TotpAuth = () => {
         userState
           .signInWithMfa({ code: code })
           .then(async () => {
-            await refetchLoginStatus();
             setModalState({ state: ModalState.Closed });
           })
           .catch((err: Error) => {
@@ -40,7 +36,7 @@ export const TotpAuth = () => {
         setIsLoggingIn(false);
       }
     },
-    [refetchLoginStatus, setModalState, userState]
+    [setModalState, userState]
   );
 
   const handleSubmit = useCallback(() => {
@@ -60,7 +56,7 @@ export const TotpAuth = () => {
   useEffect(() => {
     if (
       userState.status === UserStateStatus.NEEDS_MFA &&
-      userState.mfa === 'sms' &&
+      userState.loginStatusData.mfaRequired === 'sms' &&
       modalState.state === ModalState.Closed
     ) {
       setModalState({ state: ModalState.TotpAuth });
