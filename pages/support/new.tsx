@@ -2,7 +2,6 @@ import React from 'react';
 
 import { FilePondFile, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
-import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { FilePond } from 'react-filepond';
 import { Controller, useForm } from 'react-hook-form';
