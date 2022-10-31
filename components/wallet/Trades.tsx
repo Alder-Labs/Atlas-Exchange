@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useFills } from '../../hooks/useFills';
+import { useFills } from '../../hooks/wallet';
 import { renderCurrency } from '../../lib/currency';
 import { formatDate } from '../../lib/date';
 import { toast } from '../../lib/toast';

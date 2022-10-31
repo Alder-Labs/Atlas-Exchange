@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
-import { AuthStatus, useAuthStatus } from '../../../hooks/useKycLevel';
-import { useModalState } from '../../../hooks/useModalState';
+import { AuthStatus, useAuthStatus } from '../../../hooks/kyc';
+import { useModalState } from '../../../hooks/modal';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';

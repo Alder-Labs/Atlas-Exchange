@@ -3,8 +3,7 @@ import React, { useMemo } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { useCoins } from '../../hooks/useCoins';
-import { useMarkets } from '../../hooks/useMarkets';
+import { useCoins, useMarkets } from '../../hooks/market';
 import { renderCurrency } from '../../lib/currency';
 import { Coin, Market } from '../../lib/types';
 import { Text, Title } from '../base';

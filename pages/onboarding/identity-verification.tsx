@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
@@ -7,7 +7,7 @@ import { useMutation } from 'react-query';
 import { Spinner } from '../../components/base';
 import { getStripe } from '../../components/kyc/stripe';
 import { SidePadding } from '../../components/layout/SidePadding';
-import { useStripeVerificationSession } from '../../hooks/useStripeVerificationSession';
+import { useStripeVerificationSession } from '../../hooks/kyc';
 import { useFormMutationFetcher } from '../../lib/formMutation';
 
 import type { NextPage } from 'next';

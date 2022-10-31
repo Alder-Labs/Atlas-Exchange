@@ -8,7 +8,7 @@ import {
   ComposedChart,
 } from 'recharts';
 
-import { useMarketCandles } from '../../hooks/useMarketCandles';
+import { useMarketCandles } from '../../hooks/market';
 import { DurationInterval, DURATION_INFO } from '../../lib/duration';
 import { toast } from '../../lib/toast';
 

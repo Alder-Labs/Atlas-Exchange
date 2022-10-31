@@ -12,7 +12,7 @@ import { ProofOfAddress } from '../../components/onboarding/ProofOfAddress';
 import { SocialSecurity } from '../../components/onboarding/SocialSecurity';
 import { StageNavigator } from '../../components/onboarding/StageNavigator';
 import { FadeTransition } from '../../components/transitions/FadeTransition';
-import { useModalState } from '../../hooks/useModalState';
+import { useModalState } from '../../hooks/modal';
 import { useUserState } from '../../lib/auth-token-context';
 import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { useMutationFetcher } from '../../lib/mutation';
@@ -20,7 +20,6 @@ import { toast } from '../../lib/toast';
 import { CustomPage } from '../../lib/types';
 import { AuthLevel } from '../../lib/types/auth-level';
 import { ModalState } from '../../lib/types/modalState';
-import { UserStateStatus } from '../../lib/types/user-states';
 
 import type { KycForm, KycRawForm } from '../../lib/types/kyc';
 

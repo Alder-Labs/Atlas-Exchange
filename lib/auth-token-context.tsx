@@ -9,7 +9,7 @@ import {
 
 import { useQueryClient } from 'react-query';
 
-import { useStateCallback } from '../hooks/useStateCallback';
+import { useStateCallback } from '../hooks/utils';
 
 import { requireEnvVar } from './env';
 import { LocalStorageKey } from './local-storage-keys';

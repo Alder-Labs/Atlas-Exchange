@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { useRouter } from 'next/router';
-
 import { SidePadding } from '../../components/layout/SidePadding';
 import { TitledCard } from '../../components/TitledCard';
 

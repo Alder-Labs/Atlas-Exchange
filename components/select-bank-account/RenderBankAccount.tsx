@@ -8,7 +8,7 @@ import {
   BankAccount,
   BankAccountStatus,
   useBankAccounts,
-} from '../../hooks/useBankAccounts';
+} from '../../hooks/transfer/useBankAccounts';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { Text, Button, TextButton } from '../base';
