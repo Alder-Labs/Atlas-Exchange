@@ -1,4 +1,4 @@
-export const COUNTRY_PHONE_NUMBER_CODES: Record<string, string> = {
+export const ALPHA2_TO_PHONE_CODES: Record<string, string> = {
   BD: '880',
   BE: '32',
   BF: '226',
@@ -249,7 +249,7 @@ export const COUNTRY_PHONE_NUMBER_CODES: Record<string, string> = {
 };
 
 export const countryPhoneNumberCodes = Array.from(
-  new Set(Object.values(COUNTRY_PHONE_NUMBER_CODES))
+  new Set(Object.values(ALPHA2_TO_PHONE_CODES))
 )
   .sort()
   .map((v) => ({ value: v, label: `+${v}` }));
