@@ -16,7 +16,7 @@ import { toast } from '../../../../lib/toast';
 import {
   RECAPTCHA_KEY,
   RecaptchaActions,
-  RequestSupportOnlyToken,
+  SupportOnlyLinkRequest,
 } from '../../../../lib/types';
 import { ModalState } from '../../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../../base';
@@ -79,7 +79,7 @@ const SupportOnlySigninForm = (props: {
 
   const { isLoading: requestEmailIsLoading, mutate: requestEmail } =
     useMutation(
-      useMutationFetcher<RequestSupportOnlyToken, {}>(
+      useMutationFetcher<SupportOnlyLinkRequest, {}>(
         `/proxy/api/support/verification_code`
       ),
       {
