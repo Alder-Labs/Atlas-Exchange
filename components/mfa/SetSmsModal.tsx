@@ -54,8 +54,8 @@ function getDefaultCountryCode(country?: string) {
   return countryPhoneCode;
 }
 
-export function SetSmsMfaForm() {
-  const [open, handlers] = useModal(false);
+export function SetSmsMfaForm(props: { onSuccess: () => void }) {
+  const { onSuccess } = props;
 
   const [existingMfaCode, setExistingMfaCode] = useState('');
 
@@ -110,7 +110,7 @@ export function SetSmsMfaForm() {
     {
       onSuccess: (res) => {
         toast.success('Successfully enabled SMS MFA');
-        handlers.close();
+        onSuccess();
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
@@ -281,7 +281,7 @@ export function SetSmsModalInside(props: { mfa: MfaType }) {
         onClose={handlers.close}
       >
         <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-          <SetSmsMfaForm />
+          <SetSmsMfaForm onSuccess={handlers.close} />
         </GoogleReCaptchaProvider>
       </TitledModal>
     </>
