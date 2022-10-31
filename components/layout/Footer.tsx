@@ -24,14 +24,14 @@ export const Footer = () => {
               <FooterHeader>Pages</FooterHeader>
               <div className="h-4" />
               <FooterLink href="/">Home</FooterLink>
-              {userState.status === UserStateStatus.SIGNED_IN &&
+              {userState.status === UserStateStatus.SIGNED_IN && (
                 <div>
                   <div className="h-4" />
                   <FooterLink href="/wallet">Wallet</FooterLink>
                   <div className="h-4" />
                   <FooterLink href="/account">Settings</FooterLink>
                 </div>
-              }
+              )}
             </div>
             <div className="mr-4 flex flex-col lg:mr-16">
               <FooterHeader>Help Center</FooterHeader>
