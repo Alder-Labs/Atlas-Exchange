@@ -2,13 +2,16 @@ import React from 'react';
 
 import Link from 'next/link';
 
-import { useDarkOrLightMode } from '../../lib/dark-mode';
+import { useUserState } from '../../lib/auth-token-context';
+import { UserStateStatus } from '../../lib/types/user-states';
 import { Text } from '../base';
 import { BrandLogo } from '../BrandLogo';
 
 import { SidePadding } from './SidePadding';
 
 export const Footer = () => {
+  const userState = useUserState();
+
   return (
     <footer>
       <SidePadding className="bg-grayLight-10 dark:bg-grayDark-10">
@@ -21,10 +24,14 @@ export const Footer = () => {
               <FooterHeader>Pages</FooterHeader>
               <div className="h-4" />
               <FooterLink href="/">Home</FooterLink>
-              <div className="h-4" />
-              <FooterLink href="/wallet">Wallet</FooterLink>
-              <div className="h-4" />
-              <FooterLink href="/account">Settings</FooterLink>
+              {userState.status === UserStateStatus.SIGNED_IN &&
+                <div>
+                  <div className="h-4" />
+                  <FooterLink href="/wallet">Wallet</FooterLink>
+                  <div className="h-4" />
+                  <FooterLink href="/account">Settings</FooterLink>
+                </div>
+              }
             </div>
             <div className="mr-4 flex flex-col lg:mr-16">
               <FooterHeader>Help Center</FooterHeader>
