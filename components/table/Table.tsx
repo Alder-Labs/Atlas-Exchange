@@ -1,9 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 
-import {
-  faArrowLeft,
-  faArrowRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 
@@ -34,15 +31,15 @@ export type ColumnDef<T> = {
    */
   widthClassName?: string;
 } & (
-    | {
+  | {
       type: 'string';
       getCellValue: (row: T) => string;
     }
-    | {
+  | {
       type: 'custom';
       renderCell: (row: T) => ReactNode;
     }
-  );
+);
 
 function getColumnStyles(column: ColumnDef<any>) {
   return clsx({

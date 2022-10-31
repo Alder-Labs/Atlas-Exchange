@@ -46,7 +46,7 @@ const RecaptchaSignUpWrapper = () => {
 
 export default RecaptchaSignUpWrapper;
 
-interface SignUpProps { }
+interface SignUpProps {}
 
 const SignUpModal = (props: SignUpProps) => {
   const router = useRouter();

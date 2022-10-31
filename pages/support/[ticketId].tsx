@@ -178,7 +178,7 @@ const SupportTicketPage: CustomPage = () => {
               ticketIsOpen
                 ? 'Reply'
                 : 'This ticket has been closed. Please open a new ticket if you ' +
-                'need assistance.'
+                  'need assistance.'
             }
             disabled={!ticketIsOpen}
             textAreaClassName={'h-24'}

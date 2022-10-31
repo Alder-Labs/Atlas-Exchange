@@ -133,8 +133,8 @@ export function EnterAmount(props: EnterAmountProps) {
         onGoBack={
           showBackButton
             ? () => {
-              setModalState({ state: ModalState.DepositFiat });
-            }
+                setModalState({ state: ModalState.DepositFiat });
+              }
             : undefined
         }
       >

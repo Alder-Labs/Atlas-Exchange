@@ -122,8 +122,9 @@ export const WithdrawCryptoConfirm = (props: {
                 isLoading={feeLoading || !withdrawalFee}
                 loadingWidth={128}
                 left="Estimated network fee"
-                right={`${withdrawalFee?.fee
-                  } ${withdrawalFee?.method.toUpperCase()}`}
+                right={`${
+                  withdrawalFee?.fee
+                } ${withdrawalFee?.method.toUpperCase()}`}
               />
               {withdrawalFee && withdrawalFee.congested && (
                 <Warning>

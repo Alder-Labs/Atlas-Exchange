@@ -101,10 +101,10 @@ export function NotificationDropdown() {
     return notificationsAreLoading
       ? NotificationState.Loading
       : notifications && numOfUnreadNotifications > 0
-        ? NotificationState.NewNotificationsPresent
-        : notifications && notifications.length > 0
-          ? NotificationState.OldNotificationsPresent
-          : NotificationState.None;
+      ? NotificationState.NewNotificationsPresent
+      : notifications && notifications.length > 0
+      ? NotificationState.OldNotificationsPresent
+      : NotificationState.None;
   }, [notifications, notificationsAreLoading, numOfUnreadNotifications]);
 
   const renderNotifications = useMemo(() => {
