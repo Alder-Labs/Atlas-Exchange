@@ -104,7 +104,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const syncAuthStateWithServer = useCallback(
     async (authToken?: string) => {
-      console.log('Sync auth state with server');
       // Get sardine session key if possible
       const existingConfig = getSardineSdkConfigFromLocalstorage();
 
