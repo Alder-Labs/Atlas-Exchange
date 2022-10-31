@@ -91,7 +91,7 @@ const CreatePublicTicketForm = (props: {
   const { isLoading: createTicketIsLoading, mutate: createTicket } =
     useMutation(
       useMutationFetcher<PublicCreateTicket, { result: string }>(
-        `/proxy/api/support/logged_out_ticket`
+        `/support/logged_out_ticket`
       ),
       {
         onSuccess: (data) => {

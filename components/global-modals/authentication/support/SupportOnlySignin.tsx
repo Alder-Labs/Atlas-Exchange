@@ -80,7 +80,7 @@ const SupportOnlySigninForm = (props: {
   const { isLoading: requestEmailIsLoading, mutate: requestEmail } =
     useMutation(
       useMutationFetcher<SupportOnlyLinkRequest, {}>(
-        `/proxy/api/support/verification_code`
+        `/support/verification_code`
       ),
       {
         onSuccess: (data) => {
