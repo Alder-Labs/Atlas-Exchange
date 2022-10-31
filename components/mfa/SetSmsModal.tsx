@@ -12,20 +12,21 @@ import { useMutation } from 'react-query';
 
 import { useModal } from '../../hooks/useModal';
 import { useUserState } from '../../lib/auth-token-context';
-import { countryPhoneNumberCodes } from '../../lib/country-phone-number';
+import {
+  countryPhoneNumberCodes,
+  COUNTRY_PHONE_NUMBER_CODES,
+} from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
-import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType, RecaptchaActions } from '../../lib/types';
-import { UserStateStatus } from '../../lib/types/user-states';
 import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
-interface SetSmsMfaForm {
+interface SetSmsMfaFormType {
   countryCode: string;
   phoneNumber: string;
   code: string;
@@ -44,6 +45,15 @@ interface RequestPhoneVerification {
   };
 }
 
+function getDefaultCountryCode(country?: string) {
+  if (!country) {
+    return '+1';
+  }
+  const countryPhoneCode = COUNTRY_PHONE_NUMBER_CODES[country];
+
+  return countryPhoneCode;
+}
+
 export function SetSmsMfaForm() {
   const [open, handlers] = useModal(false);
 
@@ -53,9 +63,6 @@ export function SetSmsMfaForm() {
 
   const userState = useUserState();
 
-  const cachedForm = JSON.parse(
-    localStorage.getItem(LocalStorageKey.KycForm) || '{}'
-  );
   const {
     register,
     clearErrors,
@@ -64,7 +71,11 @@ export function SetSmsMfaForm() {
     handleSubmit,
     control,
     formState,
-  } = useForm<SetSmsMfaForm>({ defaultValues: cachedForm });
+  } = useForm<SetSmsMfaFormType>({
+    defaultValues: {
+      countryCode: getDefaultCountryCode(userState.loginStatusData?.country),
+    },
+  });
 
   const { errors } = formState;
   const {
@@ -142,7 +153,7 @@ export function SetSmsMfaForm() {
     requestPhoneVerification(inputData);
   };
 
-  const onSubmit = (data: SetSmsMfaForm) => {
+  const onSubmit = (data: SetSmsMfaFormType) => {
     const reqData: SetSmsMfaRequest = {
       phoneNumber: `+${data.countryCode}${data.phoneNumber}`,
       code: data.code,
