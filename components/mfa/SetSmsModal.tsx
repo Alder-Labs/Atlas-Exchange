@@ -11,10 +11,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import { useModal } from '../../hooks/useModal';
-import { useUserState } from '../../lib/auth-token-context';
+import { useLoginStatus } from '../../hooks/useLoginStatus';
 import {
   countryPhoneNumberCodes,
-  COUNTRY_PHONE_NUMBER_CODES,
+  ALPHA2_TO_PHONE_CODES,
 } from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
@@ -24,6 +24,8 @@ import { Text, Button, TextInput, Select } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
 import { ExistingMfaInput } from './ExistingMfaInput';
+import { iso31661Alpha2ToAlpha3 } from 'iso-3166';
+import { useUserState } from '../../lib/auth-token-context';
 
 const RECAPTCHA_KEY = requireEnvVar('NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY');
 interface SetSmsMfaFormType {
@@ -49,7 +51,7 @@ function getDefaultCountryCode(country?: string) {
   if (!country) {
     return '+1';
   }
-  const countryPhoneCode = COUNTRY_PHONE_NUMBER_CODES[country];
+  const countryPhoneCode = ALPHA2_TO_PHONE_CODES[country];
 
   return countryPhoneCode;
 }
@@ -58,9 +60,7 @@ export function SetSmsMfaForm(props: { onSuccess: () => void }) {
   const { onSuccess } = props;
 
   const [existingMfaCode, setExistingMfaCode] = useState('');
-
   const { executeRecaptcha } = useGoogleReCaptcha();
-
   const userState = useUserState();
 
   const {
