@@ -198,9 +198,9 @@ const DepositTransactionCard = (props: { data: DepositTransaction }) => {
       <div className="h-2" />
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-start">
-          <Text>{renderCurrency({ amount: tx.size, coinId: tx.coin })}</Text>
-          <div className="w-2" />
-          {tx.method && <Text>Via {tx.method}</Text>}
+          <Text>
+            {renderCurrency({ amount: tx.size ?? 0, coinId: tx.coin })}
+          </Text>
         </div>
         <Text>{formatDate(new Date(tx.time))}</Text>
       </div>

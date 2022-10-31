@@ -3,8 +3,6 @@ import { useMemo } from 'react';
 import { useUserState } from '../lib/auth-token-context';
 import { UserStateStatus } from '../lib/types/user-states';
 
-import { useLoginStatus } from './useLoginStatus';
-
 export enum AuthStatus {
   // Should never happen, but just in case.
   Unknown = 0,
@@ -38,24 +36,13 @@ type HookResult =
   | { authStatus: AuthStatus.Unknown };
 
 export function useAuthStatus(): HookResult {
-  const {
-    data: loginStatusData,
-    error: loginStatusError,
-    refetch: loginStatusRefetch,
-    isLoading: loginStatusIsLoading,
-  } = useLoginStatus();
-
   const userState = useUserState();
+  const loginStatusData = userState.loginStatusData;
 
   return useMemo(() => {
     // Deal with userState
     if (userState.status === UserStateStatus.SIGNED_OUT)
       return { authStatus: AuthStatus.NotLoggedIn };
-
-    // Deal with login status hook
-    if (loginStatusIsLoading) return { authStatus: AuthStatus.Loading };
-    if (loginStatusError)
-      return { authStatus: AuthStatus.Error, error: loginStatusError };
 
     const user = loginStatusData?.user;
     if (!user) {
@@ -90,10 +77,5 @@ export function useAuthStatus(): HookResult {
       default:
         return { authStatus: AuthStatus.Unknown };
     }
-  }, [
-    userState,
-    loginStatusIsLoading,
-    loginStatusError,
-    loginStatusData?.user,
-  ]);
+  }, [userState, loginStatusData?.user]);
 }

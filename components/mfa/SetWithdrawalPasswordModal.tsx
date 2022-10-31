@@ -4,8 +4,8 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../hooks/useLoginStatus';
 import { useModal } from '../../hooks/useModal';
+import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
@@ -21,11 +21,8 @@ interface SetWithdrawalPassword {
 
 export function SetWithdrawalPasswordModal() {
   const darkMode = useDarkOrLightMode();
-  const {
-    data: loginStatus,
-    isLoading,
-    refetch: refetchLoginStatus,
-  } = useLoginStatus();
+  const userState = useUserState();
+  const loginStatus = userState.loginStatusData;
   const hasPasswordSet = !!loginStatus?.user?.requireWithdrawalPassword;
   const [open, handlers] = useModal(false);
 
@@ -38,7 +35,11 @@ export function SetWithdrawalPasswordModal() {
   const { isLoading: isLoadingSetWithdrawalPassword } = useMutation(
     useMutationFetcher<SetWithdrawalPassword, {}>(
       `/proxy/api/wallet/withdrawal_password`,
-      { onFetchSuccess: refetchLoginStatus }
+      {
+        onFetchSuccess: async (res) => {
+          console.log(res);
+        },
+      }
     ),
     {
       onSuccess: (data) => {
@@ -52,16 +53,14 @@ export function SetWithdrawalPasswordModal() {
 
   return (
     <>
-      {!isLoading && (
-        <Button
-          className="w-48"
-          onClick={handlers.open}
-          disabled={true}
-          variant={darkMode === 'dark' ? 'secondary' : 'outline'}
-        >
-          {hasPasswordSet ? 'Change or disable Password' : 'Set Password'}
-        </Button>
-      )}
+      <Button
+        className="w-48"
+        onClick={handlers.open}
+        disabled={true}
+        variant={darkMode === 'dark' ? 'secondary' : 'outline'}
+      >
+        {hasPasswordSet ? 'Change or disable Password' : 'Set Password'}
+      </Button>
       <TitledModal
         isOpen={open}
         title={'Set withdrawal password'}

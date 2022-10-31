@@ -13,6 +13,7 @@ import { useUserState } from '../../lib/auth-token-context';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
+import { UserStateStatus } from '../../lib/types/user-states';
 
 type OAuthAuthorizeRequest = {
   responseType: string;
@@ -27,7 +28,7 @@ type OAuthAuthorizeResponse = {
 
 const Page: NextPage = () => {
   const userState = useUserState();
-  const isLoggedIn = !!userState.user;
+  const isLoggedOut = userState.status === UserStateStatus.SIGNED_OUT;
   const [modalState, setModalState, handlers] = useModalState();
 
   const router = useRouter();
@@ -87,10 +88,10 @@ const Page: NextPage = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isLoggedOut) {
       setModalState({ state: ModalState.SignIn });
     }
-  }, [isLoggedIn, setModalState]);
+  }, [isLoggedOut, setModalState]);
 
   if (!response_type || !redirect_uri || !client_id || !state) {
     return <div></div>;

@@ -68,7 +68,7 @@ const Wallet: CustomPage = () => {
     <>
       <SidePadding className="grow">
         <div className="flex w-full grow flex-col items-start lg:flex-row">
-          <div className="">
+          <div className="w-full">
             <div className="pt-8 pb-0 sm:px-8">
               <PortfolioPerformance />
             </div>

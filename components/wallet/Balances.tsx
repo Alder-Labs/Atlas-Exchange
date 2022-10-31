@@ -256,10 +256,7 @@ export const WalletBalances = (props: WalletBalancesProps) => {
               renderCell: (row) => {
                 return (
                   <div className="flex flex-row items-center py-2">
-                    <CryptoIcon
-                      className="hidden h-7 w-7 sm:block"
-                      coinId={row.coin.id}
-                    />
+                    <CryptoIcon className="h-7 w-7" coinId={row.coin.id} />
                     <div className="ml-0 min-w-0 sm:ml-2">
                       <Text className="ml-2 block truncate" weight="bold">
                         {row.coin.name}
@@ -330,7 +327,7 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                   </Text>
                 </div>
               ),
-              widthClassName: 'lg:w-20',
+              widthClassName: 'md:w-20',
               show: 'md',
               renderLoading: () => {
                 return <LoaderDoubleLine />;
@@ -384,7 +381,7 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                   </Text>
                 </div>
               ),
-              widthClassName: 'lg:w-20',
+              widthClassName: 'md:w-20',
               renderLoading: () => {
                 return <LoaderDoubleLine />;
               },
