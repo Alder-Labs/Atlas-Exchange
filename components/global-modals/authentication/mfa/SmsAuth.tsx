@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useMutation } from 'react-query';
 
-import { useCurrentDate } from '../../../../hooks/useCurrentDate';
-import { useModalState } from '../../../../hooks/useModalState';
+import { useLoginStatus } from '../../../../hooks/auth';
+import { useModalState } from '../../../../hooks/modal';
+import { useCurrentDate } from '../../../../hooks/utils';
 import { useUserState } from '../../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../../lib/mutation';
 import { toast } from '../../../../lib/toast';
@@ -29,7 +30,7 @@ export const SmsAuth = () => {
     0,
     codeLastSent
       ? SECONDS_BETWEEN_RESEND_CODE -
-          Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
+      Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
       : 0
   );
 
@@ -154,8 +155,8 @@ export const SmsAuth = () => {
               {requestSmsLoading
                 ? 'Sending...'
                 : secondsRemaining
-                ? `Resend (${secondsRemaining})`
-                : `Resend SMS`}
+                  ? `Resend (${secondsRemaining})`
+                  : `Resend SMS`}
             </Button>
           )}
           className="w-full"

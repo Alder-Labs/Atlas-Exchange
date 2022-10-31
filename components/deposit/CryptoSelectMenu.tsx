@@ -1,7 +1,5 @@
 import React, { forwardRef } from 'react';
 
-import { useRouter } from 'next/router';
-
 import { Coin } from '../../lib/types';
 import { CoinSelector } from '../trade/CoinSelector';
 

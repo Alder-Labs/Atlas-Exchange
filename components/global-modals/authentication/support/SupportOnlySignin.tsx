@@ -8,7 +8,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../../hooks/useModalState';
+import { useModalState } from '../../../../hooks/modal';
 import { getDeviceId } from '../../../../lib/localStorage';
 import { useMutationFetcher } from '../../../../lib/mutation';
 import { getReCaptchaTokenOrError } from '../../../../lib/reCaptcha';

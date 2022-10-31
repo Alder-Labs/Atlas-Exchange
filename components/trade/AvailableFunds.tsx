@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useBalances } from '../../hooks/useBalances';
+import { useBalances } from '../../hooks/wallet';
 import { useUserState } from '../../lib/auth-token-context';
 import { renderCurrency } from '../../lib/currency';
 import { UserStateStatus } from '../../lib/types/user-states';
@@ -45,11 +45,11 @@ export function AvailableFunds(props: AvailableFundsProps) {
         >
           {loggedIn
             ? renderCurrency({
-                amount: balancesMap?.[coinId]?.total ?? 0,
-                coinId: coinId,
-                showCoinId: coinId !== 'USD',
-                roundingMode: 'floor',
-              })
+              amount: balancesMap?.[coinId]?.total ?? 0,
+              coinId: coinId,
+              showCoinId: coinId !== 'USD',
+              roundingMode: 'floor',
+            })
             : '--'}
         </Text>
       </div>

@@ -9,7 +9,7 @@ import {
 
 import { useQueryClient } from 'react-query';
 
-import { useStateCallback } from '../hooks/useStateCallback';
+import { useStateCallback } from '../hooks/utils';
 
 import { requireEnvVar } from './env';
 import { LocalStorageKey } from './local-storage-keys';
@@ -45,20 +45,20 @@ type User =
   | { status: 'UNKNOWN' }
   | { status: UserStateStatus.SIGNED_OUT; loginStatusData?: LoginStatusReduced }
   | {
-      status: UserStateStatus.SUPPORT_ONLY;
-      token: string;
-      loginStatusData: LoginStatusReduced;
-    }
+    status: UserStateStatus.SUPPORT_ONLY;
+    token: string;
+    loginStatusData: LoginStatusReduced;
+  }
   | {
-      status: UserStateStatus.SIGNED_IN;
-      token: string;
-      loginStatusData: LoginStatusReduced;
-    }
+    status: UserStateStatus.SIGNED_IN;
+    token: string;
+    loginStatusData: LoginStatusReduced;
+  }
   | {
-      status: UserStateStatus.NEEDS_MFA;
-      token: string;
-      loginStatusData: LoginStatusReduced;
-    };
+    status: UserStateStatus.NEEDS_MFA;
+    token: string;
+    loginStatusData: LoginStatusReduced;
+  };
 
 export type SignupParams = {
   email: string;

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import QRCode from 'react-qr-code';
 
-import { useDepositAddress } from '../../../hooks/useDepositAddress';
+import { useDepositAddress } from '../../../hooks/transfer/useDepositAddress';
 import { toast } from '../../../lib/toast';
 import { Coin } from '../../../lib/types';
 import { AddressText } from '../../AddressText';

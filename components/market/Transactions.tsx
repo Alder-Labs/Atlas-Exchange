@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 
-import { useDepositTransactions } from '../../hooks/useDepositTransactions';
-import { useFills } from '../../hooks/useFills';
-import { useWithdrawTransactions } from '../../hooks/useWithdrawTransactions';
+import { useDepositTransactions, useFills, useWithdrawTransactions } from '../../hooks/wallet';
 import { renderCurrency } from '../../lib/currency';
 import { formatDate } from '../../lib/date';
 import { DepositTransaction, Fill, WithdrawTransaction } from '../../lib/types';
@@ -13,17 +11,17 @@ import { StatusBadge } from '../wallet/StatusBadge';
 
 type Transaction =
   | {
-      type: 'deposit';
-      data: DepositTransaction;
-    }
+    type: 'deposit';
+    data: DepositTransaction;
+  }
   | {
-      type: 'withdraw';
-      data: WithdrawTransaction;
-    }
+    type: 'withdraw';
+    data: WithdrawTransaction;
+  }
   | {
-      type: 'fill';
-      data: Fill;
-    };
+    type: 'fill';
+    data: Fill;
+  };
 
 enum FilterType {
   None = 'None',

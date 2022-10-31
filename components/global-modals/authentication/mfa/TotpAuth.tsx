@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useModalState } from '../../../../hooks/useModalState';
+import { useModalState } from '../../../../hooks/modal';
 import { useUserState } from '../../../../lib/auth-token-context';
 import { toast } from '../../../../lib/toast';
 import { ModalState } from '../../../../lib/types/modalState';

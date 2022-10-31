@@ -14,7 +14,7 @@ import {
 } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 
-import { useModalState } from '../../../hooks/useModalState';
+import { useModalState } from '../../../hooks/modal';
 import { SignupParams, useUserState } from '../../../lib/auth-token-context';
 import { BRAND_NAME } from '../../../lib/constants';
 import {
@@ -46,7 +46,7 @@ const RecaptchaSignUpWrapper = () => {
 
 export default RecaptchaSignUpWrapper;
 
-interface SignUpProps {}
+interface SignUpProps { }
 
 const SignUpModal = (props: SignUpProps) => {
   const router = useRouter();

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { BankAccount, useBankAccounts } from '../../hooks/useBankAccounts';
+import { BankAccount, useBankAccounts } from '../../hooks/transfer';
 import {
   countryCodesAlpha3,
   countryRegionsAlpha3,

@@ -11,10 +11,8 @@ import clsx from 'clsx';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 
-import { useCoins } from '../../hooks/useCoins';
-import { AuthStatus } from '../../hooks/useKycLevel';
-import { useMarkets } from '../../hooks/useMarkets';
-import { useUserState } from '../../lib/auth-token-context';
+import { AuthStatus } from '../../hooks/kyc';
+import { useCoins, useMarkets } from '../../hooks/market';
 import { renderCurrency } from '../../lib/currency';
 import { bscFocusedAtom, buyCoinIdAtom } from '../../lib/jotai';
 import { Market } from '../../lib/types';
@@ -91,18 +89,18 @@ export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
     return !markets
       ? []
       : markets
-          .filter(FILTERS[filter].filterFunc)
-          .filter((item) => item.enabled)
-          .filter((item) => {
-            return item.quoteCurrency === 'USD';
-          })
-          .filter((item) => {
-            const searchQueryLowercase = searchQuery.toLowerCase();
-            const id = item.baseCurrency.toLowerCase();
-            const name = coinsMap?.[item.baseCurrency]?.name.toLowerCase();
+        .filter(FILTERS[filter].filterFunc)
+        .filter((item) => item.enabled)
+        .filter((item) => {
+          return item.quoteCurrency === 'USD';
+        })
+        .filter((item) => {
+          const searchQueryLowercase = searchQuery.toLowerCase();
+          const id = item.baseCurrency.toLowerCase();
+          const name = coinsMap?.[item.baseCurrency]?.name.toLowerCase();
 
-            return `${id} ${name}`.includes(searchQueryLowercase);
-          });
+          return `${id} ${name}`.includes(searchQueryLowercase);
+        });
   }, [markets, filter, watchlist, searchQuery, coinsMap]);
 
   const [_buyCoinId, setBuyCoinId] = useAtom(buyCoinIdAtom);

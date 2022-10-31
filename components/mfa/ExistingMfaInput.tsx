@@ -23,7 +23,7 @@ interface ExistingMfaProps {
   onChange: (value: string) => void;
 }
 
-interface TotpMfaInput extends ExistingMfaProps {}
+interface TotpMfaInput extends ExistingMfaProps { }
 
 function TotpMfaInput(props: TotpMfaInput) {
   const { label, placeholder, value, required = false, onChange } = props;
@@ -42,7 +42,7 @@ function TotpMfaInput(props: TotpMfaInput) {
   );
 }
 
-interface SmsMfaProps extends ExistingMfaProps {}
+interface SmsMfaProps extends ExistingMfaProps { }
 function SmsMfaInput(props: SmsMfaProps) {
   const { label, placeholder, value, required = false, onChange } = props;
   const { isLoading: requestSmsLoading, mutate: requestSms } = useMutation(

@@ -1,12 +1,7 @@
-import clsx from 'clsx';
 import toast from 'react-hot-toast';
 
-import { useBalances } from '../../hooks/useBalances';
-import { useAuthStatus, AuthStatus } from '../../hooks/useKycLevel';
-import { useUserState } from '../../lib/auth-token-context';
+import { useBalances } from '../../hooks/wallet/useBalances';
 import { Button } from '../base';
-
-import { useRedirectHandlers } from './useRedirectHandlers';
 
 interface ConvertAllButtonProps {
   coinId: string;

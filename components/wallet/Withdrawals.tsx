@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
-import { useWithdrawTransactions } from '../../hooks/useWithdrawTransactions';
+import { useWithdrawTransactions } from '../../hooks/wallet';
 import { renderCurrency } from '../../lib/currency';
 import { formatDate } from '../../lib/date';
 import { toast } from '../../lib/toast';

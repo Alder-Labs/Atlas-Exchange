@@ -3,7 +3,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { useModalState } from '../../hooks/useModalState';
+import { useModalState } from '../../hooks/modal';
 import { ModalState } from '../../lib/types/modalState';
 import { Button, Text, Title } from '../base';
 

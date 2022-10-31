@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 
-import { useNotifications } from '../../hooks/useNotifications';
+import { useNotifications } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
 import { formatDate } from '../../lib/date';
 import { useMutationFetcher } from '../../lib/mutation';
@@ -101,10 +101,10 @@ export function NotificationDropdown() {
     return notificationsAreLoading
       ? NotificationState.Loading
       : notifications && numOfUnreadNotifications > 0
-      ? NotificationState.NewNotificationsPresent
-      : notifications && notifications.length > 0
-      ? NotificationState.OldNotificationsPresent
-      : NotificationState.None;
+        ? NotificationState.NewNotificationsPresent
+        : notifications && notifications.length > 0
+          ? NotificationState.OldNotificationsPresent
+          : NotificationState.None;
   }, [notifications, notificationsAreLoading, numOfUnreadNotifications]);
 
   const renderNotifications = useMemo(() => {

@@ -10,7 +10,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../hooks/useModalState';
+import { useModalState } from '../../../hooks/modal';
 import { useUserState } from '../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
@@ -21,7 +21,7 @@ import { UserStateStatus } from '../../../lib/types/user-states';
 import { Button, Text, TextButton, TextInput } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 
-interface SignInProps {}
+interface SignInProps { }
 
 export function SignIn(props: SignInProps) {
   const router = useRouter();
