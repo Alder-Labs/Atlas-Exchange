@@ -57,7 +57,7 @@ function getColumnStyles(column: ColumnDef<any>) {
     'hidden lg:table-cell': column.show === 'lg',
     'hidden xl:table-cell': column.show === 'xl',
     'hidden 2xl:table-cell': column.show === '2xl',
-    'h-full': true,
+    'h-full shrink-0': true,
     [`${column.widthClassName}`]: true,
   });
 }
