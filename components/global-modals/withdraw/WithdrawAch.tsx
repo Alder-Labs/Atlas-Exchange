@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
-import { useBalances } from '../../../hooks/useBalances';
-import { useBankAccounts } from '../../../hooks/useBankAccounts';
-import { useModalState } from '../../../hooks/useModalState';
+import { useModalState } from '../../../hooks/modal';
+import { useBankAccounts } from '../../../hooks/transfer';
+import { useBalances } from '../../../hooks/wallet';
 import { useUserState } from '../../../lib/auth-token-context';
 import { renderCurrency } from '../../../lib/currency';
 import { useMutationFetcher } from '../../../lib/mutation';

@@ -1,9 +1,8 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useBalances } from '../../hooks/useBalances';
-import { useCurrentDate } from '../../hooks/useCurrentDate';
-import { useUserState } from '../../lib/auth-token-context';
+import { useCurrentDate } from '../../hooks/utils';
+import { useBalances } from '../../hooks/wallet';
 import { renderCurrency } from '../../lib/currency';
 import { Quote } from '../../lib/types';
 import { Button, Title, Text } from '../base';

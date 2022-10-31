@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useBalances } from '../../hooks/useBalances';
+import { useBalances } from '../../hooks/wallet';
 import { useUserState } from '../../lib/auth-token-context';
 import { renderCurrency } from '../../lib/currency';
 import { UserStateStatus } from '../../lib/types/user-states';

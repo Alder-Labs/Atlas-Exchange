@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useMutation } from 'react-query';
 
-import { useCurrentDate } from '../../../../hooks/useCurrentDate';
-import { useModalState } from '../../../../hooks/useModalState';
+import { useModalState } from '../../../../hooks/modal';
+import { useCurrentDate } from '../../../../hooks/utils';
 import { useUserState } from '../../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../../lib/mutation';
 import { toast } from '../../../../lib/toast';

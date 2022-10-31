@@ -7,14 +7,13 @@ import { useRouter } from 'next/router';
 import QRCode from 'react-qr-code';
 import { useMutation } from 'react-query';
 
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/modal';
 import { useUserState } from '../../lib/auth-token-context';
 import { WEBSITE_URL } from '../../lib/constants';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
 import { MfaType } from '../../lib/types';
-import { UserStateStatus } from '../../lib/types/user-states';
 import { Button, Spinner, Text, TextInput } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 

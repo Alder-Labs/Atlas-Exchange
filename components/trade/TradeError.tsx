@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import Link from 'next/link';
 
-import { useModalState } from '../../hooks/useModalState';
+import { useModalState } from '../../hooks/modal';
 import { ModalState } from '../../lib/types/modalState';
 import { TextButton, Text } from '../base';
 

@@ -13,8 +13,8 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { useModalState } from '../../hooks/useModalState';
+import { useModalState } from '../../hooks/modal';
+import { useMediaQuery } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { toast } from '../../lib/toast';

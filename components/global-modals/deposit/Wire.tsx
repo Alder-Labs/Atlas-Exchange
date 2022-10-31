@@ -8,8 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../hooks/useModalState';
-import { useWireInstructions } from '../../../hooks/useWireInstructions';
+import { useModalState } from '../../../hooks/modal';
+import { useWireInstructions } from '../../../hooks/transfer';
 import { BRAND_NAME } from '../../../lib/constants';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';

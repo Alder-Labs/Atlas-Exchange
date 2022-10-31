@@ -1,10 +1,9 @@
 import { useCallback, useState } from 'react';
 
-import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
-import { BankAccount, useBankAccounts } from '../../hooks/useBankAccounts';
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/modal';
+import { BankAccount, useBankAccounts } from '../../hooks/transfer';
 import { Text, Select, TextButton } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 

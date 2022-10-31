@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, HTMLAttributes } from 'react';
+import { HTMLAttributes } from 'react';
 
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
