@@ -29,7 +29,7 @@ export function useBalances(props: QueryProps<CoinBalance[]> = {}) {
     return () => clearInterval(interval);
   }, [watchBalancesUntil]);
 
-  useEffect(() => { });
+  useEffect(() => {});
 
   const {
     data: balancesData,

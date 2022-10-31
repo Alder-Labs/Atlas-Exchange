@@ -337,11 +337,11 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                     <Text className="block">
                       {row.market?.price
                         ? renderCurrency({
-                          amount: row.market?.price,
-                          coinId: 'USD',
-                          showCoinId: false,
-                          maxFixedDigits: 8,
-                        })
+                            amount: row.market?.price,
+                            coinId: 'USD',
+                            showCoinId: false,
+                            maxFixedDigits: 8,
+                          })
                         : '--'}
                     </Text>
                     {row.market && (
@@ -419,56 +419,56 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                       options={[
                         ...(row.market
                           ? [
-                            {
-                              text: `Buy ${row.coin.id}`,
-                              onClick: () => {
-                                setBuyCoinId(row.coin.id);
-                                setBscFocused(true);
+                              {
+                                text: `Buy ${row.coin.id}`,
+                                onClick: () => {
+                                  setBuyCoinId(row.coin.id);
+                                  setBscFocused(true);
+                                },
                               },
-                            },
-                          ]
+                            ]
                           : []),
                         ...(row.coin.canDeposit || row.coin.fiat
                           ? [
-                            {
-                              text: row.coin.fiat
-                                ? `Deposit ${row.coin.id}`
-                                : `Receive ${row.coin.id}`,
-                              onClick: () => {
-                                if (row.coin.fiat) {
-                                  setModalStateDetailed({
-                                    state: ModalState.DepositFiat,
-                                  });
-                                } else {
-                                  setModalStateDetailed({
-                                    state: ModalState.ReceiveCryptoAddress,
-                                    coinId: row.coin.id,
-                                  });
-                                }
+                              {
+                                text: row.coin.fiat
+                                  ? `Deposit ${row.coin.id}`
+                                  : `Receive ${row.coin.id}`,
+                                onClick: () => {
+                                  if (row.coin.fiat) {
+                                    setModalStateDetailed({
+                                      state: ModalState.DepositFiat,
+                                    });
+                                  } else {
+                                    setModalStateDetailed({
+                                      state: ModalState.ReceiveCryptoAddress,
+                                      coinId: row.coin.id,
+                                    });
+                                  }
+                                },
                               },
-                            },
-                          ]
+                            ]
                           : []),
                         ...(row.coin.canWithdraw || row.coin.fiat
                           ? [
-                            {
-                              text: row.coin.fiat
-                                ? `Withdraw ${row.coin.id}`
-                                : `Send ${row.coin.id}`,
-                              onClick: () => {
-                                if (row.coin.fiat) {
-                                  setModalStateDetailed({
-                                    state: ModalState.WithdrawFiat,
-                                  });
-                                } else {
-                                  setModalStateDetailed({
-                                    state: ModalState.SendCryptoForm,
-                                    coinId: row.coin.id,
-                                  });
-                                }
+                              {
+                                text: row.coin.fiat
+                                  ? `Withdraw ${row.coin.id}`
+                                  : `Send ${row.coin.id}`,
+                                onClick: () => {
+                                  if (row.coin.fiat) {
+                                    setModalStateDetailed({
+                                      state: ModalState.WithdrawFiat,
+                                    });
+                                  } else {
+                                    setModalStateDetailed({
+                                      state: ModalState.SendCryptoForm,
+                                      coinId: row.coin.id,
+                                    });
+                                  }
+                                },
                               },
-                            },
-                          ]
+                            ]
                           : []),
                       ]}
                     >

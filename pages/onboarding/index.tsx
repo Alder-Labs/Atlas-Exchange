@@ -201,9 +201,9 @@ const OnboardingPage: CustomPage = () => {
                       .catch((err: Error) => {
                         if (
                           err.message ===
-                          'Phone number does not match country' ||
+                            'Phone number does not match country' ||
                           err.message ===
-                          'Please complete level 2 and provide proof of address'
+                            'Please complete level 2 and provide proof of address'
                         ) {
                           navStage(OnboardingStage.PROOF_OF_ADDRESS);
                           return;

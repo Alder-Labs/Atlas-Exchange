@@ -21,16 +21,16 @@ export enum AuthStatus {
 
 type HookResult =
   | {
-    authStatus: AuthStatus.Error;
-    error: { message: string };
-  }
+      authStatus: AuthStatus.Error;
+      error: { message: string };
+    }
   | { authStatus: AuthStatus.Loading }
   | { authStatus: AuthStatus.NotLoggedIn }
   | { authStatus: AuthStatus.KycLevel0 }
   | {
-    authStatus: AuthStatus.KycLevel1;
-    level2AppStatus: 'pending' | 'actions-needed' | 'not-submitted';
-  }
+      authStatus: AuthStatus.KycLevel1;
+      level2AppStatus: 'pending' | 'actions-needed' | 'not-submitted';
+    }
   | { authStatus: AuthStatus.KycLevel2 }
   | { authStatus: AuthStatus.Rejected }
   | { authStatus: AuthStatus.Unknown };

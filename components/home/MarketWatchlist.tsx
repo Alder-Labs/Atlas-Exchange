@@ -89,18 +89,18 @@ export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
     return !markets
       ? []
       : markets
-        .filter(FILTERS[filter].filterFunc)
-        .filter((item) => item.enabled)
-        .filter((item) => {
-          return item.quoteCurrency === 'USD';
-        })
-        .filter((item) => {
-          const searchQueryLowercase = searchQuery.toLowerCase();
-          const id = item.baseCurrency.toLowerCase();
-          const name = coinsMap?.[item.baseCurrency]?.name.toLowerCase();
+          .filter(FILTERS[filter].filterFunc)
+          .filter((item) => item.enabled)
+          .filter((item) => {
+            return item.quoteCurrency === 'USD';
+          })
+          .filter((item) => {
+            const searchQueryLowercase = searchQuery.toLowerCase();
+            const id = item.baseCurrency.toLowerCase();
+            const name = coinsMap?.[item.baseCurrency]?.name.toLowerCase();
 
-          return `${id} ${name}`.includes(searchQueryLowercase);
-        });
+            return `${id} ${name}`.includes(searchQueryLowercase);
+          });
   }, [markets, filter, watchlist, searchQuery, coinsMap]);
 
   const [_buyCoinId, setBuyCoinId] = useAtom(buyCoinIdAtom);

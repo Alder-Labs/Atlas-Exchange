@@ -45,11 +45,11 @@ export function AvailableFunds(props: AvailableFundsProps) {
         >
           {loggedIn
             ? renderCurrency({
-              amount: balancesMap?.[coinId]?.total ?? 0,
-              coinId: coinId,
-              showCoinId: coinId !== 'USD',
-              roundingMode: 'floor',
-            })
+                amount: balancesMap?.[coinId]?.total ?? 0,
+                coinId: coinId,
+                showCoinId: coinId !== 'USD',
+                roundingMode: 'floor',
+              })
             : '--'}
         </Text>
       </div>

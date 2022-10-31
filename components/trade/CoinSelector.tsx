@@ -204,7 +204,7 @@ export const CoinSelector = forwardRef<HTMLDivElement, CoinSelectorProps>(
                           />
                         </div>
                       }
-                      onClick={() => { }}
+                      onClick={() => {}}
                     />
                   )}
                 </Combobox.Option>

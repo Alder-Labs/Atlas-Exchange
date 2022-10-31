@@ -30,7 +30,7 @@ export const SmsAuth = () => {
     0,
     codeLastSent
       ? SECONDS_BETWEEN_RESEND_CODE -
-      Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
+          Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
       : 0
   );
 
@@ -155,8 +155,8 @@ export const SmsAuth = () => {
               {requestSmsLoading
                 ? 'Sending...'
                 : secondsRemaining
-                  ? `Resend (${secondsRemaining})`
-                  : `Resend SMS`}
+                ? `Resend (${secondsRemaining})`
+                : `Resend SMS`}
             </Button>
           )}
           className="w-full"

@@ -106,7 +106,7 @@ export function SetWithdrawalPasswordModal() {
               <Button
                 variant="primary"
                 className="flex-1"
-                onClick={() => { }}
+                onClick={() => {}}
                 loading={isLoadingSetWithdrawalPassword}
               >
                 Enable

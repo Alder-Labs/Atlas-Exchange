@@ -182,9 +182,9 @@ export function useQuote(options: Options) {
       resetQuote,
       quote: quoteData
         ? {
-          data: quoteData,
-          acceptQuote,
-        }
+            data: quoteData,
+            acceptQuote,
+          }
         : null,
     }),
     [
