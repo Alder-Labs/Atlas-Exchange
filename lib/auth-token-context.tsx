@@ -205,20 +205,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
    */
   useEffect(() => {
     const cachedUser = JSON.parse(
-      localStorage.getItem(LocalStorageKey.User) || '{}'
+      localStorage.getItem(LocalStorageKey.User) || 'null'
     );
-    // if (!validCachedUser(cachedUser)) {
-    //   setUser({ status: UserStateStatus.SIGNED_OUT });
-    // }
 
     const tokenDate = localStorage.getItem(LocalStorageKey.TokenDate);
     if ((tokenDate && Number(tokenDate) <= Date.now()) || !cachedUser) {
       setUser({ status: UserStateStatus.SIGNED_OUT });
+      syncAuthStateWithServer();
     } else {
       setUser(cachedUser);
+      syncAuthStateWithServer(cachedUser.token);
     }
-
-    syncAuthStateWithServer(cachedUser.token);
   }, [setUser, syncAuthStateWithServer]);
 
   const signup = useCallback(
@@ -385,6 +382,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     // User state has not loaded; render nothing
     return null;
   }
+
   return (
     <UserContext.Provider value={userState}>{children}</UserContext.Provider>
   );
@@ -396,25 +394,6 @@ export function useUserState(): UserState {
     throw new Error('useUserState must be used within a UserProvider');
   }
   return context;
-}
-
-function validUserStateState(data: string): boolean {
-  for (const status in UserStateStatus) {
-    if (status === data) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function validCachedUser(data: any): boolean {
-  if (!data.status) {
-    return false;
-  }
-  if (!validUserStateState(data.status)) {
-    return false;
-  }
-  return true;
 }
 
 function createSignupRequest(data: SignupParams) {
