@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useMutation } from 'react-query';
 
-import { useLoginStatus } from '../../../../hooks/auth';
 import { useModalState } from '../../../../hooks/modal';
 import { useCurrentDate } from '../../../../hooks/utils';
 import { useUserState } from '../../../../lib/auth-token-context';

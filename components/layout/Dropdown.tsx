@@ -6,7 +6,6 @@ import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { useLoginStatus } from '../../hooks/auth';
 import { useModal } from '../../hooks/modal';
 import { useUserState } from '../../lib/auth-token-context';
 import { toast } from '../../lib/toast';
