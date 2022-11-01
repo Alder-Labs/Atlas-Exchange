@@ -278,7 +278,7 @@ const Page: CustomPage = () => {
 
           <div className="my-8 hidden w-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:block"></div>
 
-          <div className="flex flex-col items-start py-8 sm:p-8">
+          <div className="my-8 flex flex-col items-start sm:m-8">
             <BuySellConvert
               className="w-full lg:w-64"
               fromCoinId="USD"

@@ -55,7 +55,6 @@ export const WithdrawTransactions = () => {
           {
             type: 'custom',
             label: 'Type',
-            widthClassName: 'sm:w-52 w-32',
             renderLoading: () => <LoaderDoubleLine />,
             renderCell: (row) => {
               return (
