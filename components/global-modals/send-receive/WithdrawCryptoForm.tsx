@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
-import { useBalances } from '../../../hooks/wallet';
 import { useWithdrawalLimits } from '../../../hooks/transfer';
+import { useBalances } from '../../../hooks/wallet';
 import { useUserState } from '../../../lib/auth-token-context';
 import { toast } from '../../../lib/toast';
 import { Coin } from '../../../lib/types';
