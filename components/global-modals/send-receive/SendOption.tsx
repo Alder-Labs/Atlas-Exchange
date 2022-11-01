@@ -8,7 +8,11 @@ import { MfaType } from '../../../lib/types';
 import { ModalState } from '../../../lib/types/modalState';
 import { Text } from '../../base';
 import { MenuIconLeft, MenuIconRight } from '../../global-modals/deposit/Menu';
-import { MenuItem, MenuItemProps } from '../../modals/MenuModalItem';
+import { MenuItem } from '../../modals/MenuModalItem';
+import { useUserState } from '../../../lib/auth-token-context';
+import { UserStateStatus } from '../../../lib/types/user-states';
+import { useWithdrawalLimits } from '../../../hooks/transfer';
+import { renderCurrency } from '../../../lib/currency';
 
 export const SendOption = (props: {
   onClick: () => void;
@@ -19,6 +23,14 @@ export const SendOption = (props: {
   const router = useRouter();
 
   const [modalState, setModalState, handlers] = useModalState();
+
+  const userState = useUserState();
+  const hasWithdrawalLimits =
+    userState.status === UserStateStatus.SIGNED_IN &&
+    userState.loginStatusData.user?.kycLevel === 1;
+
+  const { data: withdrawalLimits, isLoading: limitsLoading } =
+    useWithdrawalLimits({ enabled: hasWithdrawalLimits });
 
   const mfaRequiredOption = {
     title: (
@@ -99,9 +111,14 @@ export const SendOption = (props: {
     onClick: onClick,
   };
 
+  const limitPerDay = renderCurrency({
+    amount: withdrawalLimits?.threshold ?? 0,
+    coinId: 'USD',
+  });
+
   const kycLevelOneOption = {
     ...kycLevelTwoOption,
-    subtitle: '$10,000 limit per day',
+    subtitle: `${limitPerDay} limit per day`,
     description: (
       <>
         <Text color="secondary" className="text-start">
