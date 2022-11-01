@@ -48,7 +48,7 @@ export function SetTotpModal(props: { mfa: MfaType }) {
 
   const otpUrl =
     totpSeed && userState.loginStatusData?.user?.email
-      ? `otpauth://totp/${userState.loginStatusData?.user?.email}?secret=${totpSeed}&issuer=${TOTP_ISSUER}`
+      ? `otpauth://totp/${userState.loginStatusData.user.email}?secret=${totpSeed}&issuer=${TOTP_ISSUER}`
       : null;
 
   // Set TOTP as mfa method
