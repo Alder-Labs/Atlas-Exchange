@@ -1,6 +1,8 @@
 import React, { ComponentType, useEffect, useMemo, useState } from 'react';
 
+import { faStar } from '@fortawesome/free-regular-svg-icons';
 import {
+  faStar as faStarSolid,
   faArrowDown,
   faArrowLeft,
   faArrowUp,
@@ -10,7 +12,7 @@ import { useAtom } from 'jotai';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
-import { Text, Title } from '../../../components/base';
+import { Text, TextButton, Title } from '../../../components/base';
 import { CryptoIcon } from '../../../components/CryptoIcon';
 import { SidePadding } from '../../../components/layout/SidePadding';
 import { CandleChartDetailedProps } from '../../../components/market/CandleChartDetailed';
@@ -27,8 +29,9 @@ import { renderCurrency } from '../../../lib/currency';
 import { DURATION_INFO, DurationInterval } from '../../../lib/duration';
 import { buyCoinIdAtom } from '../../../lib/jotai';
 import { toast } from '../../../lib/toast';
-import { Coin, CoinBalance, CustomPage } from '../../../lib/types';
+import { Coin, CoinBalance, CustomPage, Market } from '../../../lib/types';
 import { UserStateStatus } from '../../../lib/types/user-states';
+import { getWatchlist, saveWatchlist } from '../../../lib/watchlist';
 
 const DynamicCandleChartDetailed: ComponentType<CandleChartDetailedProps> =
   dynamic(
@@ -129,6 +132,20 @@ const Page: CustomPage = () => {
     };
   }, [market, coinsMap]);
 
+  const [watchlist, setWatchlist] = useState(getWatchlist());
+  const onClickWatchlist = (market: Market) => {
+    setWatchlist((current) => {
+      const copy = { ...current };
+      if (copy[market.name]) {
+        delete copy[market.name];
+      } else {
+        copy[market.name] = true;
+      }
+      saveWatchlist(copy);
+      return copy;
+    });
+  };
+
   return (
     <>
       <SidePadding className="grow">
@@ -172,6 +189,20 @@ const Page: CustomPage = () => {
                   </Text>
                 </div>
                 <div className="w-2" />
+                {market && (
+                  <TextButton
+                    className="duration-300 ease-in"
+                    size="md"
+                    onClick={() => {
+                      onClickWatchlist(market);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={watchlist[market.name] ? faStarSolid : faStar}
+                      className="h-4 text-brand-600 dark:text-brand-600"
+                    />
+                  </TextButton>
+                )}
               </div>
               <div className="h-8" />
               <div className="flex flex-col">
@@ -278,12 +309,8 @@ const Page: CustomPage = () => {
 
           <div className="my-8 hidden w-[2px] shrink-0 self-stretch bg-grayLight-10 dark:bg-grayDark-50 sm:block"></div>
 
-          <div className="my-8 flex flex-col items-start sm:m-8">
-            <BuySellConvert
-              className="w-full lg:w-64"
-              fromCoinId="USD"
-              toCoinId={coinId}
-            />
+          <div className="my-8 flex w-full flex-col items-start sm:m-8 lg:w-64">
+            <BuySellConvert fromCoinId="USD" toCoinId={coinId} />
           </div>
         </div>
         <div className="h-24" />
