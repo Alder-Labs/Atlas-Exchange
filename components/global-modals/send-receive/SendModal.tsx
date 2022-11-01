@@ -105,7 +105,7 @@ const SendModal = () => {
           {modalState.state === ModalState.SendCryptoForm &&
             coinsMap?.[modalState.coinId ?? ''] && (
               <WithdrawCryptoForm
-                buttonText="Send"
+                buttonText="Preview Send"
                 coin={coinsMap?.[modalState.coinId ?? '']}
                 onCancel={router.back}
                 onSuccess={(data) => {

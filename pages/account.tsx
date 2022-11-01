@@ -17,6 +17,9 @@ import { useDarkOrLightMode } from '../lib/dark-mode';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';
+import { RemoveWithdrawalPasswordModal } from '../components/mfa/RemoveWithdrawalPassword';
+import { UpdateWithdrawalPasswordModal } from '../components/mfa/UpdateWithdrawalPasswordModal';
+import { WithdrawalPasswordModal } from '../components/mfa/WithdrawalPasswordModal';
 
 const AccountNavbarTab = ({
   label,
@@ -187,7 +190,7 @@ const SecurityTabContent = () => {
         <AccountOption
           title="Withdrawal Password"
           description="Set up a separate password for withdrawals"
-          rightChild={<SetWithdrawalPasswordModal />}
+          rightChild={<WithdrawalPasswordModal />}
         />
       </AccountOptionsContainer>
       <div className="h-8" />

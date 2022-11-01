@@ -144,8 +144,8 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
       <Button
         className="w-full"
         onClick={async () => {
-          setModalState({ state: ModalState.Closed });
           await router.push('/wallet');
+          setModalState({ state: ModalState.Closed });
         }}
       >
         <div className="w-full">Continue to Wallet</div>

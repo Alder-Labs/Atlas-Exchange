@@ -36,13 +36,13 @@ export const WithdrawCryptoForm = (props: {
   const { coin, buttonText, onCancel, onSuccess } = props;
 
   const userState = useUserState();
-  const requireWithdrawalLimits =
+  const hasWithdrawalLimits =
     userState.status === UserStateStatus.SIGNED_IN &&
     userState.loginStatusData.user?.kycLevel === 1;
 
   const { balancesMap, isLoading: balancesLoading } = useBalances();
   const { data: withdrawalLimits, isLoading: limitsLoading } =
-    useWithdrawalLimits({ enabled: requireWithdrawalLimits });
+    useWithdrawalLimits({ enabled: hasWithdrawalLimits });
 
   const {
     watch,
@@ -164,8 +164,6 @@ export const WithdrawCryptoForm = (props: {
         />
         {/* <div className="h-4"></div>
         <TextInput label="Tag" {...register('tag')}></TextInput> */}
-        {/* <div className="h-4"></div>
-        <TextInput label="Password" {...register('password')}></TextInput> */}
         {/*
         <InputCheckbox
           type="checkbox"
