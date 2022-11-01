@@ -10,7 +10,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
-import { useCurrentDate } from '../../hooks/useCurrentDate';
+import { useCurrentDate } from '../../hooks/utils';
 import {
   countryPhoneNumberCodes,
   ALPHA2_TO_PHONE_CODES,

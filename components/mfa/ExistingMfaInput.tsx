@@ -6,7 +6,7 @@ import {
 } from 'react-google-recaptcha-v3';
 import { useMutation } from 'react-query';
 
-import { useCurrentDate } from '../../hooks/useCurrentDate';
+import { useCurrentDate } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
 import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
