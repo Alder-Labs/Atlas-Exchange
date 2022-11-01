@@ -194,7 +194,7 @@ const DepositWireInstruction = (props: {
                 left={
                   <div className="flex flex-col">
                     <div>Account Identifier</div>
-                    <div>(shorten version)</div>
+                    <div>(shortened version)</div>
                   </div>
                 }
                 right={wireInst.shortMemo}

@@ -56,13 +56,13 @@ export function BuySellConvert(props: BuySellConvertProps) {
   const [focused, setFocused] = useAtom(bscFocusedAtom);
   // Add dark:backdrop-blur if you want (I don't think we should)
   const dimDivStyles = clsx({
-    'fixed inset-0 bg-grayLight-100/10 dark:bg-black/70  transition z-10': true,
+    'fixed bg-grayLight-100/10 dark:bg-black/70 transition z-10': true,
     'opacity-100': focused,
     'pointer-events-none opacity-0': !focused,
   });
 
   return (
-    <>
+    <div className="w-full">
       <Portal>
         <div
           className={dimDivStyles}
@@ -77,7 +77,7 @@ export function BuySellConvert(props: BuySellConvertProps) {
           'relative z-20 flex w-full flex-col items-center'
         )}
       >
-        <div className="absolute -inset-6 rounded-md bg-white dark:bg-black"></div>
+        <div className="absolute rounded-md bg-white dark:bg-black"></div>
         <div className="w-full">
           <Title order={4} className="font-bold">
             Trade
@@ -103,10 +103,10 @@ export function BuySellConvert(props: BuySellConvertProps) {
           </Tab.Panels>
         </Tab.Group>
         <div
-          className="pointer-events-none absolute inset-0 z-30 h-full"
+          className="pointer-events-none absolute z-30 h-full w-full overflow-hidden"
           id={PREVIEW_CONTAINER_ID}
         ></div>
       </div>
-    </>
+    </div>
   );
 }
