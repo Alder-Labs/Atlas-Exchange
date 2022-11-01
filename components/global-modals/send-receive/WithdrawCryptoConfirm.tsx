@@ -1,47 +1,23 @@
 import React, { useState } from 'react';
 
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleInfo,
+  faEye,
+  faEyeSlash,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMutation } from 'react-query';
 
 import { useWithdrawalFees } from '../../../hooks/transfer';
+import { useUserState } from '../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
 import { Coin } from '../../../lib/types';
 import { AddressText } from '../../AddressText';
-import { Text, Button } from '../../base';
+import { Text, Button, TextInput, TextButton } from '../../base';
 import { CryptoIcon } from '../../CryptoIcon';
 import { ExistingMfaInput } from '../../mfa/ExistingMfaInput';
 import { Warning } from '../../Warning';
-
-const ENTRY_STYLE =
-  'flex flex-row justify-between py-4 border-b-1 border-grayLight-80';
-
-const Entry = (props: {
-  left: React.ReactNode;
-  right: React.ReactNode;
-  isLoading?: boolean;
-  loadingWidth?: string | number;
-}) => {
-  const { left, right, isLoading = false, loadingWidth } = props;
-  return (
-    <div className={ENTRY_STYLE}>
-      <div>
-        <Text>{left}</Text>
-      </div>
-      <div className="flex flex-row">
-        <Text
-          isLoading={isLoading}
-          loadingWidth={loadingWidth}
-          color="secondary"
-          className="text-right"
-        >
-          {right}
-        </Text>
-      </div>
-    </div>
-  );
-};
 
 export interface WithdrawCryptoInput {
   coin: string;
@@ -61,6 +37,17 @@ export const WithdrawCryptoConfirm = (props: {
 }) => {
   const { coin, input, onCancel, onSuccess } = props;
   const [mfaCode, setMfaCode] = useState('');
+  const [withdrawalPasword, setWithdrawalPassword] = useState('');
+  const [withdrawalPasswordIsShowing, setWithdrawalPasswordIsShowing] =
+    useState(false);
+  const toggleShowWithdrawalPassword = () => {
+    setWithdrawalPasswordIsShowing((prev) => !prev);
+  };
+
+  const userState = useUserState();
+  const loginStatus = userState.loginStatusData;
+  const hasWithdrawalPasswordSet =
+    !!loginStatus?.user?.requireWithdrawalPassword;
 
   const { data: withdrawalFee, isLoading: feeLoading } = useWithdrawalFees({
     coin: coin.id,
@@ -87,6 +74,7 @@ export const WithdrawCryptoConfirm = (props: {
   const onSubmit = () => {
     const data = {
       code: mfaCode,
+      password: withdrawalPasword,
       ...input,
     };
     withdrawCrypto(data);
@@ -141,7 +129,37 @@ export const WithdrawCryptoConfirm = (props: {
               )}
             </div>
           </div>
-          <div className="h-2" />
+          {hasWithdrawalPasswordSet && (
+            <div>
+              <div className="h-4"></div>
+              <TextInput
+                type={withdrawalPasswordIsShowing ? 'text' : 'password'}
+                label="Withdrawal Password"
+                placeholder="password"
+                value={withdrawalPasword}
+                onChange={(e) => {
+                  // Digits only
+                  setWithdrawalPassword(e.target.value);
+                }}
+                renderSuffix={() => (
+                  <TextButton
+                    onClick={toggleShowWithdrawalPassword}
+                    className="mx-3 duration-300 ease-in"
+                    size="md"
+                    type="button"
+                    variant="secondary"
+                  >
+                    {withdrawalPasswordIsShowing ? (
+                      <FontAwesomeIcon icon={faEye} className="h-4 w-4" />
+                    ) : (
+                      <FontAwesomeIcon icon={faEyeSlash} className="h-4 w-4" />
+                    )}
+                  </TextButton>
+                )}
+              ></TextInput>
+            </div>
+          )}
+          <div className="h-4" />
           <ExistingMfaInput
             required={true}
             label="MFA Code *"
@@ -154,15 +172,16 @@ export const WithdrawCryptoConfirm = (props: {
         <div className="w-full">
           <Button
             type="submit"
-            className="my-2 w-full"
+            className="w-full"
             onClick={onSubmit}
             disabled={mfaCode.length === 0 || feeLoading || withdrawalLoading}
           >
-            Confirm
+            Submit
           </Button>
+          <div className="h-4" />
           <Button
             variant="secondary"
-            className="mt-2 w-full"
+            className="w-full"
             disabled={withdrawalLoading}
             onClick={onCancel}
           >
@@ -175,3 +194,29 @@ export const WithdrawCryptoConfirm = (props: {
 };
 
 export default WithdrawCryptoConfirm;
+
+const Entry = (props: {
+  left: React.ReactNode;
+  right: React.ReactNode;
+  isLoading?: boolean;
+  loadingWidth?: string | number;
+}) => {
+  const { left, right, isLoading = false, loadingWidth } = props;
+  return (
+    <div className="border-b-1 flex flex-row justify-between border-grayLight-80 py-4">
+      <div>
+        <Text>{left}</Text>
+      </div>
+      <div className="flex flex-row">
+        <Text
+          isLoading={isLoading}
+          loadingWidth={loadingWidth}
+          color="secondary"
+          className="text-right"
+        >
+          {right}
+        </Text>
+      </div>
+    </div>
+  );
+};
