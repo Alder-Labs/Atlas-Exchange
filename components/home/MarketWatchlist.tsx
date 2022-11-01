@@ -11,10 +11,8 @@ import clsx from 'clsx';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 
-import { useCoins } from '../../hooks/useCoins';
-import { AuthStatus } from '../../hooks/useKycLevel';
-import { useMarkets } from '../../hooks/useMarkets';
-import { useUserState } from '../../lib/auth-token-context';
+import { AuthStatus } from '../../hooks/kyc';
+import { useCoins, useMarkets } from '../../hooks/market';
 import { renderCurrency } from '../../lib/currency';
 import { bscFocusedAtom, buyCoinIdAtom } from '../../lib/jotai';
 import { Market } from '../../lib/types';

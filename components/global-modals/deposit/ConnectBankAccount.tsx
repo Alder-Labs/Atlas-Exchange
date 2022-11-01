@@ -3,13 +3,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import { useMutation } from 'react-query';
 
-import { useBankAccounts } from '../../../hooks/useBankAccounts';
-import { usePlaidLinkToken } from '../../../hooks/usePlaidLinkToken';
+import { useBankAccounts } from '../../../hooks/transfer/useBankAccounts';
+import { usePlaidLinkToken } from '../../../hooks/transfer/usePlaidLinkToken';
 import { useUserState } from '../../../lib/auth-token-context';
 import { BRAND_NAME } from '../../../lib/constants';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';
-import { UserStateStatus } from '../../../lib/types/user-states';
 import { Button, InputCheckbox, Spinner, Text } from '../../base';
 import { TitledModal } from '../../modals/TitledModal';
 

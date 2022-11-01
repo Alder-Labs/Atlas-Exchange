@@ -1,6 +1,6 @@
 import { Portal } from '@headlessui/react';
 
-import { useModalState } from '../../hooks/useModalState';
+import { useModalState } from '../../hooks/modal';
 import { ModalState } from '../../lib/types/modalState';
 import { ModalBackdrop } from '../base/Modal';
 

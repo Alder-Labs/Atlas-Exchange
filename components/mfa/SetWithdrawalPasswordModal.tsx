@@ -4,7 +4,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMutation } from 'react-query';
 
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '../../hooks/modal';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { useMutationFetcher } from '../../lib/mutation';

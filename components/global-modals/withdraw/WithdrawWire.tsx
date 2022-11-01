@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useBalances } from '../../../hooks/useBalances';
+import { useBalances } from '../../../hooks/wallet';
 import { useUserState } from '../../../lib/auth-token-context';
 import {
   countryCodesAlpha3,

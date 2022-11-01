@@ -8,7 +8,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../../hooks/useModalState';
+import { useModalState } from '../../../../hooks/modal';
 import { getDeviceId } from '../../../../lib/localStorage';
 import { useMutationFetcher } from '../../../../lib/mutation';
 import { getReCaptchaTokenOrError } from '../../../../lib/reCaptcha';
@@ -16,7 +16,7 @@ import { toast } from '../../../../lib/toast';
 import {
   RECAPTCHA_KEY,
   RecaptchaActions,
-  RequestSupportOnlyToken,
+  SupportOnlyLinkRequest,
 } from '../../../../lib/types';
 import { ModalState } from '../../../../lib/types/modalState';
 import { Button, Text, TextInput } from '../../../base';
@@ -79,8 +79,8 @@ const SupportOnlySigninForm = (props: {
 
   const { isLoading: requestEmailIsLoading, mutate: requestEmail } =
     useMutation(
-      useMutationFetcher<RequestSupportOnlyToken, {}>(
-        `/proxy/api/support/verification_code`
+      useMutationFetcher<SupportOnlyLinkRequest, {}>(
+        `/support/verification_code`
       ),
       {
         onSuccess: (data) => {

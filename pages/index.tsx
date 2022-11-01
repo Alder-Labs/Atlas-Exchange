@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { BuyingPowerPrompt } from '../components/home/BuyingPowerPrompt';
 import { DepositPrompt } from '../components/home/DepositPrompt';
@@ -8,9 +8,8 @@ import { SignupPrompt } from '../components/home/SignupPrompt';
 import { TopMovers } from '../components/home/TopMovers';
 import { Responsive } from '../components/layout/Responsive';
 import { SidePadding } from '../components/layout/SidePadding';
-import { LoaderTripleLine } from '../components/loaders/LoaderTripleLine';
 import { BuySellConvert } from '../components/trade/BuySellConvert';
-import { useBalances } from '../hooks/useBalances';
+import { useBalances } from '../hooks/wallet/useBalances';
 import { useUserState } from '../lib/auth-token-context';
 import { CustomPage } from '../lib/types';
 import { UserStateStatus } from '../lib/types/user-states';
