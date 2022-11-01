@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { AuthStatus, useAuthStatus } from '../../hooks/kyc';
 import { useModalState } from '../../hooks/modal';
 import { useMediaQuery } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
@@ -112,24 +113,15 @@ export function Navbar({ children }: NavbarProps) {
   const userState = useUserState();
   const router = useRouter();
 
-  const authenticated =
-    userState.loginStatusData?.loggedIn &&
-    [UserStateStatus.NEEDS_MFA, UserStateStatus.SIGNED_IN].includes(
-      userState?.status
-    );
+  const authenticated = userState?.status !== UserStateStatus.SIGNED_OUT;
   const url = router.pathname;
 
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
 
+  const { authStatus } = useAuthStatus();
   // Under basic mode, the user can only sign out and change app appearance.
-  const basicMode =
-    ['/onboarding/begin', '/onboarding', '/onboarding/signup'].includes(
-      router.pathname
-    ) ||
-    [ModalState.SmsAuth, ModalState.TotpAuth].includes(
-      modalStateDetailed.state
-    );
+  const basicMode = authStatus === AuthStatus.KycLevel0;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isDesktop = useMediaQuery({ showIfBiggerThan: 'lg' });
@@ -270,6 +262,17 @@ export function Navbar({ children }: NavbarProps) {
                     Send / Receive
                   </Button>
                 </>
+              )}
+              {basicMode && (
+                <Button
+                  rounded="md"
+                  className="mx-4 mt-4"
+                  onClick={() => {
+                    router.push('/onboarding');
+                  }}
+                >
+                  Verify identity
+                </Button>
               )}
               {userState.status !== UserStateStatus.SIGNED_OUT ? (
                 <Button

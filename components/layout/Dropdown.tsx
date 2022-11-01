@@ -6,6 +6,7 @@ import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
+import { AuthStatus, useAuthStatus } from '../../hooks/kyc';
 import { useModal } from '../../hooks/modal';
 import { useUserState } from '../../lib/auth-token-context';
 import { toast } from '../../lib/toast';
@@ -41,21 +42,15 @@ function DropdownMenuItem(props: DropdownMenuItemProps) {
 
 export function Dropdown() {
   const router = useRouter();
-
-  const userIsCurrentlyOnboarding = [
-    '/onboarding/begin',
-    '/onboarding',
-    '/onboarding/signup',
-  ].includes(router.pathname);
+  const { authStatus } = useAuthStatus();
+  const userIsKycLevel0 = authStatus === AuthStatus.KycLevel0;
 
   const userState = useUserState();
   const loginStatusData = userState.loginStatusData;
 
   const [isSigningOut, setIsSigningOut] = useState(false);
 
-  const isLoggedIn =
-    loginStatusData?.loggedIn &&
-    userState.status !== UserStateStatus.SIGNED_OUT;
+  const isLoggedIn = userState.status !== UserStateStatus.SIGNED_OUT;
 
   const [isOpen, handlers] = useModal(false);
 
@@ -86,7 +81,7 @@ export function Dropdown() {
               >
                 {isLoggedIn ? (
                   <>
-                    {loginStatusData?.loggedIn && !userIsCurrentlyOnboarding && (
+                    {!userIsKycLevel0 && (
                       <>
                         <DropdownMenuItem
                           text={'Settings'}
@@ -98,6 +93,16 @@ export function Dropdown() {
                           text={'Support / FAQ'}
                           onClick={() => {
                             router.push('/support');
+                          }}
+                        />
+                      </>
+                    )}
+                    {userIsKycLevel0 && (
+                      <>
+                        <DropdownMenuItem
+                          text={'Verify Identity'}
+                          onClick={() => {
+                            router.push('/onboarding');
                           }}
                         />
                       </>
