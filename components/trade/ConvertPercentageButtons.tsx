@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
 
-import { useBalances } from '../../hooks/useBalances';
-import { useAuthStatus, AuthStatus } from '../../hooks/useKycLevel';
-import { useUserState } from '../../lib/auth-token-context';
+import { useAuthStatus, AuthStatus } from '../../hooks/kyc';
+import { useBalances } from '../../hooks/wallet';
 import { Button } from '../base';
 
 import { useRedirectHandlers } from './useRedirectHandlers';

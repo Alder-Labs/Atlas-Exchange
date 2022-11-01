@@ -13,7 +13,7 @@ import { Rifm } from 'rifm';
 import { useCurrentDate } from '../../hooks/useCurrentDate';
 import {
   countryPhoneNumberCodes,
-  COUNTRY_PHONE_NUMBER_CODES,
+  ALPHA2_TO_PHONE_CODES,
 } from '../../lib/country-phone-number';
 import { requireEnvVar } from '../../lib/env';
 import { LocalStorageKey } from '../../lib/local-storage-keys';
@@ -48,7 +48,7 @@ function setDefaultSmsCountryToAddressCountry() {
     localStorage.getItem(LocalStorageKey.KycForm) || '{}'
   );
   const countryPhoneCode =
-    COUNTRY_PHONE_NUMBER_CODES[iso31661Alpha3ToAlpha2[cachedForm.country]];
+    ALPHA2_TO_PHONE_CODES[iso31661Alpha3ToAlpha2[cachedForm.country]];
   // set country code phone number to the country user has selected
   cachedForm.countryCode = countryPhoneCode;
   // update localstorage with changes

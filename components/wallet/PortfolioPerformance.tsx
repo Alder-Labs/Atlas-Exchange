@@ -1,8 +1,8 @@
-import { ComponentType, ReactComponentElement, useMemo, useState } from 'react';
+import { ComponentType, useMemo, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { useUsdValueSnapshots } from '../../hooks/useUsdValueSnapshots';
+import { useUsdValueSnapshots } from '../../hooks/wallet';
 import { useUserState } from '../../lib/auth-token-context';
 import { DurationInterval, DURATION_INFO } from '../../lib/duration';
 import { toast } from '../../lib/toast';

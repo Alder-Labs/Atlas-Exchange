@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react';
 
-import { AuthStatus, useAuthStatus } from '../../hooks/useKycLevel';
-import { useModalState } from '../../hooks/useModalState';
+import { AuthStatus, useAuthStatus } from '../../hooks/auth/useAuthState';
+import { useModalState } from '../../hooks/modal';
 import { ModalState } from '../../lib/types/modalState';
 
 export function useRedirectHandlers() {

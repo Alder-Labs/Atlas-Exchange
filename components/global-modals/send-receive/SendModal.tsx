@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
-import { useCoins } from '../../../hooks/useCoins';
-import { useModalState } from '../../../hooks/useModalState';
+import { useCoins } from '../../../hooks/market';
+import { useModalState } from '../../../hooks/modal';
 import { useUserState } from '../../../lib/auth-token-context';
 import { ModalState } from '../../../lib/types/modalState';
 import { Button, Text } from '../../base';

@@ -10,7 +10,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../hooks/useModalState';
+import { useModalState } from '../../../hooks/modal';
 import { useUserState } from '../../../lib/auth-token-context';
 import { useMutationFetcher } from '../../../lib/mutation';
 import { toast } from '../../../lib/toast';

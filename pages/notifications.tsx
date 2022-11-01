@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 import { Text, TextButton, Title } from '../components/base';
 import { SidePadding } from '../components/layout/SidePadding';
 import { Table } from '../components/table';
-import { useNotifications } from '../hooks/useNotifications';
+import { useNotifications } from '../hooks/utils';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';

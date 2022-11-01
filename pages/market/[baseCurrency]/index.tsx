@@ -18,10 +18,10 @@ import { DurationIntervalSelector } from '../../../components/market/DurationInt
 import UserTransactions from '../../../components/market/Transactions';
 import { priceDataWithDateIntervals } from '../../../components/market/utils';
 import { BuySellConvert } from '../../../components/trade/BuySellConvert';
-import { useBalances } from '../../../hooks/useBalances';
-import { useCoins } from '../../../hooks/useCoins';
-import { useMarket } from '../../../hooks/useMarket';
-import { useMarketCandles } from '../../../hooks/useMarketCandles';
+import { useBalances } from '../../../hooks/wallet/useBalances';
+import { useCoins } from '../../../hooks/market/useCoins';
+import { useMarket } from '../../../hooks/market/useMarket';
+import { useMarketCandles } from '../../../hooks/market/useMarketCandles';
 import { useUserState } from '../../../lib/auth-token-context';
 import { renderCurrency } from '../../../lib/currency';
 import { DURATION_INFO, DurationInterval } from '../../../lib/duration';

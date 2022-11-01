@@ -44,14 +44,6 @@ export type SupportTicketMessage = {
   time: string;
 };
 
-export type RequestSupportOnlyToken = {
-  captcha: {
-    recaptcha_challenge: string;
-  };
-  deviceId?: string;
-  email: string;
-};
-
 // If a user cannot access their email, they may still submit a support ticket
 // with this request schema
 export type PublicCreateTicket = {
@@ -63,4 +55,28 @@ export type PublicCreateTicket = {
   captcha: {
     recaptcha_challenge: string;
   };
+};
+
+/* ----------------------------------------------------------------------------
+ * Steps to get a SUPPORT-ONLY authorization token
+ * 1. User requests a link be sent to their email. This email contains a code.
+ * 2. The link redirects a user to a support page. Here the code is extracted
+ *    from the URL and used to fetch a token.
+ * ------------------------------------------------------------------------- */
+
+export type SupportOnlyLinkRequest = {
+  captcha: {
+    recaptcha_challenge: string;
+  };
+  deviceId?: string;
+  email: string;
+};
+
+export type SupportOnlyTokenRequest = {
+  code: string;
+  deviceId?: string;
+};
+
+export type SupportOnlyTokenResponse = {
+  result: string; // Authorization token
 };

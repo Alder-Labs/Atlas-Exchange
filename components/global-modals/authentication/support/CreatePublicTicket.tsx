@@ -7,7 +7,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
-import { useModalState } from '../../../../hooks/useModalState';
+import { useModalState } from '../../../../hooks/modal';
 import { BRAND_NAME } from '../../../../lib/constants';
 import { getDeviceId } from '../../../../lib/localStorage';
 import { useMutationFetcher } from '../../../../lib/mutation';
@@ -91,7 +91,7 @@ const CreatePublicTicketForm = (props: {
   const { isLoading: createTicketIsLoading, mutate: createTicket } =
     useMutation(
       useMutationFetcher<PublicCreateTicket, { result: string }>(
-        `/proxy/api/support/logged_out_ticket`
+        `/support/logged_out_ticket`
       ),
       {
         onSuccess: (data) => {

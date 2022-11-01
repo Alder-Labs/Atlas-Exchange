@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Combobox } from '@headlessui/react';
 import clsx from 'clsx';
 
-import { useCoins } from '../../hooks/useCoins';
-import { useFocusWithin } from '../../hooks/useFocusWithin';
+import { useCoins } from '../../hooks/market';
+import { useFocusWithin } from '../../hooks/utils';
 import { Coin } from '../../lib/types';
 import { Text } from '../base';
 import { CryptoIcon } from '../CryptoIcon';

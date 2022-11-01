@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 
-import { useNotifications } from '../../hooks/useNotifications';
+import { useNotifications } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
 import { formatDate } from '../../lib/date';
 import { useMutationFetcher } from '../../lib/mutation';

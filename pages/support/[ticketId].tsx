@@ -23,7 +23,7 @@ import {
 } from '../../components/base';
 import { SidePadding } from '../../components/layout/SidePadding';
 import { Message } from '../../components/support/Message';
-import { useSupportMessages } from '../../hooks/useSupportMessages';
+import { useSupportMessages } from '../../hooks/support/useSupportMessages';
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
