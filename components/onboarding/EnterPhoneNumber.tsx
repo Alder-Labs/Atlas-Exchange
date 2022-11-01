@@ -10,6 +10,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Rifm } from 'rifm';
 
+import { useCurrentDate } from '../../hooks/useCurrentDate';
 import {
   countryPhoneNumberCodes,
   COUNTRY_PHONE_NUMBER_CODES,
@@ -122,6 +123,16 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     );
   }, [vals]);
 
+  // Phone Number Verification Code Timer
+  const currentDate = useCurrentDate();
+  const [codeLastSent, setCodeLastSent] = useState<Date | null>(null);
+  const secondsRemaining = Math.max(
+    0,
+    codeLastSent
+      ? 59 - Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
+      : 0
+  );
+
   const {
     isLoading: requestPhoneVerificationLoading,
     mutate: requestPhoneVerification,
@@ -131,6 +142,7 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
     ),
     {
       onSuccess: (data) => {
+        setCodeLastSent(new Date());
         toast.success('Successfully requested phone verification');
       },
       onError: (err: Error) => {
@@ -250,8 +262,13 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
                               loading={requestPhoneVerificationLoading}
                               type="button"
                               className="mx-2 whitespace-nowrap"
+                              disabled={secondsRemaining > 0}
                             >
-                              Send SMS
+                              {requestPhoneVerificationLoading
+                                ? 'Sending...'
+                                : secondsRemaining
+                                ? `Resend (${secondsRemaining})`
+                                : `Send SMS`}
                             </Button>
                           </div>
                         )}
