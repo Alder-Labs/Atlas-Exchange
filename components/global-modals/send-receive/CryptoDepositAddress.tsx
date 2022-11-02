@@ -55,7 +55,7 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
 
   function copyAddressToClipboard(address: string) {
     if (!navigator.clipboard) {
-      toast.error('Insecure context. Are you on development environment?');
+      toast.error('Insecure context');
       return;
     }
     navigator.clipboard.writeText(address);
