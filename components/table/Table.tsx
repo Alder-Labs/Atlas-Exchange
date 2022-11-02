@@ -191,9 +191,13 @@ export function Table<T>(props: TableProps<T>) {
           </TableBody>
         )}
         {!loading && (
-          <TableBody className="relative">
+          <TableBody>
             {!loading && data.length === 0 && (
-              <div className="absolute top-0 w-full">{renderEmpty()}</div>
+              <TableRow className="w-full">
+                <TableCell colSpan={columns.length + 2}>
+                  {renderEmpty()}
+                </TableCell>
+              </TableRow>
             )}
             {renderedData.map((item, idx) => {
               const clickable =
