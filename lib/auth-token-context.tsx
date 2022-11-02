@@ -449,14 +449,14 @@ function getUserStatusFromLoginStatus(
   loginStatus: LoginStatusReduced
 ): UserStateStatus {
   if (loginStatus.loggedIn === true) {
-    if (loginStatus.mfa === null) {
-      return UserStateStatus.MFA_NOT_SET;
-    }
-
     if (loginStatus.supportOnly) {
       return UserStateStatus.SUPPORT_ONLY;
     } else {
-      return UserStateStatus.SIGNED_IN;
+      if (loginStatus.mfa === null) {
+        return UserStateStatus.MFA_NOT_SET;
+      } else {
+        return UserStateStatus.SIGNED_IN;
+      }
     }
   } else {
     if (loginStatus.mfaRequired === null) {
