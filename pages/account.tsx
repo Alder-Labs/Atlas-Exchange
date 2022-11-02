@@ -361,7 +361,7 @@ const IdentityTabContent = () => {
                     {!kycLevel2SubmitDisabled && (
                       <>
                         <div className="h-2" />
-                        <Text color="info">Takes less than 5 minutes</Text>
+                        <Text color="warning">Takes less than 5 minutes</Text>
                       </>
                     )}
                   </div>
