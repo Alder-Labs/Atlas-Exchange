@@ -108,6 +108,7 @@ export function AddressInformation(props: AddressInformationProps) {
               }}
               options={countryCodesAlpha3}
               className="w-full"
+              placeholder={'Select a country'}
             />
           )}
         />
@@ -164,6 +165,7 @@ export function AddressInformation(props: AddressInformationProps) {
                     }}
                     options={countryRegions}
                     className="w-full"
+                    placeholder={'Select an option'}
                   />
                 </div>
               )}
