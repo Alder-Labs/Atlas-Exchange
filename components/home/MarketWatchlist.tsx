@@ -304,7 +304,7 @@ export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
             onSelect={(value) => {
               if (value) setFilter(value);
             }}
-            className="w-32"
+            className="z-20 w-32"
             options={[
               {
                 label: 'All assets',
