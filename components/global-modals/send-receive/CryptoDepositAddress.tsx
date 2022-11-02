@@ -14,6 +14,8 @@ import { Button, Select, Spinner } from '../../base';
 import { CryptoIcon } from '../../CryptoIcon';
 import { LoaderSingleLine } from '../../loaders';
 import { Warning } from '../../Warning';
+import { useModalState } from '../../../hooks/modal';
+import { ModalState } from '../../../lib/types/modalState';
 
 function GrayQRCodeContainer(props: { children: React.ReactNode }) {
   return (
@@ -26,6 +28,7 @@ function GrayQRCodeContainer(props: { children: React.ReactNode }) {
 export const CryptoDepositAddress = (props: { coin: Coin }) => {
   const { coin } = props;
   const router = useRouter();
+  const [modalState, setModalState, handlers] = useModalState();
 
   const [depositMethod, setDepositMethod] = useState<string | null>(
     coin.methods[0] ?? null
@@ -140,8 +143,9 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
       <div className="h-4" />
       <Button
         className="w-full"
-        onClick={() => {
-          router.push('/wallet');
+        onClick={async () => {
+          await router.push('/wallet');
+          setModalState({ state: ModalState.Closed });
         }}
       >
         <div className="w-full">Continue to Wallet</div>
