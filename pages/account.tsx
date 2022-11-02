@@ -17,6 +17,9 @@ import { useDarkOrLightMode } from '../lib/dark-mode';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';
+import { RemoveWithdrawalPasswordModal } from '../components/mfa/RemoveWithdrawalPassword';
+import { UpdateWithdrawalPasswordModal } from '../components/mfa/UpdateWithdrawalPasswordModal';
+import { WithdrawalPasswordModal } from '../components/mfa/WithdrawalPasswordModal';
 
 const AccountNavbarTab = ({
   label,
@@ -187,7 +190,7 @@ const SecurityTabContent = () => {
         <AccountOption
           title="Withdrawal Password"
           description="Set up a separate password for withdrawals"
-          rightChild={<SetWithdrawalPasswordModal />}
+          rightChild={<WithdrawalPasswordModal />}
         />
       </AccountOptionsContainer>
       <div className="h-8" />
@@ -268,119 +271,119 @@ const IdentityTabContent = () => {
         AuthStatus.KycLevel1,
         AuthStatus.KycLevel2,
       ].includes(authStatus) && (
-        <div>
-          <AccountOptionsContainer>
-            <AccountOption
-              title="Identity Verification: Level 1"
-              subtitle="Share your personal information"
-              description="Unlimited crypto withdrawals"
-              leftChild={
-                <div className={'flex flex-col'}>
-                  <div className="flex flex-row">
-                    <Title>Identity Verification: Level 1</Title>
-                    {authStatus >= AuthStatus.KycLevel1 && (
-                      <Text size="2xl" color="success">
-                        &nbsp;(Verified)
-                      </Text>
+          <div>
+            <AccountOptionsContainer>
+              <AccountOption
+                title="Identity Verification: Level 1"
+                subtitle="Share your personal information"
+                description="Unlimited crypto withdrawals"
+                leftChild={
+                  <div className={'flex flex-col'}>
+                    <div className="flex flex-row">
+                      <Title>Identity Verification: Level 1</Title>
+                      {authStatus >= AuthStatus.KycLevel1 && (
+                        <Text size="2xl" color="success">
+                          &nbsp;(Verified)
+                        </Text>
+                      )}
+                    </div>
+                    <div className="h-2" />
+                    <Text color="secondary">
+                      No crypto deposit limits <br />
+                      $10,000 USD limit for crypto withdrawals per day <br />
+                      No fiat deposits or withdrawals{' '}
+                    </Text>
+                    {authStatus === AuthStatus.KycLevel0 && (
+                      <>
+                        <div className="h-2" />
+                        <Text color="warning">Takes less than 5 minutes</Text>
+                      </>
                     )}
                   </div>
-                  <div className="h-2" />
-                  <Text color="secondary">
-                    No crypto deposit limits <br />
-                    $2000 USD limit for crypto withdrawals per day <br />
-                    No fiat deposits or withdrawals{' '}
-                  </Text>
-                  {authStatus === AuthStatus.KycLevel0 && (
-                    <>
-                      <div className="h-2" />
-                      <Text color="warning">Takes less than 5 minutes</Text>
-                    </>
-                  )}
-                </div>
-              }
-              rightChild={
-                <div>
-                  {authStatus === AuthStatus.KycLevel0 ? (
-                    <Button
-                      className="w-48"
-                      variant={'primary'}
-                      onClick={onClickIdentityLevel1}
-                    >
-                      Continue
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              }
-            />
-          </AccountOptionsContainer>
-          <div className="h-8" />
-          <AccountOptionsContainer>
-            <AccountOption
-              title="Identity Verification: Level 2"
-              subtitle="Upload identity documents"
-              description="Unlimited crypto withdrawals"
-              leftChild={
-                <div className={'flex flex-col'}>
-                  <div className="flex flex-row">
-                    <Title>Identity Verification: Level 2</Title>
-
-                    {authStatus === AuthStatus.KycLevel2 ? (
-                      <Text size="2xl" color="success">
-                        &nbsp;(Verified)
-                      </Text>
-                    ) : authStatus === AuthStatus.KycLevel1 &&
-                      status.level2AppStatus === 'pending' ? (
-                      <span className={'text-2xl text-warning'}>
-                        &nbsp;(Pending)
-                      </span>
-                    ) : authStatus === AuthStatus.KycLevel1 &&
-                      status.level2AppStatus === 'actions-needed' ? (
-                      <>
-                        <span className={'text-2xl text-error'}>
-                          &nbsp;(Action Needed)
-                        </span>
-                      </>
+                }
+                rightChild={
+                  <div>
+                    {authStatus === AuthStatus.KycLevel0 ? (
+                      <Button
+                        className="w-48"
+                        variant={'primary'}
+                        onClick={onClickIdentityLevel1}
+                      >
+                        Continue
+                      </Button>
                     ) : (
                       <></>
                     )}
                   </div>
-                  <div className="h-1"></div>
-                  <Text color="normal" weight="medium">
-                    Upload identity documents
-                  </Text>
-                  <div className="h-4" />
-                  <Text color="secondary">
-                    Unlimited USD deposits and withdrawals
-                  </Text>
-                  <Text color="secondary">Unlimited crypto withdrawals</Text>
-                  {!kycLevel2SubmitDisabled && (
-                    <>
-                      <div className="h-2" />
-                      <Text color="info">Takes less than 5 minutes</Text>
-                    </>
-                  )}
-                </div>
-              }
-              rightChild={
-                authStatus === AuthStatus.KycLevel2 ? (
-                  <div></div>
-                ) : (
-                  <Button
-                    className="w-48"
-                    variant={'primary'}
-                    onClick={onChangeIdentityLevel2}
-                    disabled={kycLevel2SubmitDisabled}
-                  >
-                    Continue
-                  </Button>
-                )
-              }
-            />
-          </AccountOptionsContainer>
-        </div>
-      )}
+                }
+              />
+            </AccountOptionsContainer>
+            <div className="h-8" />
+            <AccountOptionsContainer>
+              <AccountOption
+                title="Identity Verification: Level 2"
+                subtitle="Upload identity documents"
+                description="Unlimited crypto withdrawals"
+                leftChild={
+                  <div className={'flex flex-col'}>
+                    <div className="flex flex-row">
+                      <Title>Identity Verification: Level 2</Title>
+
+                      {authStatus === AuthStatus.KycLevel2 ? (
+                        <Text size="2xl" color="success">
+                          &nbsp;(Verified)
+                        </Text>
+                      ) : authStatus === AuthStatus.KycLevel1 &&
+                        status.level2AppStatus === 'pending' ? (
+                        <span className={'text-2xl text-warning'}>
+                          &nbsp;(Pending)
+                        </span>
+                      ) : authStatus === AuthStatus.KycLevel1 &&
+                        status.level2AppStatus === 'actions-needed' ? (
+                        <>
+                          <span className={'text-2xl text-error'}>
+                            &nbsp;(Action Needed)
+                          </span>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div className="h-1"></div>
+                    <Text color="normal" weight="medium">
+                      Upload identity documents
+                    </Text>
+                    <div className="h-4" />
+                    <Text color="secondary">
+                      Unlimited USD deposits and withdrawals
+                    </Text>
+                    <Text color="secondary">Unlimited crypto withdrawals</Text>
+                    {!kycLevel2SubmitDisabled && (
+                      <>
+                        <div className="h-2" />
+                        <Text color="info">Takes less than 5 minutes</Text>
+                      </>
+                    )}
+                  </div>
+                }
+                rightChild={
+                  authStatus === AuthStatus.KycLevel2 ? (
+                    <div></div>
+                  ) : (
+                    <Button
+                      className="w-48"
+                      variant={'primary'}
+                      onClick={onChangeIdentityLevel2}
+                      disabled={kycLevel2SubmitDisabled}
+                    >
+                      Continue
+                    </Button>
+                  )
+                }
+              />
+            </AccountOptionsContainer>
+          </div>
+        )}
       <div className="h-12" />
     </div>
   );
