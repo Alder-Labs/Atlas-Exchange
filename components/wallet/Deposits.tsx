@@ -2,10 +2,12 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
+import { useModalState } from '../../hooks/modal';
 import { useDepositTransactions } from '../../hooks/wallet';
 import { renderCurrency } from '../../lib/currency';
 import { formatDate } from '../../lib/date';
 import { toast } from '../../lib/toast';
+import { ModalState } from '../../lib/types/modalState';
 import { Button, Text } from '../base';
 import { LoaderDoubleLine } from '../loaders';
 import { Table } from '../table';
@@ -15,6 +17,7 @@ import { StatusBadge } from './StatusBadge';
 
 export const DepositTransactions = () => {
   const router = useRouter();
+  const [modalStateDetailed, setModalStateDetailed] = useModalState();
   const { data: transactions, isLoading } = useDepositTransactions(
     {},
     {
@@ -43,7 +46,13 @@ export const DepositTransactions = () => {
               </Text>
             </div>
             <div className="h-4" />
-            <Button onClick={() => router.push('/deposit')}>Deposit</Button>
+            <Button
+              onClick={() => {
+                setModalStateDetailed({ state: ModalState.DepositFiat });
+              }}
+            >
+              Deposit
+            </Button>
             <div className="h-12" />
           </EmptyContent>
         );
