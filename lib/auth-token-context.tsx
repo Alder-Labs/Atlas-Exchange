@@ -15,7 +15,6 @@ import { requireEnvVar } from './env';
 import { LocalStorageKey } from './local-storage-keys';
 import {
   LoginStatusReduced,
-  MfaType,
   RecaptchaParams,
   SigninParams,
   SignInResponse,
@@ -424,6 +423,9 @@ function getUserStatusFromLoginStatus(
   loginStatus: LoginStatusReduced
 ): UserStateStatus {
   if (loginStatus.loggedIn === true) {
+    if (loginStatus.mfa === null) {
+      return UserStateStatus.NEEDS_MFA;
+    }
     if (loginStatus.supportOnly) {
       return UserStateStatus.SUPPORT_ONLY;
     } else {
