@@ -50,7 +50,7 @@ const Home: CustomPage = () => {
   return (
     <>
       <SidePadding className="grow">
-        <div className="flex w-full grow flex-col-reverse items-start overflow-x-auto lg:flex-row">
+        <div className="flex w-full grow flex-col-reverse items-start lg:flex-row">
           <div className="h-full flex-col">
             <Responsive showIfLargerThan="lg">
               <div className="py-8 sm:p-8">{renderHomePrompt}</div>
