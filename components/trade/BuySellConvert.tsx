@@ -56,7 +56,7 @@ export function BuySellConvert(props: BuySellConvertProps) {
   const [focused, setFocused] = useAtom(bscFocusedAtom);
   // Add dark:backdrop-blur if you want (I don't think we should)
   const dimDivStyles = clsx({
-    'fixed inset-0 bg-grayLight-100/10 dark:bg-black/70  transition z-10': true,
+    'fixed inset-0 bg-grayLight-100/10 dark:bg-black/70  transition z-20': true,
     'opacity-100': focused,
     'pointer-events-none opacity-0': !focused,
   });
@@ -74,7 +74,7 @@ export function BuySellConvert(props: BuySellConvertProps) {
       <div
         className={clsx(
           className,
-          'relative z-20 flex w-full flex-col items-center'
+          'relative z-30 flex w-full flex-col items-center'
         )}
       >
         <div className="absolute -inset-6 rounded-md bg-white dark:bg-black"></div>

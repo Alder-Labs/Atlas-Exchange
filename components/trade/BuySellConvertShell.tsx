@@ -158,7 +158,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
               }
             }}
             onFocus={(e) => {
-              if (!requireAuthStatus(AuthStatus.KycLevel2)) {
+              if (!requireAuthStatus(AuthStatus.KycLevel1)) {
                 e.target.blur();
               }
             }}
@@ -179,7 +179,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
           <ConvertPercentageButtons
             className="mt-4"
             onAmountChosen={(amount) => {
-              if (!requireAuthStatus(AuthStatus.KycLevel2)) {
+              if (!requireAuthStatus(AuthStatus.KycLevel1)) {
                 return;
               }
               setFromAmount(amount);
@@ -192,7 +192,7 @@ export function BuySellConvertShell(props: BuySellConvertShellProps) {
             coinId={fromCoinId}
             className="mt-4"
             onAmountChosen={(amount) => {
-              if (!requireAuthStatus(AuthStatus.KycLevel2)) {
+              if (!requireAuthStatus(AuthStatus.KycLevel1)) {
                 return;
               }
               setFromAmount(amount);
