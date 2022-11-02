@@ -198,6 +198,7 @@ export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
               onClick={(e) => {
                 e.stopPropagation();
 
+                console.log('Called');
                 if (!requireAuthStatus(AuthStatus.KycLevel1)) {
                   return;
                 }
