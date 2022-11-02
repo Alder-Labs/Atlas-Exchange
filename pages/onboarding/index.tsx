@@ -105,6 +105,58 @@ const OnboardingPage: CustomPage = () => {
       {}
     );
 
+  const submitKycLevel1Form = () => {
+    const prevRawKycFormData: string | null =
+      localStorage.getItem(LocalStorageKey.KycForm);
+    if (!prevRawKycFormData) {
+      toast.error('No kyc data...');
+      return;
+    }
+
+    const rawKycData = JSON.parse(
+      prevRawKycFormData
+    ) as KycRawForm;
+
+    const dob = new Date(
+      `${rawKycData.month}/${rawKycData.day}/${rawKycData.year}`
+    );
+
+    if (!dob) {
+      toast.error('Invalid date of birth...');
+      return;
+    }
+
+    rawKycData.countryCode = `+${rawKycData.countryCode}`;
+    const kycLevel1Data: KycForm = {
+      ...rawKycData,
+      socialSecurityNumber: rawKycData.socialSecurityNumber ?? '',
+      dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
+      phoneNumber: `${rawKycData.countryCode}${rawKycData.phoneNumber}`,
+    };
+
+    return submitKycLevel1(kycLevel1Data)
+      .then((res) => {
+        localStorage.removeItem(LocalStorageKey.KycForm);
+        setModalState({
+          state: ModalState.Kyc1Complete,
+        });
+        router.push('/');
+      })
+      .catch((err: Error) => {
+        // "errorCode": "id_verification_2_required"
+        if (
+          err.message ===
+          'Phone number does not match country' ||
+          err.message ===
+          'Please complete level 2 and provide proof of address'
+        ) {
+          navStage(OnboardingStage.PROOF_OF_ADDRESS);
+          return;
+        }
+        toast.error(`Error: ${err.message}`);
+      });
+  };
+
   if (!loginStatus) return <></>;
 
   return (
@@ -163,54 +215,7 @@ const OnboardingPage: CustomPage = () => {
               >
                 <EnterPhoneNumber
                   onFinish={async () => {
-                    const prevRawKycFormData: string | null =
-                      localStorage.getItem(LocalStorageKey.KycForm);
-                    if (!prevRawKycFormData) {
-                      toast.error('No kyc data...');
-                      return;
-                    }
-
-                    const rawKycData = JSON.parse(
-                      prevRawKycFormData
-                    ) as KycRawForm;
-
-                    const dob = new Date(
-                      `${rawKycData.month}/${rawKycData.day}/${rawKycData.year}`
-                    );
-
-                    if (!dob) {
-                      toast.error('Invalid date of birth...');
-                      return;
-                    }
-
-                    rawKycData.countryCode = `+${rawKycData.countryCode}`;
-                    const kycLevel1Data: KycForm = {
-                      ...rawKycData,
-                      socialSecurityNumber: rawKycData.socialSecurityNumber ?? '',
-                      dateOfBirth: moment(dob).format('YYYY-MM-DD').toString(),
-                      phoneNumber: `${rawKycData.countryCode}${rawKycData.phoneNumber}`,
-                    };
-
-                    return submitKycLevel1(kycLevel1Data)
-                      .then((res) => {
-                        localStorage.removeItem(LocalStorageKey.KycForm);
-                        setModalState({
-                          state: ModalState.Kyc1Complete,
-                        });
-                        router.push('/');
-                      })
-                      .catch((err: Error) => {
-                        if (
-                          err.message ===
-                          'Phone number does not match country' ||
-                          err.message ===
-                          'Please complete level 2 and provide proof of address'
-                        ) {
-                          navStage(OnboardingStage.PROOF_OF_ADDRESS);
-                          return;
-                        }
-                        toast.error(`Error: ${err.message}`);
-                      });
+                    submitKycLevel1Form();
                   }}
                   onBack={() => {
                     navStage(OnboardingStage.SOCIAL_SECURITY);
@@ -221,8 +226,8 @@ const OnboardingPage: CustomPage = () => {
                 show={stageDisplayed === OnboardingStage.PROOF_OF_ADDRESS}
               >
                 <ProofOfAddress
-                  onContinue={() => {
-                    router.push('/onboarding/identity-verification');
+                  onContinue={async () => {
+                    await router.push('/onboarding/identity-verification');
                   }}
                 />
               </FadeTransition>
