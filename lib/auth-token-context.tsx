@@ -57,6 +57,11 @@ type User =
       status: UserStateStatus.NEEDS_MFA;
       token: string;
       loginStatusData: LoginStatusReduced;
+    }
+  | {
+      status: UserStateStatus.MFA_NOT_SET;
+      token: string;
+      loginStatusData: LoginStatusReduced;
     };
 
 export type SignupParams = {
@@ -172,6 +177,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               resolve
             );
             break;
+          case UserStateStatus.MFA_NOT_SET:
+            if (!authToken) {
+              reject(new Error('No auth token'));
+              return;
+            }
+            setUser(
+              {
+                status: UserStateStatus.MFA_NOT_SET,
+                token: authToken,
+                loginStatusData: result,
+              },
+              resolve
+            );
           case UserStateStatus.NEEDS_MFA:
             if (!authToken) {
               reject(new Error('No auth token'));
@@ -348,6 +366,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           signOut: signOutInstantly,
           updateToken: updateToken,
         };
+      case UserStateStatus.MFA_NOT_SET:
+        return {
+          status: user.status,
+          token: user.token,
+          loginStatusData: user.loginStatusData,
+          signOut: signOutInstantly,
+          updateToken: updateToken,
+        };
       case UserStateStatus.NEEDS_MFA:
         return {
           status: user.status,
@@ -424,8 +450,9 @@ function getUserStatusFromLoginStatus(
 ): UserStateStatus {
   if (loginStatus.loggedIn === true) {
     if (loginStatus.mfa === null) {
-      return UserStateStatus.NEEDS_MFA;
+      return UserStateStatus.MFA_NOT_SET;
     }
+
     if (loginStatus.supportOnly) {
       return UserStateStatus.SUPPORT_ONLY;
     } else {
