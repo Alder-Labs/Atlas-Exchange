@@ -12,6 +12,7 @@ import { SignUpResponse } from './signup';
 
 export type UserState =
   | SignedOutUserState
+  | MfaNotSetUserState
   | NeedsMfaUserState
   | SignedInUserState
   | SupportOnlyUserState;
@@ -21,6 +22,14 @@ export type SignedOutUserState = {
   loginStatusData?: LoginStatusReduced;
   signIn: (params: SigninParams) => Promise<SignInResponse>;
   signUp: (params: SignupParams) => Promise<SignUpResponse>;
+  updateToken: (token: string) => Promise<void>;
+};
+
+export type MfaNotSetUserState = {
+  status: UserStateStatus.MFA_NOT_SET;
+  token: string;
+  loginStatusData: LoginStatusReduced;
+  signOut: () => Promise<void>;
   updateToken: (token: string) => Promise<void>;
 };
 
@@ -53,6 +62,7 @@ export type SupportOnlyUserState = {
 
 export enum UserStateStatus {
   SIGNED_OUT = 'SIGNED_OUT',
+  MFA_NOT_SET = 'MFA_NOT_SET',
   NEEDS_MFA = 'NEEDS_MFA',
   SIGNED_IN = 'SIGNED_IN',
   SUPPORT_ONLY = 'SUPPORT_ONLY',

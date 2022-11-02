@@ -15,7 +15,6 @@ import { requireEnvVar } from './env';
 import { LocalStorageKey } from './local-storage-keys';
 import {
   LoginStatusReduced,
-  MfaType,
   RecaptchaParams,
   SigninParams,
   SignInResponse,
@@ -56,6 +55,11 @@ type User =
     }
   | {
       status: UserStateStatus.NEEDS_MFA;
+      token: string;
+      loginStatusData: LoginStatusReduced;
+    }
+  | {
+      status: UserStateStatus.MFA_NOT_SET;
       token: string;
       loginStatusData: LoginStatusReduced;
     };
@@ -173,6 +177,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
               resolve
             );
             break;
+          case UserStateStatus.MFA_NOT_SET:
+            if (!authToken) {
+              reject(new Error('No auth token'));
+              return;
+            }
+            setUser(
+              {
+                status: UserStateStatus.MFA_NOT_SET,
+                token: authToken,
+                loginStatusData: result,
+              },
+              resolve
+            );
           case UserStateStatus.NEEDS_MFA:
             if (!authToken) {
               reject(new Error('No auth token'));
@@ -349,6 +366,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           signOut: signOutInstantly,
           updateToken: updateToken,
         };
+      case UserStateStatus.MFA_NOT_SET:
+        return {
+          status: user.status,
+          token: user.token,
+          loginStatusData: user.loginStatusData,
+          signOut: signOutInstantly,
+          updateToken: updateToken,
+        };
       case UserStateStatus.NEEDS_MFA:
         return {
           status: user.status,
@@ -427,7 +452,11 @@ function getUserStatusFromLoginStatus(
     if (loginStatus.supportOnly) {
       return UserStateStatus.SUPPORT_ONLY;
     } else {
-      return UserStateStatus.SIGNED_IN;
+      if (loginStatus.mfa === null) {
+        return UserStateStatus.MFA_NOT_SET;
+      } else {
+        return UserStateStatus.SIGNED_IN;
+      }
     }
   } else {
     if (loginStatus.mfaRequired === null) {
