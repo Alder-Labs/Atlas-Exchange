@@ -198,8 +198,7 @@ export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
               onClick={(e) => {
                 e.stopPropagation();
 
-                console.log('Called');
-                if (!requireAuthStatus(AuthStatus.KycLevel1)) {
+                if (!requireAuthStatus(AuthStatus.KycLevel2)) {
                   return;
                 }
                 setBuyCoinId(market.baseCurrency);
