@@ -139,8 +139,9 @@ export function Navbar({ children }: NavbarProps) {
         <div className="flex w-full items-center justify-between bg-grayLight-20 dark:bg-grayDark-20">
           <div className="ml-4">
             <BrandLogo
-              href={basicMode ? '' : '/'}
+              href="/"
               className="w-16"
+              linkDisabled={basicMode}
               noIcon={true}
             />
           </div>
@@ -323,7 +324,11 @@ export function Navbar({ children }: NavbarProps) {
           <SidePadding as="nav" className="w-full py-4">
             <div className="flex w-full items-center justify-between px-8">
               <div className="flex items-center">
-                <BrandLogo className="w-16" href={basicMode ? '' : '/'} />
+                <BrandLogo
+                  className="w-16"
+                  linkDisabled={basicMode}
+                  href={'/'}
+                />
                 {authenticated && !basicMode && (
                   <>
                     <div className="w-10"></div>
