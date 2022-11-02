@@ -198,7 +198,11 @@ const SignUpModal = (props: SignUpProps) => {
         />
         <div className="h-4"></div>
         <Button
-          disabled={!agreed}
+          disabled={
+            !agreed ||
+            watch('password').length === 0 ||
+            watch('email').length === 0
+          }
           type="submit"
           className="w-full"
           loading={isSigningUp}
