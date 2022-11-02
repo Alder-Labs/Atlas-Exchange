@@ -1,4 +1,6 @@
+import clsx from 'clsx';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { useDarkOrLightMode } from '../lib/dark-mode';
 
@@ -6,13 +8,22 @@ export const BrandLogo = (props: {
   className: string;
   href?: string;
   noIcon?: boolean;
+  linkDisabled?: boolean;
 }) => {
-  const { className, href = '/', noIcon = false } = props;
+  const { className, href = '/', noIcon = false, linkDisabled = false } = props;
+  const router = useRouter();
   const darkMode = useDarkOrLightMode();
 
+  console.log(router);
+
   return (
-    <Link href={href}>
-      <div className="flex items-center">
+    <Link href={linkDisabled ? router.asPath : href}>
+      <div
+        className={clsx({
+          'flex items-center': true,
+          'cursor-pointer': !linkDisabled,
+        })}
+      >
         {!noIcon && (
           <img
             src="/atlas-lion-logo-rgb.svg"

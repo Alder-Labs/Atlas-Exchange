@@ -133,6 +133,11 @@ function EnterPhoneNumberInside(props: EnterPhoneNumberProps) {
       : 0
   );
 
+  const phoneNum = useWatch({ control: control, name: 'phoneNumber' });
+  useEffect(() => {
+    setCodeLastSent(null);
+  }, [phoneNum]);
+
   const {
     isLoading: requestPhoneVerificationLoading,
     mutate: requestPhoneVerification,
