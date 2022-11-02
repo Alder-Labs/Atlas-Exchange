@@ -146,7 +146,7 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
                     >
                       {(props) =>
                         renderOption ? (
-                          <>{renderOption(option.value, props)}</>
+                          <>{renderOption(option, props)}</>
                         ) : (
                           <span
                             className={`${
