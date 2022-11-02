@@ -6,12 +6,13 @@ export const BrandLogo = (props: {
   className: string;
   href?: string;
   noIcon?: boolean;
+  linkDisabled?: boolean;
 }) => {
-  const { className, href = '/', noIcon = false } = props;
+  const { className, href = '/', noIcon = false, linkDisabled = false } = props;
   const darkMode = useDarkOrLightMode();
 
-  return (
-    <Link href={href}>
+  const Logo = () => {
+    return (
       <div className="flex items-center">
         {!noIcon && (
           <img
@@ -31,6 +32,14 @@ export const BrandLogo = (props: {
           alt="Logo"
         />
       </div>
+    );
+  };
+
+  return linkDisabled ? (
+    <Logo />
+  ) : (
+    <Link href={href}>
+      <Logo />
     </Link>
   );
 };
