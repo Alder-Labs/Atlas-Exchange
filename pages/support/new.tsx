@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { FilePondFile, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
@@ -25,9 +25,8 @@ registerPlugin(FilePondPluginFileValidateSize);
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
 import { CustomPage, SupportTicketCreate } from '../../lib/types';
-import { useState } from 'react';
 
-const ticketCategories: { value: string; label: string }[] = [
+const TICKET_CATEGORIES: { value: string; label: string }[] = [
   { value: 'Account closure', label: 'Account closure' },
   { value: 'Change Address', label: 'Change Address' },
   { value: 'Change Email', label: 'Change Email' },
@@ -100,7 +99,7 @@ const NewTicketPage: CustomPage = () => {
                 value={field.value}
                 placeholder="Select Category"
                 onSelect={(value) => field.onChange(value)}
-                options={ticketCategories}
+                options={TICKET_CATEGORIES}
                 className="w-full"
               />
             )}

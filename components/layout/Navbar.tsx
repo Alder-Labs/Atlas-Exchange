@@ -28,6 +28,7 @@ import { Dropdown } from './Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
+import { useBasicMode } from '../../hooks/utils/useBasicMode';
 
 export function IconButton(props: {
   icon: ReactNode;
@@ -123,13 +124,7 @@ export function Navbar({ children }: NavbarProps) {
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
 
   // Under basic mode, the user can only sign out and change app appearance.
-  const basicMode =
-    ['/onboarding/begin', '/onboarding', '/onboarding/signup'].includes(
-      router.pathname
-    ) ||
-    [ModalState.SmsAuth, ModalState.TotpAuth].includes(
-      modalStateDetailed.state
-    );
+  const basicMode = useBasicMode();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isDesktop = useMediaQuery({ showIfBiggerThan: 'lg' });
@@ -138,8 +133,6 @@ export function Navbar({ children }: NavbarProps) {
       setDrawerOpen(false);
     }
   }, [isDesktop]);
-
-  const darkMode = useDarkOrLightMode();
 
   return (
     <>
