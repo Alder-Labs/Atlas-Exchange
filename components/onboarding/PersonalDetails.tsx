@@ -52,6 +52,7 @@ export function PersonalDetails(props: PersonalDetailsProps) {
   const {
     control,
     register,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<KycPersonForm>({ defaultValues: cachedForm });
@@ -78,6 +79,7 @@ export function PersonalDetails(props: PersonalDetailsProps) {
     control: control,
     name: ['fullLegalName', 'day', 'month', 'year'],
   });
+
   useEffect(() => {
     const [fullLegalName, day, month, year] = vals;
     const prevRawKycFormData: string =
@@ -192,7 +194,7 @@ export function PersonalDetails(props: PersonalDetailsProps) {
         </div>
 
         <div className="h-8" />
-        <Button className="w-full" type="submit">
+        <Button className="w-full" type="submit" disabled={vals.includes('')}>
           Continue
         </Button>
       </form>
