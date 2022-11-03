@@ -152,7 +152,7 @@ function MobileNavbar() {
           </button>
         ) : (
           <div className="m-4 flex h-6 items-center gap-4">
-            <DarkModeButton />
+            <DarkModeButton className="h-8 w-8" />
             <Button
               size="sm"
               variant="outline"
@@ -406,7 +406,7 @@ function DesktopNavbar() {
               {authenticated && <Dropdown />}
               {!authenticated && (
                 <>
-                  <DarkModeButton />
+                  <DarkModeButton className="h-8 w-8" />
                   <Button
                     size="sm"
                     variant="outline"
