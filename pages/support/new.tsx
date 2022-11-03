@@ -55,6 +55,7 @@ const NewTicketPage: CustomPage = () => {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<SupportTicketCreate>();
 
@@ -155,7 +156,15 @@ const NewTicketPage: CustomPage = () => {
             />
           </div>
           <div className="h-4" />
-          <Button type="submit" loading={submitIsLoading}>
+          <Button
+            type="submit"
+            loading={submitIsLoading}
+            disabled={
+              !watch('category') ||
+              watch('title') === '' ||
+              watch('message') === ''
+            }
+          >
             Submit
           </Button>
         </form>

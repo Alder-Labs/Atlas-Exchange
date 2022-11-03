@@ -37,7 +37,8 @@ const SupportTicketPage: CustomPage = () => {
   const router = useRouter();
   const { ticketId } = router.query;
 
-  const { handleSubmit, register, reset } = useForm<SupportMessageCreate>();
+  const { handleSubmit, register, reset, watch } =
+    useForm<SupportMessageCreate>();
 
   const {
     ticket: ticketData,
@@ -203,7 +204,7 @@ const SupportTicketPage: CustomPage = () => {
           </div>
           <Button
             className="w-full"
-            disabled={!ticketIsOpen}
+            disabled={!ticketIsOpen || watch('message') === ''}
             type="submit"
             loading={sendMessageIsLoading}
           >
