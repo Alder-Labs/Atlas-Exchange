@@ -104,7 +104,9 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
         {loading ? (
           <div className="flex w-full items-center justify-center gap-4 py-8">
             <Text>Connecting bank account...</Text>
+            <div className={'h-6'} />
             <Spinner />
+            <div className={'h-6'} />
           </div>
         ) : (
           <>
