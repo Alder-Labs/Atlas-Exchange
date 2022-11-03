@@ -27,7 +27,7 @@ interface SetTotpMfaRequest {
   seed: string;
 }
 
-interface SetTotpModal {}
+interface SetTotpModal { }
 export function SetTotpModal(props: { mfa: MfaType }) {
   const router = useRouter();
   const darkMode = useDarkOrLightMode();
@@ -140,8 +140,7 @@ export function SetTotpModal(props: { mfa: MfaType }) {
                 <div className="h-1"></div>
                 <li>
                   <Text color="secondary">
-                    Scan QR code with the authenticator (or tap it in mobile
-                    browser).
+                    Scan QR code with the authenticator.
                   </Text>
                 </li>
               </ol>
