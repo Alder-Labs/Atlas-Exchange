@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { FilePondFile, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
@@ -26,7 +26,7 @@ import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
 import { CustomPage, SupportTicketCreate } from '../../lib/types';
 
-const ticketCategories: { value: string; label: string }[] = [
+const TICKET_CATEGORIES: { value: string; label: string }[] = [
   { value: 'Account closure', label: 'Account closure' },
   { value: 'Change Address', label: 'Change Address' },
   { value: 'Change Email', label: 'Change Email' },
@@ -46,7 +46,7 @@ const ticketCategories: { value: string; label: string }[] = [
 
 const NewTicketPage: CustomPage = () => {
   const router = useRouter();
-
+  const [filepondError, setFilepondError] = useState(false);
   const {
     register,
     handleSubmit,
@@ -99,7 +99,7 @@ const NewTicketPage: CustomPage = () => {
                 value={field.value}
                 placeholder="Select Category"
                 onSelect={(value) => field.onChange(value)}
-                options={ticketCategories}
+                options={TICKET_CATEGORIES}
                 className="w-full"
               />
             )}
@@ -129,13 +129,21 @@ const NewTicketPage: CustomPage = () => {
               labelIdle={
                 'Drag and drop here,<p class=text-brand-500> or click to Browse</p>'
               }
-              onupdatefiles={setSupportingDocument}
+              onerror={() => setFilepondError(true)}
+              onupdatefiles={(docs) => {
+                setFilepondError(false);
+                setSupportingDocument(docs);
+              }}
               allowFileSizeValidation={true}
               maxFileSize="5MB"
             />
           </div>
           <div className="h-4" />
-          <Button type="submit" loading={submitIsLoading}>
+          <Button
+            type="submit"
+            loading={submitIsLoading}
+            disabled={filepondError}
+          >
             Submit
           </Button>
         </form>
