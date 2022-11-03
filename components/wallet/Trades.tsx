@@ -35,7 +35,7 @@ export const TradeTransactions = () => {
               <div>
                 <div className="h-2"></div>
                 <Text size="md" color="secondary">
-                  Start trading using the convert feature
+                  Start trading using the widget in the top right.
                 </Text>
               </div>
               <div className="h-12" />

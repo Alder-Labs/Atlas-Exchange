@@ -16,7 +16,7 @@ export function DisabledMenuItemOverlay({
 }) {
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="z-10 flex max-w-xs rounded-md bg-white p-4 shadow-md dark:bg-grayDark-20">
+      <div className="z-10 flex max-w-xs rounded-md border bg-white p-4 shadow-md dark:border-grayDark-20 dark:bg-grayDark-20 dark:shadow-grayDark-40">
         {children}
       </div>
     </div>

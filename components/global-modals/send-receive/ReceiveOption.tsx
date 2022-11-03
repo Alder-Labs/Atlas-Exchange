@@ -8,7 +8,11 @@ import { MfaType } from '../../../lib/types';
 import { ModalState } from '../../../lib/types/modalState';
 import { Text } from '../../base';
 import { MenuIconLeft, MenuIconRight } from '../../global-modals/deposit/Menu';
-import { MenuItem, MenuItemProps } from '../../modals/MenuModalItem';
+import {
+  DisabledMenuItemOverlay,
+  MenuItem,
+  MenuItemProps,
+} from '../../modals/MenuModalItem';
 
 export const ReceiveOption = (props: {
   onClick: () => void;
@@ -81,7 +85,7 @@ export const ReceiveOption = (props: {
     rightIcon: <MenuIconRight icon={faBan} />,
   };
 
-  const kycLevelOneOption = {
+  const KycLevelTwoOption = {
     title: <Text size="xl"> Receive Crypto</Text>,
     description: (
       <>
@@ -104,8 +108,34 @@ export const ReceiveOption = (props: {
     }
     switch (kycLevel) {
       case 1:
+        return {
+          ...KycLevelTwoOption,
+          disabled: true,
+          disabledDescription: (
+            <DisabledMenuItemOverlay>
+              <Text color="secondary" className="text-start">
+                Please{' '}
+                <span
+                  className="cursor-pointer hover:brightness-110"
+                  onClick={async () => {
+                    await router.push('/account?tabIndex=1');
+                    setModalState({ state: ModalState.Closed });
+                  }}
+                >
+                  <Text color="brand" weight="bold">
+                    verify your information
+                  </Text>
+                </span>{' '}
+                (Level 2) to{' '}
+                <Text color="normal" weight="bold">
+                  receive crypto
+                </Text>
+              </Text>
+            </DisabledMenuItemOverlay>
+          ),
+        };
       case 2:
-        return kycLevelOneOption;
+        return KycLevelTwoOption;
       case 0:
       default:
         return kycLevelZeroOption;

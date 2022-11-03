@@ -142,7 +142,8 @@ const NewTicketPage: CustomPage = () => {
           <Button
             type="submit"
             loading={submitIsLoading}
-            disabled={filepondError}>
+            disabled={filepondError}
+          >
             Submit
           </Button>
         </form>
