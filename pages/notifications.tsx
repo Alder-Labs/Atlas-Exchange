@@ -42,7 +42,7 @@ const Notifications: CustomPage = () => {
     <SidePadding>
       <div className="sm:px-8">
         <div className="h-12" />
-        <div className={'flex flex-row items-end justify-between'}>
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
           <Title>Notifications</Title>
           <TextButton onClick={() => markAllRead({})}>
             Mark all as read
@@ -50,7 +50,7 @@ const Notifications: CustomPage = () => {
         </div>
         <div className="h-4" />
         <Table
-          tableClassName="w-full table-fixed"
+          tableClassName="table-fixed"
           data={notifications ?? []}
           loading={notificationsAreLoading}
           loadingRows={3}
@@ -74,13 +74,13 @@ const Notifications: CustomPage = () => {
                 return (
                   <div className={'border-b border-b-grayLight-90'}>
                     <div className="h-4" />
-                    <div className="flex flex-row items-center justify-between">
+                    <div className="flex flex-row items-center justify-between gap-4">
                       <Text className="" weight="bold">
                         {row.subject}
                       </Text>
                       <Text className="">{row.notification_type}</Text>
                     </div>
-                    <Text className="mt-2 block" color="secondary">
+                    <Text className="mt-2 block break-words" color="secondary">
                       {row.body}
                     </Text>
                     <Text className="mt-4 block" color="secondary" size="sm">
