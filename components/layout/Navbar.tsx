@@ -146,7 +146,11 @@ export function Navbar({ children }: NavbarProps) {
       <Responsive showIfSmallerThan="lg" className="sticky top-0 z-40 w-full">
         <div className="flex w-full items-center justify-between bg-grayLight-20 dark:bg-grayDark-20">
           <div className="ml-4">
-            <BrandLogo className="w-16" noIcon={true} />
+            <BrandLogo
+              className="w-16"
+              noIcon={true}
+              linkDisabled={basicMode}
+            />
           </div>
           {authenticated ? (
             <button

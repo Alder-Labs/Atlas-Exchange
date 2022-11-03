@@ -161,6 +161,7 @@ export const WithdrawCryptoForm = (props: {
           {...register('address', {
             required: true,
           })}
+          placeholder={'Address'}
         />
         {/* <div className="h-4"></div>
         <TextInput label="Tag" {...register('tag')}></TextInput> */}
