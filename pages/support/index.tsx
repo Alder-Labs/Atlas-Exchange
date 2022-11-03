@@ -55,9 +55,9 @@ export function SignedInSupport() {
         </Button>
       </div>
       {/*<div className={'flex '}></div>*/}
-      <div className={'flex-1 py-8 sm:p-8'}>
+      <div className={'flex-1 py-8'}>
         <Table
-          tableClassName="table-fixed"
+          tableClassName=""
           data={supportTickets ?? []}
           loading={supportTicketsIsLoading}
           loadingRows={3}
@@ -117,13 +117,14 @@ export function SignedInSupport() {
             {
               type: 'string',
               label: 'Category',
-              show: 'md',
+              show: 'sm',
               getCellValue: (ticket) => `${ticket.category}`,
               align: 'left',
             },
             {
               type: 'string',
               label: 'Title',
+              // widthClassName: '',
               getCellValue: (ticket) => `${ticket.title}`,
               align: 'left',
             },
