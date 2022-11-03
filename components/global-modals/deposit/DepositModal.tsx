@@ -72,7 +72,6 @@ const DepositModal = () => {
           <MenuItem
             title={<Text size="xl">Bank Transfer (ACH)</Text>}
             subtitle={'$2000 limit per transaction'}
-            disabled={authStatus < AuthStatus.KycLevel2}
             description={
               <Text color="secondary" className="text-start">
                 Transfers via ACH are free if you deposit more than $100 or
@@ -80,6 +79,7 @@ const DepositModal = () => {
                 arrive.
               </Text>
             }
+            disabled={authStatus < AuthStatus.KycLevel2}
             disabledDescription={
               <DisabledMenuItemOverlay>
                 <Text color="secondary" className="text-start">
@@ -95,7 +95,10 @@ const DepositModal = () => {
                       verify your information
                     </Text>
                   </span>{' '}
-                  (Level 2) to use <b>ACH Bank Transfers</b>
+                  (Level 2) to use{' '}
+                  <Text color="normal" weight="bold">
+                    ACH Bank Transfers
+                  </Text>
                 </Text>
               </DisabledMenuItemOverlay>
             }
@@ -128,7 +131,10 @@ const DepositModal = () => {
                       verify your information
                     </Text>
                   </span>{' '}
-                  (Level 2) to use <b>Wire Transfers</b>
+                  (Level 2) to use{' '}
+                  <Text color="normal" weight="bold">
+                    Wire Transfers
+                  </Text>
                 </Text>
               </DisabledMenuItemOverlay>
             }
