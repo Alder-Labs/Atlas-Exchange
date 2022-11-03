@@ -151,7 +151,8 @@ function MobileNavbar() {
             <FontAwesomeIcon icon={faNavicon} className="h-6 w-6" />
           </button>
         ) : (
-          <div className="m-4 flex h-6 items-center">
+          <div className="m-4 flex h-6 items-center gap-4">
+            <DarkModeButton />
             <Button
               size="sm"
               variant="outline"
