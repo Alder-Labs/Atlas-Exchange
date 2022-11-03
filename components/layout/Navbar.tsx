@@ -152,7 +152,7 @@ function MobileNavbar() {
           </button>
         ) : (
           <div className="m-4 flex h-6 items-center gap-4">
-            <DarkModeButton className="h-8 w-8" />
+            <DarkModeButton className="h-8" />
             <Button
               size="sm"
               variant="outline"
@@ -331,7 +331,7 @@ function DesktopNavbar() {
   const userState = useUserState();
   const router = useRouter();
 
-  const userIsNotSignedOut = userState?.status !== UserStateStatus.SIGNED_OUT;
+  const authenticated = userState?.status !== UserStateStatus.SIGNED_OUT;
   const url = router.pathname;
 
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
@@ -348,10 +348,10 @@ function DesktopNavbar() {
             <div className="flex items-center">
               <BrandLogo
                 className="w-16"
-                linkDisabled={basicMode && userIsNotSignedOut}
+                linkDisabled={basicMode && authenticated}
                 href={'/'}
               />
-              {userIsNotSignedOut && !basicMode && (
+              {authenticated && !basicMode && (
                 <>
                   <div className="w-10"></div>
 
@@ -379,7 +379,7 @@ function DesktopNavbar() {
             </div>
 
             <div className="flex items-center gap-4">
-              {userIsNotSignedOut && !basicMode && (
+              {authenticated && !basicMode && (
                 <>
                   <Button
                     size="sm"
@@ -407,10 +407,10 @@ function DesktopNavbar() {
                   <div className="w-0.5 self-stretch dark:bg-grayDark-50"></div>
                 </>
               )}
-              {userIsNotSignedOut && <Dropdown />}
-              {!userIsNotSignedOut && (
+              {authenticated && <Dropdown />}
+              {!authenticated && (
                 <>
-                  <DarkModeButton className="h-8 w-8" />
+                  <DarkModeButton className="h-8" />
                   <Button
                     size="sm"
                     variant="outline"

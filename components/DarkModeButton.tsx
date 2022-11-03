@@ -15,7 +15,7 @@ export function DarkModeButton({ className }: HTMLAttributes<HTMLDivElement>) {
   return (
     <Button
       variant="outline"
-      size="sm"
+      size="xs"
       onClick={() => {
         setDarkMode(getDarkOrLightMode() === 'light' ? 'dark' : 'light');
         forceUpdate();
