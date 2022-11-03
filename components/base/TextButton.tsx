@@ -57,7 +57,7 @@ export const TextButton = ({
   const primaryStyles = clsx({
     ['bg-gradient-to-r from-[#E32D00] to-[#E5007B]']: true,
     ['bg-clip-text text-transparent']: true,
-    ['hover:brightness-110 active:brightness-125']: true,
+    ['hover:brightness-110 active:brightness-125']: !disabled,
   });
 
   // Gray

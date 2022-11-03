@@ -211,7 +211,13 @@ export const WalletBalances = (props: WalletBalancesProps) => {
                 </Text>
               </div>
               <div className="h-4" />
-              <Button onClick={() => router.push('/deposit')}>Deposit</Button>
+              <Button
+                onClick={() => {
+                  setModalStateDetailed({ state: ModalState.DepositFiat });
+                }}
+              >
+                Deposit
+              </Button>
               <div className="h-12" />
             </EmptyContent>
           );

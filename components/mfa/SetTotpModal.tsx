@@ -47,7 +47,7 @@ export function SetTotpModal(props: { mfa: MfaType }) {
 
   const otpUrl =
     totpSeed && userState.loginStatusData?.user?.email
-      ? `otpauth://totp/${userState.loginStatusData?.user?.email}?secret=${totpSeed}&issuer=${TOTP_ISSUER}`
+      ? `otpauth://totp/${userState.loginStatusData.user.email}?secret=${totpSeed}&issuer=${TOTP_ISSUER}`
       : null;
 
   // Set TOTP as mfa method
@@ -134,7 +134,8 @@ export function SetTotpModal(props: { mfa: MfaType }) {
                 <li>
                   <Text color="secondary">
                     Install an authenticator app on your mobile device if you{' '}
-                    {"don't"} already have one.
+                    {"don't"} already have one. Examples include Google
+                    Authenticator and Authy.
                   </Text>
                 </li>
                 <div className="h-1"></div>

@@ -13,6 +13,7 @@ export function useRedirectHandlers() {
     (requiredStatus: AuthStatus) => {
       console.log('requireAuthStatus', requiredStatus, authStatus);
       if (authStatus === AuthStatus.Loading) {
+        console.log('Loading');
         return true;
       }
 
@@ -34,6 +35,7 @@ export function useRedirectHandlers() {
         return false;
       }
 
+      console.log('Fucker');
       return true;
     },
     [authStatus, setAuthModalState]

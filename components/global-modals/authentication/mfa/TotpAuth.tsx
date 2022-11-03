@@ -86,8 +86,8 @@ export const TotpAuth = () => {
     >
       <div className="p-6">
         <Text>
-          Please enter a 6-digit verification code from your Google
-          Authenticator or Authy app.
+          Please enter a 6-digit verification code from your authenticator app
+          (such as Google Authenticator or Authy).
         </Text>
         <div className="h-1"></div>
         <TextInput
