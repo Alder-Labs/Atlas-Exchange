@@ -17,11 +17,13 @@ import { AuthStatus, useAuthStatus } from '../../hooks/kyc';
 import { useModal, useModalState } from '../../hooks/modal';
 import { useMediaQuery } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
+import { setDarkMode } from '../../lib/dark-mode';
 import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
 import { UserStateStatus } from '../../lib/types/user-states';
 import { Button, Text } from '../base';
 import { BrandLogo } from '../BrandLogo';
+import { DarkModeButton } from '../DarkModeButton';
 import { DarkModeModal } from '../DarkModeModal';
 import Drawer from '../Drawer';
 
@@ -302,17 +304,19 @@ function MobileNavbar() {
                 Sign out
               </Button>
             ) : (
-              <Button
-                variant="outline"
-                rounded="md"
-                className="mx-4 mt-16"
-                onClick={() => {
-                  setDrawerOpen(false);
-                  setModalStateDetailed({ state: ModalState.SignIn });
-                }}
-              >
-                Sign in
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  rounded="md"
+                  className="mx-4 mt-16"
+                  onClick={() => {
+                    setDrawerOpen(false);
+                    setModalStateDetailed({ state: ModalState.SignIn });
+                  }}
+                >
+                  Sign in
+                </Button>
+              </>
             )}
           </div>
         </div>
@@ -400,15 +404,18 @@ function DesktopNavbar() {
               )}
               {authenticated && <Dropdown />}
               {!authenticated && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    setModalStateDetailed({ state: ModalState.SignIn })
-                  }
-                >
-                  Sign in
-                </Button>
+                <>
+                  <DarkModeButton />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      setModalStateDetailed({ state: ModalState.SignIn })
+                    }
+                  >
+                    Sign in
+                  </Button>
+                </>
               )}
             </div>
           </div>

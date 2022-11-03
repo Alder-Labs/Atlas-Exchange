@@ -20,7 +20,7 @@ export function DarkModeButton({ className }: HTMLAttributes<HTMLDivElement>) {
         setDarkMode(getDarkOrLightMode() === 'light' ? 'dark' : 'light');
         forceUpdate();
       }}
-      className={clsx('', className)}
+      className={clsx('h-8 w-8', className)}
     >
       {getDarkOrLightMode() === 'light' ? (
         <FontAwesomeIcon icon={faSun} className="h-4 w-4" size={'sm'} />
