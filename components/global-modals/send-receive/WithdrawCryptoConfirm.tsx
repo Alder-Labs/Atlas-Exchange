@@ -169,24 +169,26 @@ export const WithdrawCryptoConfirm = (props: {
           ></ExistingMfaInput>
           <div className="h-6" />
         </div>
-        <div className="w-full">
-          <Button
-            type="submit"
-            className="w-full"
-            onClick={onSubmit}
-            disabled={mfaCode.length === 0 || feeLoading || withdrawalLoading}
-          >
-            Submit
-          </Button>
-          <div className="h-4" />
-          <Button
-            variant="secondary"
-            className="w-full"
-            disabled={withdrawalLoading}
-            onClick={onCancel}
-          >
-            Cancel
-          </Button>
+        <div className="mx-4">
+          <div className="flex w-full flex-col items-center">
+            <Button
+              type="submit"
+              className="w-full"
+              onClick={onSubmit}
+              disabled={mfaCode.length === 0 || feeLoading || withdrawalLoading}
+            >
+              Submit
+            </Button>
+            <div className="h-4" />
+            <Button
+              variant="secondary"
+              className="w-full"
+              disabled={withdrawalLoading}
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </div>
     </div>

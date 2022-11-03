@@ -27,7 +27,7 @@ interface SetTotpMfaRequest {
   seed: string;
 }
 
-interface SetTotpModal { }
+interface SetTotpModal {}
 export function SetTotpModal(props: { mfa: MfaType }) {
   const router = useRouter();
   const darkMode = useDarkOrLightMode();

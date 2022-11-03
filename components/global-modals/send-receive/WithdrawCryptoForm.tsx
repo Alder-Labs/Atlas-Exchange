@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { FormEventHandler, useCallback, useMemo, useState } from 'react';
 
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Rifm } from 'rifm';
 
 import { useWithdrawalLimits } from '../../../hooks/transfer';
 import { useBalances } from '../../../hooks/wallet';
@@ -15,17 +15,7 @@ import { Warning } from '../../Warning';
 
 import { WithdrawCryptoInput } from './WithdrawCryptoConfirm';
 
-interface WithdrawCryptoFormInput {
-  size: string;
-  address: string;
-  method: string;
-  tag?: string;
-  code?: string;
-  password?: string;
-  savedAddressId?: string;
-}
-
-const ERROR_ID = 'WithdrawCryptoForm';
+const NUMBER_ACCEPTED = /[\d.]+/g;
 
 export const WithdrawCryptoForm = (props: {
   coin: Coin;
@@ -44,59 +34,44 @@ export const WithdrawCryptoForm = (props: {
   const { data: withdrawalLimits, isLoading: limitsLoading } =
     useWithdrawalLimits({ enabled: hasWithdrawalLimits });
 
-  const {
-    watch,
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm<WithdrawCryptoFormInput>({
-    defaultValues: {
-      method: coin.methods[0],
-      size: '',
-      address: '',
-    },
-  });
-
-  const getCoinBalance = (coin: Coin): number => {
-    if (!balancesMap) {
+  const getCoinBalance = useCallback(
+    (coin: Coin): number => {
+      if (!balancesMap) {
+        return 0.0;
+      }
+      if (coin.usdFungible && balancesMap['USD']) {
+        return balancesMap['USD'].free;
+      }
+      if (balancesMap[coin.id]) {
+        return balancesMap[coin.id].free;
+      }
       return 0.0;
-    }
-    if (coin.usdFungible && balancesMap['USD']) {
-      return balancesMap['USD'].free;
-    }
-    if (balancesMap[coin.id]) {
-      return balancesMap[coin.id].free;
-    }
-    return 0.0;
-  };
+    },
+    [balancesMap]
+  );
 
-  const balanceAvailable = getCoinBalance(coin);
+  const balanceAvailable = useMemo(
+    () => getCoinBalance(coin),
+    [coin, getCoinBalance]
+  );
+  const [method, setMethod] = useState(coin.methods[0]);
+  const [address, setAddress] = useState('');
+  const [size, setSize] = useState('');
+  const [tag, setTag] = useState('');
   const [saveAddress, setSaveAddress] = useState(false);
+  const [saveAddressId, setSaveAddressId] = useState(null);
 
-  const onSubmit: SubmitHandler<WithdrawCryptoFormInput> = async (formData) => {
-    const amount = Number(formData.size);
-    if (amount > balanceAvailable) {
-      toast.error('Amount greater than balance in wallet', { id: ERROR_ID });
+  const onSubmit: FormEventHandler<HTMLElement> = async (e) => {
+    e.preventDefault();
+    if (parseInt(size) > balanceAvailable) {
+      toast.error('Amount greater than balance in wallet');
       return;
-    }
-
-    if (formData.tag === '') {
-      delete formData.tag;
-    }
-    if (formData.code === '') {
-      delete formData.code;
-    }
-    if (formData.password === '') {
-      delete formData.password;
-    }
-    if (!saveAddress || formData.savedAddressId === '') {
-      delete formData.savedAddressId;
     }
     const data = {
       coin: coin.id,
-      ...formData,
+      method,
+      size,
+      address,
     };
     onSuccess({ data, coin });
   };
@@ -107,7 +82,7 @@ export const WithdrawCryptoForm = (props: {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="mb-4">
+      <form onSubmit={onSubmit} className="mb-4">
         <div className="flex flex-row">
           <div className="mr-6 ml-2 flex flex-col items-center">
             <CryptoIcon coinId={coin.id} className="mt-6 w-20"></CryptoIcon>
@@ -115,39 +90,52 @@ export const WithdrawCryptoForm = (props: {
             <Text>{coin.id}</Text>
           </div>
           <div className="w-full">
-            <Controller
-              name={'method'}
-              control={control}
-              render={({ field }) => (
-                <div>
-                  <label>
-                    <Text>Network</Text>
-                  </label>
-                  <Select
-                    className="mb-4 block text-label font-medium text-textPrimary"
-                    value={field.value ?? ''}
-                    onSelect={(value) => {
-                      if (typeof value === 'string') {
-                        field.onChange(value);
-                      }
-                    }}
-                    options={withdrawalMethods}
-                  />
-                </div>
+            <label>
+              <Text>Network</Text>
+            </label>
+            <Select
+              className="mb-4 block text-label font-medium text-textPrimary"
+              value={method}
+              onSelect={(value) => {
+                if (!value) {
+                  return;
+                }
+                setMethod(value);
+              }}
+              options={withdrawalMethods}
+            />
+
+            <Rifm
+              accept={NUMBER_ACCEPTED}
+              format={formatSize}
+              value={size}
+              onChange={(val) => {
+                const stripped = val.replace(/[^\d.]/g, '');
+                setSize(stripped);
+              }}
+            >
+              {({ value, onChange }) => (
+                <TextInput
+                  className="w-full"
+                  label="Amount"
+                  placeholder="0.00000000"
+                  onKeyDown={(e) => {
+                    if (e.key === ',') {
+                      e.preventDefault();
+                    }
+                  }}
+                  value={value}
+                  onChange={(e) => {
+                    onChange(e);
+                  }}
+                />
               )}
-            />
-            <TextInput
-              label="Amount"
-              placeholder="0.0000000"
-              {...register('size', { required: true })}
-            />
+            </Rifm>
             {balancesLoading && <Text>Balance: $---</Text>}
             {!balancesLoading && balancesMap && (
               <div
                 className="cursor-pointer"
-                onClick={() => {
-                  setValue('size', getCoinBalance(coin).toString());
-                }}
+                onClick={() => setSize(getCoinBalance(coin).toString())}
               >
                 <Text color="info" className="hover:underline">
                   Balance: {getCoinBalance(coin).toString()} {coin.id}
@@ -158,25 +146,10 @@ export const WithdrawCryptoForm = (props: {
         </div>
         <TextInput
           label="Address"
-          {...register('address', {
-            required: true,
-          })}
+          onChange={(e) => setAddress(e.target.value)}
         />
         {/* <div className="h-4"></div>
         <TextInput label="Tag" {...register('tag')}></TextInput> */}
-        {/*
-        <InputCheckbox
-          type="checkbox"
-          label="Save address"
-          checked={saveAddress}
-          onChange={() => setSaveAddress(!saveAddress)}
-        /> */}
-        {saveAddress && (
-          <TextInput
-            label="Address Name"
-            {...register('savedAddressId')}
-          ></TextInput>
-        )}
         <div className="mt-4" />
         {withdrawalLimits && (
           <WithdrawalLimitPrompt withdrawalLimits={withdrawalLimits} />
@@ -184,12 +157,7 @@ export const WithdrawCryptoForm = (props: {
         <Button
           type="submit"
           className="my-2 w-full"
-          disabled={
-            !watch('size') ||
-            !watch('address') ||
-            !watch('method') ||
-            limitsLoading
-          }
+          disabled={!size || !address || !method || limitsLoading}
         >
           {buttonText}
         </Button>
@@ -226,3 +194,10 @@ const WithdrawalLimitPrompt = (props: { withdrawalLimits: WithdrawLimits }) => {
 };
 
 export default WithdrawCryptoForm;
+
+function formatSize(nStr: string) {
+  const x = nStr.replace(/[^\d.]/g, '').split('.');
+  const x1 = x[0];
+  const x2 = x.length > 1 ? '.' + x[1] : '';
+  return `${x1}${x2}`;
+}
