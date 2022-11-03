@@ -25,6 +25,7 @@ registerPlugin(FilePondPluginFileValidateSize);
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
 import { CustomPage, SupportTicketCreate } from '../../lib/types';
+import { useState } from 'react';
 
 const ticketCategories: { value: string; label: string }[] = [
   { value: 'Account closure', label: 'Account closure' },
@@ -46,7 +47,7 @@ const ticketCategories: { value: string; label: string }[] = [
 
 const NewTicketPage: CustomPage = () => {
   const router = useRouter();
-
+  const [filepondError, setFilepondError] = useState(false);
   const {
     register,
     handleSubmit,
@@ -129,13 +130,20 @@ const NewTicketPage: CustomPage = () => {
               labelIdle={
                 'Drag and drop here,<p class=text-brand-500> or click to Browse</p>'
               }
-              onupdatefiles={setSupportingDocument}
+              onerror={() => setFilepondError(true)}
+              onupdatefiles={(docs) => {
+                setFilepondError(false);
+                setSupportingDocument(docs);
+              }}
               allowFileSizeValidation={true}
               maxFileSize="5MB"
             />
           </div>
           <div className="h-4" />
-          <Button type="submit" loading={submitIsLoading}>
+          <Button
+            type="submit"
+            loading={submitIsLoading}
+            disabled={filepondError}>
             Submit
           </Button>
         </form>
