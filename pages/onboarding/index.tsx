@@ -106,16 +106,15 @@ const OnboardingPage: CustomPage = () => {
     );
 
   const submitKycLevel1Form = () => {
-    const prevRawKycFormData: string | null =
-      localStorage.getItem(LocalStorageKey.KycForm);
+    const prevRawKycFormData: string | null = localStorage.getItem(
+      LocalStorageKey.KycForm
+    );
     if (!prevRawKycFormData) {
       toast.error('No kyc data...');
       return;
     }
 
-    const rawKycData = JSON.parse(
-      prevRawKycFormData
-    ) as KycRawForm;
+    const rawKycData = JSON.parse(prevRawKycFormData) as KycRawForm;
 
     const dob = new Date(
       `${rawKycData.month}/${rawKycData.day}/${rawKycData.year}`
@@ -145,10 +144,8 @@ const OnboardingPage: CustomPage = () => {
       .catch((err: Error) => {
         // "errorCode": "id_verification_2_required"
         if (
-          err.message ===
-          'Phone number does not match country' ||
-          err.message ===
-          'Please complete level 2 and provide proof of address'
+          err.message === 'Phone number does not match country' ||
+          err.message === 'Please complete level 2 and provide proof of address'
         ) {
           navStage(OnboardingStage.PROOF_OF_ADDRESS);
           return;
