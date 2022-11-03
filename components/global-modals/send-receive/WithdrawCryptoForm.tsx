@@ -147,6 +147,7 @@ export const WithdrawCryptoForm = (props: {
         <TextInput
           label="Address"
           onChange={(e) => setAddress(e.target.value)}
+          placeholder={'Address'}
         />
         {/* <div className="h-4"></div>
         <TextInput label="Tag" {...register('tag')}></TextInput> */}

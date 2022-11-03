@@ -26,9 +26,9 @@ export function Kyc2Required(props: {}) {
 
   const action =
     status.level2AppStatus === 'actions-needed'
-      ? 'Finish Application'
+      ? 'Contact Support'
       : status.level2AppStatus === 'pending'
-      ? 'View Application Status'
+      ? 'View Account Settings'
       : 'Upload Documents';
 
   return (

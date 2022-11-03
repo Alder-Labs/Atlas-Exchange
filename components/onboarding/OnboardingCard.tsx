@@ -30,9 +30,9 @@ export function OnboardingCard(props: OnboardingCardProps) {
         {onBack && (
           <button
             onClick={onBack}
-            className="mr-4 flex h-4 w-4 items-center overflow-hidden text-grayLight-50 transition hover:text-grayLight-80 dark:hover:text-white"
+            className="mr-4 flex h-4 w-4 items-center overflow-hidden text-grayLight-50 transition hover:text-grayLight-80 dark:text-grayLight-50 dark:hover:text-white"
           >
-            <FontAwesomeIcon icon={faArrowLeft} />
+            <FontAwesomeIcon icon={faArrowLeft} className="h-4 w-4" />
           </button>
         )}
         <Title className="font-bold">{title}</Title>

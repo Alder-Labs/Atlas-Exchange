@@ -17,8 +17,11 @@ export const TextAreaWithLabel = React.forwardRef<HTMLTextAreaElement, Props>(
     const { ref: prefixRef } = useElementSize();
 
     const textAreaPrimaryStyle = clsx({
-      'w-full p-2 rounded-md py-3 px-4 resize-none bg-grayLight-20 dark:bg-grayDark-40':
+      'w-full p-2 transition rounded-md py-3 px-4 resize-none bg-grayLight-20 dark:bg-grayDark-40 outline-none':
         true,
+      'focus-within:border-brand-300 dark:focus-within:border-brand-500 border':
+        true,
+      'border-grayLight-40 dark:border-grayDark-40': true,
       [`${textAreaClassName}`]: true,
     });
 

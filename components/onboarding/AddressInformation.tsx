@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
@@ -81,6 +81,18 @@ export function AddressInformation(props: AddressInformationProps) {
     );
   }, [vals]);
 
+  const countryCodesList = useMemo(() => {
+    // Put united states at the top of the list
+
+    const otherCountries = countryCodesAlpha3.filter(
+      (country) => country.value !== 'USA'
+    );
+    return [
+      { label: 'United States of America', value: 'USA' },
+      ...otherCountries,
+    ];
+  }, []);
+
   const countryRegions = watch('country')
     ? countryRegionsAlpha3[watch('country')] ?? []
     : [];
@@ -106,8 +118,9 @@ export function AddressInformation(props: AddressInformationProps) {
                   setValue('stateProvinceRegion', '');
                 }
               }}
-              options={countryCodesAlpha3}
+              options={countryCodesList}
               className="w-full"
+              placeholder={'Select a country'}
             />
           )}
         />
@@ -164,6 +177,7 @@ export function AddressInformation(props: AddressInformationProps) {
                     }}
                     options={countryRegions}
                     className="w-full"
+                    placeholder={'Select an option'}
                   />
                 </div>
               )}

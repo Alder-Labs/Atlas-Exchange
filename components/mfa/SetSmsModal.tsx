@@ -12,6 +12,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import { useModal } from '../../hooks/modal';
+import { useCurrentDate } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
 import {
   countryPhoneNumberCodes,
@@ -76,6 +77,16 @@ export function SetSmsMfaForm(props: { onSuccess: () => void }) {
     },
   });
 
+  // Phone Number Verification Code Timer
+  const currentDate = useCurrentDate();
+  const [codeLastSent, setCodeLastSent] = useState<Date | null>(null);
+  const secondsRemaining = Math.max(
+    0,
+    codeLastSent
+      ? 59 - Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
+      : 0
+  );
+
   const { errors } = formState;
   const {
     isLoading: requestPhoneVerificationLoading,
@@ -87,6 +98,7 @@ export function SetSmsMfaForm(props: { onSuccess: () => void }) {
     {
       onSuccess: (data) => {
         toast.success('Successfully requested phone verification');
+        setCodeLastSent(new Date());
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
@@ -201,8 +213,13 @@ export function SetSmsMfaForm(props: { onSuccess: () => void }) {
                   onClick={onRequestSmsCode}
                   loading={requestPhoneVerificationLoading}
                   type="button"
+                  disabled={secondsRemaining > 0}
                 >
-                  Send SMS
+                  {requestPhoneVerificationLoading
+                    ? 'Sending...'
+                    : secondsRemaining
+                    ? `Resend (${secondsRemaining})`
+                    : `Send SMS`}
                 </Button>
               </div>
             </div>

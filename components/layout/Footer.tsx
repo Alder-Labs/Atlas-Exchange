@@ -20,7 +20,7 @@ export const Footer = () => {
           <div className="ml-4 lg:ml-0">
             <BrandLogo className="w-16" />
           </div>
-          {userState.loginStatusData?.user?.kycLevel != 0 &&
+          {userState.loginStatusData?.user?.kycLevel != 0 && (
             <div className="flex flex-row">
               <div className="mr-6 flex flex-col lg:mr-16">
                 <FooterHeader>Pages</FooterHeader>
@@ -50,7 +50,8 @@ export const Footer = () => {
                   </a>
                 </Text>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
       </SidePadding>
     </footer>

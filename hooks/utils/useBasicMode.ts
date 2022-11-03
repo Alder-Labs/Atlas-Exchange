@@ -1,7 +1,7 @@
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
-import { ModalState } from "../../lib/types/modalState";
-import { useModalState } from "../modal";
+import { ModalState } from '../../lib/types/modalState';
+import { useModalState } from '../modal';
 
 export const useBasicMode = () => {
   const router = useRouter();
@@ -16,4 +16,4 @@ export const useBasicMode = () => {
     );
 
   return basicMode;
-}
+};

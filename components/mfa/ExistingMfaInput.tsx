@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   GoogleReCaptchaProvider,
@@ -6,6 +6,7 @@ import {
 } from 'react-google-recaptcha-v3';
 import { useMutation } from 'react-query';
 
+import { useCurrentDate } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
 import { requireEnvVar } from '../../lib/env';
 import { useMutationFetcher } from '../../lib/mutation';
@@ -45,6 +46,17 @@ function TotpMfaInput(props: TotpMfaInput) {
 interface SmsMfaProps extends ExistingMfaProps {}
 function SmsMfaInput(props: SmsMfaProps) {
   const { label, placeholder, value, required = false, onChange } = props;
+
+  // Phone Number Verification Code Timer
+  const currentDate = useCurrentDate();
+  const [codeLastSent, setCodeLastSent] = useState<Date | null>(null);
+  const secondsRemaining = Math.max(
+    0,
+    codeLastSent
+      ? 59 - Math.floor((currentDate.getTime() - codeLastSent.getTime()) / 1000)
+      : 0
+  );
+
   const { isLoading: requestSmsLoading, mutate: requestSms } = useMutation(
     useMutationFetcher<{ phoneNumber: string }, {}>(
       `/proxy/api/mfa/sms/request`
@@ -52,6 +64,7 @@ function SmsMfaInput(props: SmsMfaProps) {
     {
       onSuccess: (data) => {
         toast.success('Successfully sent MFA code via SMS');
+        setCodeLastSent(new Date());
       },
       onError: (err: Error) => {
         toast.error(`Error: ${err.message}`);
@@ -104,8 +117,13 @@ function SmsMfaInput(props: SmsMfaProps) {
           loading={requestSmsLoading}
           type="button"
           className="mr-2"
+          disabled={secondsRemaining > 0}
         >
-          Send SMS
+          {requestSmsLoading
+            ? 'Sending...'
+            : secondsRemaining
+            ? `Resend (${secondsRemaining})`
+            : `Send SMS`}
         </Button>
       )}
     />

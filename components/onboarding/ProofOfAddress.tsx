@@ -95,7 +95,7 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
           </Text>
         </div>
       </TextBubble>
-      <div className="h-2" />
+      <div className="h-8" />
 
       <div className="flex flex-row justify-between">
         <Text color="secondary">
@@ -111,6 +111,7 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
           Legal Name: <Text>{cachedForm.fullLegalName}</Text>
         </Text>
       </div>
+      <div className="h-4"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="h-1"></div>
         <TextLabel>Proof of Address document(s)</TextLabel>
