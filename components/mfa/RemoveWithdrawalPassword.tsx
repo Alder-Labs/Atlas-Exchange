@@ -4,7 +4,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMutation } from 'react-query';
 
-import { useModal } from '../../hooks/modal';
+import { useModal, UseModalCallbacks } from '../../hooks/modal';
 import { useUserState } from '../../lib/auth-token-context';
 import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { useMutationFetcher } from '../../lib/mutation';
@@ -13,45 +13,16 @@ import { UserStateStatus } from '../../lib/types/user-states';
 import { Button, Text, TextButton, TextInput } from '../base';
 import { TitledModal } from '../modals/TitledModal';
 
-interface SetWithdrawalPassword {
+import { WithdrawalPasswordWarning } from './WithdrawalPasswordWarning';
+
+interface RemoveWithdrawalPassword {
   password: string;
-  newPassword: string;
+  reset_token: string | null;
 }
 
-export function SetWithdrawalPasswordModal() {
+export function RemoveWithdrawalPasswordModal() {
   const darkMode = useDarkOrLightMode();
-  const userState = useUserState();
-  const loginStatus = userState.loginStatusData;
   const [open, handlers] = useModal(false);
-
-  const [newPassword, setNewPassword] = useState('');
-  const [passwordIsShowing, setPasswordIsShowing] = useState(false);
-  const toggleShowPassword = () => {
-    setPasswordIsShowing((prev) => !prev);
-  };
-
-  const {
-    mutate: setWithdrawalPassword,
-    isLoading: isLoadingSetWithdrawalPassword,
-  } = useMutation(
-    useMutationFetcher<SetWithdrawalPassword, {}>(
-      `/proxy/api/wallet/withdrawal_password`
-    ),
-    {
-      onSuccess: (data) => {
-        toast.success('Successfully set withdrawal password');
-        if (userState.status !== UserStateStatus.SIGNED_OUT) {
-          userState.updateToken(userState.token).then(() => {
-            handlers.close();
-          });
-        }
-        setNewPassword('');
-      },
-      onError: (err: Error) => {
-        toast.error(`Error: ${err.message}`);
-      },
-    }
-  );
 
   return (
     <>
@@ -60,25 +31,78 @@ export function SetWithdrawalPasswordModal() {
         onClick={handlers.open}
         variant={darkMode === 'dark' ? 'secondary' : 'outline'}
       >
-        Set Password
+        Disable Password
       </Button>
-      <TitledModal
-        isOpen={open}
-        title={'Set withdrawal password'}
-        onClose={handlers.close}
-      >
-        <div>
+      <RemoveWithdrawalPasswordInner isOpen={open} handlers={handlers} />
+    </>
+  );
+}
+
+const RemoveWithdrawalPasswordInner = (props: {
+  isOpen: boolean;
+  handlers: UseModalCallbacks;
+}) => {
+  const { isOpen, handlers } = props;
+
+  const userState = useUserState();
+  const [showWarning, setShowWarning] = useState(true);
+
+  const [oldPassword, setOldPassword] = useState('');
+  const [passwordIsShowing, setPasswordIsShowing] = useState(false);
+  const toggleShowPassword = () => {
+    setPasswordIsShowing((prev) => !prev);
+  };
+
+  const {
+    mutate: removeWithdrawalPassword,
+    isLoading: isLoadingRemoveWithdrawalPassword,
+  } = useMutation(
+    useMutationFetcher<RemoveWithdrawalPassword, {}>(
+      `/proxy/api/wallet/withdrawal_password`,
+      {
+        method: 'DELETE',
+      }
+    ),
+    {
+      onSuccess: (_) => {
+        toast.success('Successfully removed withdrawal password');
+        if (userState.status !== UserStateStatus.SIGNED_OUT) {
+          userState.updateToken(userState.token).then(() => {
+            handlers.close();
+          });
+        }
+        setOldPassword('');
+      },
+      onError: (err: Error) => {
+        toast.error(`Error: ${err.message}`);
+      },
+    }
+  );
+
+  return (
+    <TitledModal
+      isOpen={isOpen}
+      title={'Disable withdrawal password'}
+      onClose={handlers.close}
+    >
+      <div>
+        {showWarning && (
+          <div className="flex flex-col items-center p-6">
+            <WithdrawalPasswordWarning onClick={() => setShowWarning(false)} />
+          </div>
+        )}
+        {!showWarning && (
           <div className="flex flex-col items-center p-6">
             <Text className="w-full text-left">
-              Set a password that must be used for all withdrawals.
+              Enter your existing withdrawal password to disable.
             </Text>
             <TextInput
               className="mt-4 w-full"
               type={passwordIsShowing ? 'text' : 'password'}
               label="Password"
               placeholder="Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
               renderSuffix={() => (
                 <TextButton
                   onClick={toggleShowPassword}
@@ -108,16 +132,19 @@ export function SetWithdrawalPasswordModal() {
                 variant="primary"
                 className="flex-1"
                 onClick={() => {
-                  setWithdrawalPassword({ newPassword, password: '' });
+                  removeWithdrawalPassword({
+                    password: oldPassword,
+                    reset_token: null,
+                  });
                 }}
-                loading={isLoadingSetWithdrawalPassword}
+                loading={isLoadingRemoveWithdrawalPassword}
               >
-                Enable
+                Disable
               </Button>
             </div>
           </div>
-        </div>
-      </TitledModal>
-    </>
+        )}
+      </div>
+    </TitledModal>
   );
-}
+};

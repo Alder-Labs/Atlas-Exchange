@@ -5,11 +5,13 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useWithdrawalLimits } from '../../../hooks/transfer';
 import { useBalances } from '../../../hooks/wallet';
 import { useUserState } from '../../../lib/auth-token-context';
+import { renderCurrency } from '../../../lib/currency';
 import { toast } from '../../../lib/toast';
-import { Coin } from '../../../lib/types';
+import { Coin, WithdrawLimits } from '../../../lib/types';
 import { UserStateStatus } from '../../../lib/types/user-states';
 import { Button, Select, Text, TextInput } from '../../base';
 import { CryptoIcon } from '../../CryptoIcon';
+import { Warning } from '../../Warning';
 
 import { WithdrawCryptoInput } from './WithdrawCryptoConfirm';
 
@@ -34,12 +36,13 @@ export const WithdrawCryptoForm = (props: {
   const { coin, buttonText, onCancel, onSuccess } = props;
 
   const userState = useUserState();
-  const isLoggedIn = userState.status === UserStateStatus.SIGNED_IN;
+  const hasWithdrawalLimits =
+    userState.status === UserStateStatus.SIGNED_IN &&
+    userState.loginStatusData.user?.kycLevel === 1;
 
-  const [showConfirm, setShowConfirm] = useState(false);
   const { balancesMap, isLoading: balancesLoading } = useBalances();
   const { data: withdrawalLimits, isLoading: limitsLoading } =
-    useWithdrawalLimits();
+    useWithdrawalLimits({ enabled: hasWithdrawalLimits });
 
   const {
     watch,
@@ -70,16 +73,6 @@ export const WithdrawCryptoForm = (props: {
   };
 
   const balanceAvailable = getCoinBalance(coin);
-
-  let limit = null;
-  if (
-    withdrawalLimits &&
-    withdrawalLimits.threshold &&
-    withdrawalLimits.exhausted
-  ) {
-    limit = withdrawalLimits.threshold - withdrawalLimits.exhausted;
-  }
-
   const [saveAddress, setSaveAddress] = useState(false);
 
   const onSubmit: SubmitHandler<WithdrawCryptoFormInput> = async (formData) => {
@@ -168,11 +161,10 @@ export const WithdrawCryptoForm = (props: {
           {...register('address', {
             required: true,
           })}
+          placeholder={'Address'}
         />
         {/* <div className="h-4"></div>
         <TextInput label="Tag" {...register('tag')}></TextInput> */}
-        {/* <div className="h-4"></div>
-        <TextInput label="Password" {...register('password')}></TextInput> */}
         {/*
         <InputCheckbox
           type="checkbox"
@@ -186,11 +178,19 @@ export const WithdrawCryptoForm = (props: {
             {...register('savedAddressId')}
           ></TextInput>
         )}
-        <div className="mt-4"></div>
+        <div className="mt-4" />
+        {withdrawalLimits && (
+          <WithdrawalLimitPrompt withdrawalLimits={withdrawalLimits} />
+        )}
         <Button
           type="submit"
           className="my-2 w-full"
-          disabled={!watch('size') || !watch('address') || !watch('method')}
+          disabled={
+            !watch('size') ||
+            !watch('address') ||
+            !watch('method') ||
+            limitsLoading
+          }
         >
           {buttonText}
         </Button>
@@ -200,6 +200,30 @@ export const WithdrawCryptoForm = (props: {
       </Button>
     </div>
   );
+};
+
+const WithdrawalLimitPrompt = (props: { withdrawalLimits: WithdrawLimits }) => {
+  const { withdrawalLimits } = props;
+
+  if (withdrawalLimits.threshold && withdrawalLimits.exhausted) {
+    return (
+      <div>
+        <Warning>
+          <Text color="warning">
+            Daily Limit Left:{' '}
+            {renderCurrency({
+              amount: withdrawalLimits.threshold - withdrawalLimits.exhausted,
+              coinId: 'USD',
+              showCoinId: false,
+            })}
+          </Text>
+        </Warning>
+        <div className="mt-4" />
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default WithdrawCryptoForm;

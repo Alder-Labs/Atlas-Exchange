@@ -17,6 +17,9 @@ import { useDarkOrLightMode } from '../lib/dark-mode';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';
+import { RemoveWithdrawalPasswordModal } from '../components/mfa/RemoveWithdrawalPassword';
+import { UpdateWithdrawalPasswordModal } from '../components/mfa/UpdateWithdrawalPasswordModal';
+import { WithdrawalPasswordModal } from '../components/mfa/WithdrawalPasswordModal';
 
 const AccountNavbarTab = ({
   label,
@@ -187,7 +190,7 @@ const SecurityTabContent = () => {
         <AccountOption
           title="Withdrawal Password"
           description="Set up a separate password for withdrawals"
-          rightChild={<SetWithdrawalPasswordModal />}
+          rightChild={<WithdrawalPasswordModal />}
         />
       </AccountOptionsContainer>
       <div className="h-8" />
@@ -287,7 +290,7 @@ const IdentityTabContent = () => {
                     <div className="h-2" />
                     <Text color="secondary">
                       No crypto deposit limits <br />
-                      $2000 USD limit for crypto withdrawals per day <br />
+                      $10,000 USD limit for crypto withdrawals per day <br />
                       No fiat deposits or withdrawals{' '}
                     </Text>
                     {authStatus === AuthStatus.KycLevel0 && (

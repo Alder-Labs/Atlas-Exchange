@@ -160,7 +160,7 @@ export function Dropdown() {
                   />
                   <Text loadingWidth="8rem">
                     {loginStatusData?.loggedIn
-                      ? loginStatusData.user.displayName
+                      ? truncateStr(loginStatusData.user.displayName, 20)
                       : '---'}
                   </Text>
                   <FontAwesomeIcon
@@ -177,4 +177,8 @@ export function Dropdown() {
       }}
     </Menu>
   );
+}
+
+function truncateStr(str: string, maxChars: number) {
+  return str.length > maxChars ? str.substring(0, maxChars) + '...' : str;
 }

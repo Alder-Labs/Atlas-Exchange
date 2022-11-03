@@ -11,19 +11,11 @@ export const BrandLogo = (props: {
   linkDisabled?: boolean;
 }) => {
   const { className, href = '/', noIcon = false, linkDisabled = false } = props;
-  const router = useRouter();
   const darkMode = useDarkOrLightMode();
 
-  console.log(router);
-
-  return (
-    <Link href={linkDisabled ? router.asPath : href}>
-      <div
-        className={clsx({
-          'flex items-center': true,
-          'cursor-pointer': !linkDisabled,
-        })}
-      >
+  const Logo = () => {
+    return (
+      <div className="flex items-center">
         {!noIcon && (
           <img
             src="/brave-lion-logo-rgb.svg"
@@ -42,6 +34,14 @@ export const BrandLogo = (props: {
           alt="Logo"
         />
       </div>
+    );
+  };
+
+  return linkDisabled ? (
+    <Logo />
+  ) : (
+    <Link href={href}>
+      <Logo />
     </Link>
   );
 };

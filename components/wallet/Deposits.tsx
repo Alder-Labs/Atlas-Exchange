@@ -61,7 +61,6 @@ export const DepositTransactions = () => {
         {
           type: 'custom',
           label: 'Type',
-          widthClassName: 'lg:w-52 w-32',
           renderLoading: () => <LoaderDoubleLine />,
           renderCell: (row) => {
             return (
