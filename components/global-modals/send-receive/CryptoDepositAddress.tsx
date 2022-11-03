@@ -124,7 +124,7 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
             className="ml-2 cursor-pointer text-grayLight-90/75 duration-300 hover:text-grayLight-90 dark:text-grayDark-90/75 hover:dark:text-grayDark-90"
             onClick={() => {
               if (data?.address) {
-                copyAddressToClipboard(data.address)
+                copyAddressToClipboard(data.address);
               }
             }}
           >

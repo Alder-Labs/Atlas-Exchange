@@ -99,6 +99,11 @@ const SendModal = () => {
         title="Send Crypto"
         {...defaultModalProps}
         isOpen={modalState.state === ModalState.SendCryptoForm}
+        onGoBack={() => {
+          setModalState({
+            state: ModalState.SendCryptoSelect,
+          });
+        }}
         darkenBackground={false}
       >
         <div className="p-3 lg:p-6">
@@ -123,6 +128,11 @@ const SendModal = () => {
         title="Send Crypto"
         {...defaultModalProps}
         isOpen={modalState.state === ModalState.SendCryptoSelect}
+        onGoBack={() => {
+          setModalState({
+            state: ModalState.SendReceiveCrypto,
+          });
+        }}
         darkenBackground={false}
       >
         <div className="p-3 lg:p-6">
@@ -140,6 +150,9 @@ const SendModal = () => {
         {...defaultModalProps}
         isOpen={modalState.state === ModalState.ReceiveCryptoAddress}
         darkenBackground={false}
+        onGoBack={() => {
+          setModalState({ state: ModalState.ReceiveCryptoSelect });
+        }}
       >
         <div className="p-3 lg:p-6">
           {modalState.state === ModalState.ReceiveCryptoAddress &&
@@ -155,6 +168,9 @@ const SendModal = () => {
         title="Receive Crypto"
         {...defaultModalProps}
         isOpen={modalState.state === ModalState.ReceiveCryptoSelect}
+        onGoBack={() => {
+          setModalState({ state: ModalState.SendReceiveCrypto });
+        }}
         darkenBackground={false}
       >
         <div className="p-3 lg:p-6">
