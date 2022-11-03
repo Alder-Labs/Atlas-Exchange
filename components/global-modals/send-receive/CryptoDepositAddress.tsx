@@ -14,6 +14,8 @@ import { Button, Select, Spinner } from '../../base';
 import { CryptoIcon } from '../../CryptoIcon';
 import { LoaderSingleLine } from '../../loaders';
 import { Warning } from '../../Warning';
+import { useModalState } from '../../../hooks/modal';
+import { ModalState } from '../../../lib/types/modalState';
 
 function GrayQRCodeContainer(props: { children: React.ReactNode }) {
   return (
@@ -26,6 +28,7 @@ function GrayQRCodeContainer(props: { children: React.ReactNode }) {
 export const CryptoDepositAddress = (props: { coin: Coin }) => {
   const { coin } = props;
   const router = useRouter();
+  const [modalState, setModalState, handlers] = useModalState();
 
   const [depositMethod, setDepositMethod] = useState<string | null>(
     coin.methods[0] ?? null
@@ -50,11 +53,13 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
     }
   }
 
-  function copyAddressToClipboard() {
-    if (data) {
-      navigator.clipboard.writeText(data.address);
-      toast.success(`Copied address to clipboard`);
+  function copyAddressToClipboard(address: string) {
+    if (!navigator.clipboard) {
+      toast.error('Insecure context');
+      return;
     }
+    navigator.clipboard.writeText(address);
+    toast.success(`Copied address to clipboard`);
   }
 
   return (
@@ -117,7 +122,11 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
           {data && <AddressText className="m-2">{data.address}</AddressText>}
           <button
             className="ml-2 cursor-pointer text-grayLight-90/75 duration-300 hover:text-grayLight-90 dark:text-grayDark-90/75 hover:dark:text-grayDark-90"
-            onClick={copyAddressToClipboard}
+            onClick={() => {
+              if (data?.address) {
+                copyAddressToClipboard(data.address)
+              }
+            }}
           >
             <FontAwesomeIcon className="h-6" icon={faCopy} />
           </button>
@@ -140,8 +149,9 @@ export const CryptoDepositAddress = (props: { coin: Coin }) => {
       <div className="h-4" />
       <Button
         className="w-full"
-        onClick={() => {
-          router.push('/wallet');
+        onClick={async () => {
+          await router.push('/wallet');
+          setModalState({ state: ModalState.Closed });
         }}
       >
         <div className="w-full">Continue to Wallet</div>

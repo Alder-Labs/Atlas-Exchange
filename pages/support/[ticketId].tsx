@@ -6,12 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { FilePondFile, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
-import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { FilePond } from 'react-filepond';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
-registerPlugin(FilePondPluginFileValidateSize);
 
 import {
   Button,
@@ -23,7 +21,7 @@ import {
 } from '../../components/base';
 import { SidePadding } from '../../components/layout/SidePadding';
 import { Message } from '../../components/support/Message';
-import { useSupportMessages } from '../../hooks/support/useSupportMessages';
+import { useSupportMessages } from '../../hooks/support';
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { useMutationFetcher } from '../../lib/mutation';
 import { toast } from '../../lib/toast';
@@ -32,6 +30,8 @@ import {
   SupportMessageCreate,
   SupportTicketStatusUpdate,
 } from '../../lib/types';
+
+registerPlugin(FilePondPluginFileValidateSize);
 
 const SupportTicketPage: CustomPage = () => {
   const router = useRouter();
@@ -74,7 +74,7 @@ const SupportTicketPage: CustomPage = () => {
         refetch();
       },
       onError: (err: Error) => {
-        toast.error(`Error: ${err.message}`);
+        toast.error(`${err.message}`);
       },
     }
   );

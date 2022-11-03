@@ -61,7 +61,6 @@ const secondaryDark = {
   120: '#F3F5FE',
 };
 
-// Turquoise
 const brand = {
   50: '#FEE5DF',
   100: '#FED5CB',

@@ -1,5 +1,11 @@
 import { useState } from 'react';
 
+export type UseModalCallbacks = {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+};
+
 export function useModal(
   initialState: boolean,
   callbacks?: { onOpen?(): void; onClose?(): void }

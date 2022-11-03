@@ -17,7 +17,6 @@ import { AuthStatus, useAuthStatus } from '../../hooks/kyc';
 import { useModal, useModalState } from '../../hooks/modal';
 import { useMediaQuery } from '../../hooks/utils';
 import { useUserState } from '../../lib/auth-token-context';
-import { useDarkOrLightMode } from '../../lib/dark-mode';
 import { toast } from '../../lib/toast';
 import { ModalState } from '../../lib/types/modalState';
 import { UserStateStatus } from '../../lib/types/user-states';

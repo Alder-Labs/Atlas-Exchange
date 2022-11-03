@@ -99,7 +99,7 @@ export function SelectAutocomplete<T extends string>(props: SelectProps<T>) {
             <Combobox.Input<'input', OptionType<T> | null>
               className={
                 (open ? 'dark:border-brand-500 ' : '') +
-                'relative flex w-full cursor-pointer items-center justify-between rounded-lg border px-2 py-3 pl-3 text-left outline-none dark:border-grayDark-40 dark:bg-grayDark-40'
+                'relative flex w-full cursor-pointer items-center justify-between rounded-lg border border-grayLight-40 px-2 py-3 pl-3 text-left outline-none dark:border-grayDark-40 dark:bg-grayDark-40'
               }
               displayValue={(item) => item?.label ?? ''}
               onChange={(event) => setQuery(event.target.value)}
