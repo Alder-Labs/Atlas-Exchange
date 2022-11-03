@@ -12,6 +12,7 @@ import { ALPHA3_TO_COUNTRY_NAME } from '../../lib/country-codes';
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { LocalStorageKey } from '../../lib/local-storage-keys';
 import { toast } from '../../lib/toast';
+import { KycRawForm } from '../../lib/types/kyc';
 import { Text, Button, TextLabel } from '../base';
 import { TextBubble } from '../Warning';
 
@@ -29,6 +30,7 @@ interface ProofOfAddressProps
 type ProofOfAddressForm = {
   kycType: string;
   country: string;
+  stateProvinceRegion: string;
   fullLegalName: string;
   proofOfAddress: File;
 };
@@ -47,12 +49,13 @@ export function ProofOfAddress(props: ProofOfAddressProps) {
 
   const cachedForm = JSON.parse(
     localStorage.getItem(LocalStorageKey.KycForm) || '{}'
-  );
+  ) as KycRawForm;
 
   const onSubmit = (data: ProofOfAddressForm) => {
     const formData = {
       kycType: 'individual',
       country: cachedForm.country,
+      stateProvinceRegion: cachedForm.stateProvinceRegion,
       fullLegalName: cachedForm.fullLegalName,
       proofOfAddress:
         supportingDocument.length > 0 && supportingDocument[0].file,

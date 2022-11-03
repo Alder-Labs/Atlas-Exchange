@@ -2,6 +2,7 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import { useBasicMode } from '../../hooks/utils/useBasicMode';
 import { useUserState } from '../../lib/auth-token-context';
 import { UserStateStatus } from '../../lib/types/user-states';
 import { Text } from '../base';
@@ -19,36 +20,38 @@ export const Footer = () => {
           <div className="ml-4 lg:ml-0">
             <BrandLogo className="w-16" />
           </div>
-          <div className="flex flex-row">
-            <div className="mr-6 flex flex-col lg:mr-16">
-              <FooterHeader>Pages</FooterHeader>
-              <div className="h-4" />
-              <FooterLink href="/">Home</FooterLink>
-              {userState.status === UserStateStatus.SIGNED_IN && (
-                <div>
-                  <div className="h-4" />
-                  <FooterLink href="/wallet">Wallet</FooterLink>
-                  <div className="h-4" />
-                  <FooterLink href="/account">Settings</FooterLink>
-                </div>
-              )}
+          {userState.loginStatusData?.user?.kycLevel != 0 && (
+            <div className="flex flex-row">
+              <div className="mr-6 flex flex-col lg:mr-16">
+                <FooterHeader>Pages</FooterHeader>
+                <div className="h-4" />
+                <FooterLink href="/">Home</FooterLink>
+                {userState.status === UserStateStatus.SIGNED_IN && (
+                  <div>
+                    <div className="h-4" />
+                    <FooterLink href="/wallet">Wallet</FooterLink>
+                    <div className="h-4" />
+                    <FooterLink href="/account">Settings</FooterLink>
+                  </div>
+                )}
+              </div>
+              <div className="mr-4 flex flex-col lg:mr-16">
+                <FooterHeader>Help Center</FooterHeader>
+                <div className="h-4" />
+                <FooterLink href="/support">Support</FooterLink>
+                <div className="h-4" />
+                <Text color="secondary" hoverColor="normal">
+                  <a
+                    href="https://hackerone.com/brave"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Report a bug
+                  </a>
+                </Text>
+              </div>
             </div>
-            <div className="mr-4 flex flex-col lg:mr-16">
-              <FooterHeader>Help Center</FooterHeader>
-              <div className="h-4" />
-              <FooterLink href="/support">Support</FooterLink>
-              <div className="h-4" />
-              <Text color="secondary" hoverColor="normal">
-                <a
-                  href="https://hackerone.com/brave"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Report a bug
-                </a>
-              </Text>
-            </div>
-          </div>
+          )}
         </div>
       </SidePadding>
     </footer>
