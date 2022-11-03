@@ -137,7 +137,7 @@ function MobileNavbar() {
           <BrandLogo
             href="/"
             className="w-16"
-            linkDisabled={basicMode}
+            linkDisabled={basicMode && authenticated}
             noIcon={true}
           />
         </div>
@@ -331,7 +331,7 @@ function DesktopNavbar() {
   const userState = useUserState();
   const router = useRouter();
 
-  const authenticated = userState?.status !== UserStateStatus.SIGNED_OUT;
+  const userIsNotSignedOut = userState?.status !== UserStateStatus.SIGNED_OUT;
   const url = router.pathname;
 
   const [modalStateDetailed, setModalStateDetailed] = useModalState();
@@ -346,8 +346,12 @@ function DesktopNavbar() {
         <SidePadding as="nav" className="w-full py-4">
           <div className="flex w-full items-center justify-between px-8">
             <div className="flex items-center">
-              <BrandLogo className="w-16" linkDisabled={basicMode} href={'/'} />
-              {authenticated && !basicMode && (
+              <BrandLogo
+                className="w-16"
+                linkDisabled={basicMode && userIsNotSignedOut}
+                href={'/'}
+              />
+              {userIsNotSignedOut && !basicMode && (
                 <>
                   <div className="w-10"></div>
 
@@ -375,7 +379,7 @@ function DesktopNavbar() {
             </div>
 
             <div className="flex items-center gap-4">
-              {authenticated && !basicMode && (
+              {userIsNotSignedOut && !basicMode && (
                 <>
                   <Button
                     size="sm"
@@ -403,8 +407,8 @@ function DesktopNavbar() {
                   <div className="w-0.5 self-stretch dark:bg-grayDark-50"></div>
                 </>
               )}
-              {authenticated && <Dropdown />}
-              {!authenticated && (
+              {userIsNotSignedOut && <Dropdown />}
+              {!userIsNotSignedOut && (
                 <>
                   <DarkModeButton className="h-8 w-8" />
                   <Button

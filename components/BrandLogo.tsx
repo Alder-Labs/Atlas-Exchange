@@ -13,8 +13,28 @@ export const BrandLogo = (props: {
   const { className, href = '/', noIcon = false, linkDisabled = false } = props;
   const darkMode = useDarkOrLightMode();
 
-  const Logo = () => {
-    return (
+  return linkDisabled ? (
+    <div className="flex items-center">
+      {!noIcon && (
+        <img
+          src="/atlas-lion-logo-rgb.svg"
+          className="mr-2.5 h-9 w-6"
+          alt="Logo"
+        />
+      )}
+      {/* <img src="/favicon.ico" className="mr-3 h-6 sm:h-9" alt="Logo" /> */}
+      <img
+        src={
+          darkMode === 'dark'
+            ? '/atlas-text-logo-white.svg'
+            : '/atlas-text-logo-gray.svg'
+        }
+        className={className}
+        alt="Logo"
+      />
+    </div>
+  ) : (
+    <Link href={href}>
       <div className="flex items-center">
         {!noIcon && (
           <img
@@ -34,14 +54,6 @@ export const BrandLogo = (props: {
           alt="Logo"
         />
       </div>
-    );
-  };
-
-  return linkDisabled ? (
-    <Logo />
-  ) : (
-    <Link href={href}>
-      <Logo />
     </Link>
   );
 };
