@@ -111,7 +111,6 @@ export function AddressInformation(props: AddressInformationProps) {
           rules={{ required: true }}
           render={({ field }) => (
             <SelectAutocomplete
-              placeholder="Select Country"
               value={field.value}
               onSelect={(e) => {
                 if (typeof e === 'string') {
