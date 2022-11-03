@@ -100,7 +100,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
       className="mx-auto my-8 w-full max-w-lg lg:mt-32"
       isOpen={isOpen}
     >
-      <div className="px-4 py-8">
+      <div className="px-4 py-6">
         {loading ? (
           <div className="flex w-full items-center justify-center gap-4 py-8">
             <Text>Connecting bank account...</Text>
@@ -117,7 +117,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
               FTX US account or link my bank account.
             </Text>
 
-            <div className="h-4"></div>
+            <div className="h-2"></div>
             <div className="flex cursor-pointer items-center gap-1.5">
               <InputCheckbox
                 label={<Text className="pl-2">I agree</Text>}
@@ -129,7 +129,7 @@ export function ConnectBankAccount(props: ConnectBankAccountProps) {
                 }}
               />
             </div>
-            <div className="h-12"></div>
+            <div className="h-6"></div>
 
             <div className="text-center">
               <Button
