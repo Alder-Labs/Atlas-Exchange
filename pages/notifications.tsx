@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
 import { useMutation } from 'react-query';
 
 import { Text, TextButton, Title } from '../components/base';
@@ -17,6 +20,8 @@ const formatTime = (time: string) => {
 };
 
 const Notifications: CustomPage = () => {
+  const router = useRouter();
+
   const { data: notifications, isLoading: notificationsAreLoading } =
     useNotifications({
       onError: (err: Error) => {
@@ -40,6 +45,22 @@ const Notifications: CustomPage = () => {
 
   return (
     <SidePadding>
+      <div className="pt-8 sm:px-8 sm:pt-10">
+        <button
+          onClick={() => router.back()}
+          className={`mr-2 flex flex-row items-center `}
+        >
+          <Text
+            size="lg"
+            color="secondary"
+            hoverColor={'normal'}
+            className="flex items-center gap-2"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="h-4 w-4" />
+            Back
+          </Text>
+        </button>
+      </div>
       <div className="sm:px-8">
         <div className="h-12" />
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">

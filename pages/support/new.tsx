@@ -14,6 +14,7 @@ import {
   Title,
   TextAreaWithLabel,
   TextLabel,
+  Text,
 } from '../../components/base';
 // eslint-disable-next-line import/order
 import { SidePadding } from '../../components/layout/SidePadding';
@@ -25,6 +26,9 @@ registerPlugin(FilePondPluginFileValidateSize);
 import { useFormMutationFetcher } from '../../lib/formMutation';
 import { toast } from '../../lib/toast';
 import { CustomPage, SupportTicketCreate } from '../../lib/types';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const ticketCategories: { value: string; label: string }[] = [
   { value: 'Account closure', label: 'Account closure' },
@@ -83,6 +87,22 @@ const NewTicketPage: CustomPage = () => {
 
   return (
     <SidePadding>
+      <div className="pt-8 sm:px-8 sm:pt-10">
+        <button
+          onClick={() => router.back()}
+          className={`mr-2 flex flex-row items-center `}
+        >
+          <Text
+            size="lg"
+            color="secondary"
+            hoverColor={'normal'}
+            className="flex items-center gap-2"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="h-4 w-4" />
+            Back
+          </Text>
+        </button>
+      </div>
       <div className="lg:mx-48">
         <form onSubmit={handleSubmit(submitNewTicket)}>
           <div className="h-12" />
@@ -140,6 +160,7 @@ const NewTicketPage: CustomPage = () => {
           </Button>
         </form>
       </div>
+      <div className="h-24" />
     </SidePadding>
   );
 };
