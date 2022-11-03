@@ -7,9 +7,12 @@ import { useMutation } from 'react-query';
 
 import { Title, Text, Button } from '../components/base';
 import { SidePadding } from '../components/layout/SidePadding';
+import { RemoveWithdrawalPasswordModal } from '../components/mfa/RemoveWithdrawalPassword';
 import { SetSmsModal } from '../components/mfa/SetSmsModal';
 import { SetTotpModal } from '../components/mfa/SetTotpModal';
 import { SetWithdrawalPasswordModal } from '../components/mfa/SetWithdrawalPasswordModal';
+import { UpdateWithdrawalPasswordModal } from '../components/mfa/UpdateWithdrawalPasswordModal';
+import { WithdrawalPasswordModal } from '../components/mfa/WithdrawalPasswordModal';
 import { AuthStatus, useAuthStatus } from '../hooks/auth';
 import { useStripeVerificationStatus } from '../hooks/kyc';
 import { useUserState } from '../lib/auth-token-context';
@@ -17,29 +20,6 @@ import { useDarkOrLightMode } from '../lib/dark-mode';
 import { useMutationFetcher } from '../lib/mutation';
 import { toast } from '../lib/toast';
 import { CustomPage } from '../lib/types';
-import { RemoveWithdrawalPasswordModal } from '../components/mfa/RemoveWithdrawalPassword';
-import { UpdateWithdrawalPasswordModal } from '../components/mfa/UpdateWithdrawalPasswordModal';
-import { WithdrawalPasswordModal } from '../components/mfa/WithdrawalPasswordModal';
-
-const AccountNavbarTab = ({
-  label,
-  selected,
-}: {
-  label: string;
-  selected: boolean;
-}) => {
-  const styles = clsx({
-    'py-4 px-3 border-b-4 text-xl outline-none select-none translate-y-[2px]':
-      true,
-    'border-textAccent text-textAccent': selected,
-    'border-transparent text-grayLight-50': !selected,
-  });
-  return (
-    <>
-      <span className={styles}>{label}</span>
-    </>
-  );
-};
 
 type AccountOptionProps = {
   title?: string;
@@ -51,6 +31,79 @@ type AccountOptionProps = {
   leftChild?: React.ReactNode; // overrides title/description
   rightChild?: React.ReactNode; // overrides action / actionLabel
 } & HTMLAttributes<HTMLDivElement>;
+
+enum TabType {
+  Security = 'Security',
+  Identity = 'Identity',
+}
+
+const ALL_TABS = Object.values(TabType);
+
+const Account: CustomPage = () => {
+  const router = useRouter();
+  const tab = (router.query.tab ?? TabType.Security) as TabType;
+  const userState = useUserState();
+  const loginStatusData = userState.loginStatusData;
+  const displayName = loginStatusData?.user?.displayName;
+  const feeTier = loginStatusData?.user?.feeTier;
+
+  const getBtnStyle = (btnTab: TabType) => {
+    return clsx({
+      'py-4 px-4 border-b-4 text-lg outline-none select-none translate-y-[2px] font-medium':
+        true,
+      'border-textAccent text-textAccent': tab === btnTab,
+      'border-transparent text-grayLight-70': tab !== btnTab,
+    });
+  };
+
+  const setTab = (tab: TabType) => {
+    router.push(
+      {
+        pathname: '/account',
+        query: { tab },
+      },
+      undefined,
+      { scroll: false }
+    );
+  };
+
+  return (
+    <SidePadding>
+      <div className="sm:px-8">
+        <div className="h-8" />
+        <Title loadingWidth={'12rem'}>
+          {displayName ? `${displayName}` : ''}
+        </Title>
+        <div className="h-1" />
+        <Text color="secondary" loadingWidth="8rem">
+          Fee tier: Level {feeTier}
+        </Text>
+        <div className={'min-h-screen max-w-3xl'}>
+          <div className="h-8" />
+          <Tab.Group
+            selectedIndex={ALL_TABS.indexOf(tab)}
+            onChange={(idx) => {
+              setTab(ALL_TABS[idx]);
+            }}
+          >
+            <Tab.List className="mb-4 flex min-w-full flex-nowrap gap-6 border-b-2 border-grayLight-10 dark:border-grayDark-50">
+              <Tab className={getBtnStyle(TabType.Security)}>Security</Tab>
+              <Tab className={getBtnStyle(TabType.Identity)}>Identity</Tab>
+            </Tab.List>
+            <Tab.Panels>
+              <Tab.Panel className="outline-none">
+                <SecurityTabContent />
+              </Tab.Panel>
+              <Tab.Panel className="outline-none">
+                <IdentityTabContent />
+              </Tab.Panel>
+            </Tab.Panels>
+          </Tab.Group>
+        </div>
+      </div>
+    </SidePadding>
+  );
+};
 
 const AccountOptionsContainer = ({
   children,
@@ -271,193 +324,121 @@ const IdentityTabContent = () => {
         AuthStatus.KycLevel1,
         AuthStatus.KycLevel2,
       ].includes(authStatus) && (
-          <div>
-            <AccountOptionsContainer>
-              <AccountOption
-                title="Identity Verification: Level 1"
-                subtitle="Share your personal information"
-                description="Unlimited crypto withdrawals"
-                leftChild={
-                  <div className={'flex flex-col'}>
-                    <div className="flex flex-row">
-                      <Title>Identity Verification: Level 1</Title>
-                      {authStatus >= AuthStatus.KycLevel1 && (
-                        <Text size="2xl" color="success">
-                          &nbsp;(Verified)
-                        </Text>
-                      )}
-                    </div>
-                    <div className="h-2" />
-                    <Text color="secondary">
-                      No crypto deposit limits <br />
-                      $10,000 USD limit for crypto withdrawals per day <br />
-                      No fiat deposits or withdrawals{' '}
-                    </Text>
-                    {authStatus === AuthStatus.KycLevel0 && (
-                      <>
-                        <div className="h-2" />
-                        <Text color="warning">Takes less than 5 minutes</Text>
-                      </>
+        <div>
+          <AccountOptionsContainer>
+            <AccountOption
+              title="Identity Verification: Level 1"
+              subtitle="Share your personal information"
+              description="Unlimited crypto withdrawals"
+              leftChild={
+                <div className={'flex flex-col'}>
+                  <div className="flex flex-row">
+                    <Title>Identity Verification: Level 1</Title>
+                    {authStatus >= AuthStatus.KycLevel1 && (
+                      <Text size="2xl" color="success">
+                        &nbsp;(Verified)
+                      </Text>
                     )}
                   </div>
-                }
-                rightChild={
-                  <div>
-                    {authStatus === AuthStatus.KycLevel0 ? (
-                      <Button
-                        className="w-48"
-                        variant={'primary'}
-                        onClick={onClickIdentityLevel1}
-                      >
-                        Continue
-                      </Button>
+                  <div className="h-2" />
+                  <Text color="secondary">
+                    No crypto deposit limits <br />
+                    $10,000 USD limit for crypto withdrawals per day <br />
+                    No fiat deposits or withdrawals{' '}
+                  </Text>
+                  {authStatus === AuthStatus.KycLevel0 && (
+                    <>
+                      <div className="h-2" />
+                      <Text color="warning">Takes less than 5 minutes</Text>
+                    </>
+                  )}
+                </div>
+              }
+              rightChild={
+                <div>
+                  {authStatus === AuthStatus.KycLevel0 ? (
+                    <Button
+                      className="w-48"
+                      variant={'primary'}
+                      onClick={onClickIdentityLevel1}
+                    >
+                      Continue
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              }
+            />
+          </AccountOptionsContainer>
+          <div className="h-8" />
+          <AccountOptionsContainer>
+            <AccountOption
+              title="Identity Verification: Level 2"
+              subtitle="Upload identity documents"
+              description="Unlimited crypto withdrawals"
+              leftChild={
+                <div className={'flex flex-col'}>
+                  <div className="flex flex-row">
+                    <Title>Identity Verification: Level 2</Title>
+
+                    {authStatus === AuthStatus.KycLevel2 ? (
+                      <Text size="2xl" color="success">
+                        &nbsp;(Verified)
+                      </Text>
+                    ) : authStatus === AuthStatus.KycLevel1 &&
+                      status.level2AppStatus === 'pending' ? (
+                      <span className={'text-2xl text-warning'}>
+                        &nbsp;(Pending)
+                      </span>
+                    ) : authStatus === AuthStatus.KycLevel1 &&
+                      status.level2AppStatus === 'actions-needed' ? (
+                      <>
+                        <span className={'text-2xl text-error'}>
+                          &nbsp;(Action Needed)
+                        </span>
+                      </>
                     ) : (
                       <></>
                     )}
                   </div>
-                }
-              />
-            </AccountOptionsContainer>
-            <div className="h-8" />
-            <AccountOptionsContainer>
-              <AccountOption
-                title="Identity Verification: Level 2"
-                subtitle="Upload identity documents"
-                description="Unlimited crypto withdrawals"
-                leftChild={
-                  <div className={'flex flex-col'}>
-                    <div className="flex flex-row">
-                      <Title>Identity Verification: Level 2</Title>
-
-                      {authStatus === AuthStatus.KycLevel2 ? (
-                        <Text size="2xl" color="success">
-                          &nbsp;(Verified)
-                        </Text>
-                      ) : authStatus === AuthStatus.KycLevel1 &&
-                        status.level2AppStatus === 'pending' ? (
-                        <span className={'text-2xl text-warning'}>
-                          &nbsp;(Pending)
-                        </span>
-                      ) : authStatus === AuthStatus.KycLevel1 &&
-                        status.level2AppStatus === 'actions-needed' ? (
-                        <>
-                          <span className={'text-2xl text-error'}>
-                            &nbsp;(Action Needed)
-                          </span>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <div className="h-1"></div>
-                    <Text color="normal" weight="medium">
-                      Upload identity documents
-                    </Text>
-                    <div className="h-4" />
-                    <Text color="secondary">
-                      Unlimited USD deposits and withdrawals
-                    </Text>
-                    <Text color="secondary">Unlimited crypto withdrawals</Text>
-                    {!kycLevel2SubmitDisabled && (
-                      <>
-                        <div className="h-2" />
-                        <Text color="info">Takes less than 5 minutes</Text>
-                      </>
-                    )}
-                  </div>
-                }
-                rightChild={
-                  authStatus === AuthStatus.KycLevel2 ? (
-                    <div></div>
-                  ) : (
-                    <Button
-                      className="w-48"
-                      variant={'primary'}
-                      onClick={onChangeIdentityLevel2}
-                      disabled={kycLevel2SubmitDisabled}
-                    >
-                      Continue
-                    </Button>
-                  )
-                }
-              />
-            </AccountOptionsContainer>
-          </div>
-        )}
+                  <div className="h-1"></div>
+                  <Text color="normal" weight="medium">
+                    Upload identity documents
+                  </Text>
+                  <div className="h-4" />
+                  <Text color="secondary">
+                    Unlimited USD deposits and withdrawals
+                  </Text>
+                  <Text color="secondary">Unlimited crypto withdrawals</Text>
+                  {!kycLevel2SubmitDisabled && (
+                    <>
+                      <div className="h-2" />
+                      <Text color="info">Takes less than 5 minutes</Text>
+                    </>
+                  )}
+                </div>
+              }
+              rightChild={
+                authStatus === AuthStatus.KycLevel2 ? (
+                  <div></div>
+                ) : (
+                  <Button
+                    className="w-48"
+                    variant={'primary'}
+                    onClick={onChangeIdentityLevel2}
+                    disabled={kycLevel2SubmitDisabled}
+                  >
+                    Continue
+                  </Button>
+                )
+              }
+            />
+          </AccountOptionsContainer>
+        </div>
+      )}
       <div className="h-12" />
     </div>
-  );
-};
-
-const AccountNavbar = ({
-  tabs,
-  controlledTabIndex = 0,
-}: {
-  tabs: { [key: string]: React.ReactNode }[];
-  controlledTabIndex?: number; // Pass in tab from query param
-}) => {
-  const router = useRouter();
-
-  return (
-    <Tab.Group
-      onChange={(index) => {
-        router.push({
-          pathname: router.pathname,
-          query: { ...router.query, tabIndex: index },
-        });
-      }}
-      {...(controlledTabIndex && { selectedIndex: controlledTabIndex })}
-    >
-      <Tab.List className="flex w-full flex-nowrap gap-6 border-b-2 border-grayLight-30 pb-4 dark:border-grayDark-50">
-        {tabs.map((t) => (
-          <Tab key={Object.keys(t)[0]} className="outline-none">
-            {({ selected }) => (
-              <AccountNavbarTab label={Object.keys(t)[0]} selected={selected} />
-            )}
-          </Tab>
-        ))}
-      </Tab.List>
-      <Tab.Panels>
-        {tabs.map((t) => (
-          <Tab.Panel key={Object.keys(t)[0]}>{Object.values(t)[0]}</Tab.Panel>
-        ))}
-      </Tab.Panels>
-    </Tab.Group>
-  );
-};
-
-const Account: CustomPage = () => {
-  const router = useRouter();
-  const tabIndex = router.query.tabIndex ? Number(router.query.tabIndex) : 0;
-
-  const tabs: { [key: string]: React.ReactNode }[] = [
-    { Security: <SecurityTabContent /> },
-    { Identity: <IdentityTabContent /> },
-  ];
-
-  const userState = useUserState();
-  const loginStatusData = userState.loginStatusData;
-
-  const displayName = loginStatusData?.user?.displayName;
-  const feeTier = loginStatusData?.user?.feeTier;
-
-  return (
-    <SidePadding>
-      <div className="sm:px-8">
-        <div className="h-8" />
-        <Title loadingWidth={'12rem'}>
-          {displayName ? `${displayName}` : ''}
-        </Title>
-        <div className="h-1" />
-        <Text color="secondary" loadingWidth="8rem">
-          Fee tier: Level {feeTier}
-        </Text>
-        <div className={'min-h-screen max-w-3xl'}>
-          <div className="h-8" />
-          <AccountNavbar tabs={tabs} controlledTabIndex={tabIndex} />
-        </div>
-      </div>
-    </SidePadding>
   );
 };
 
