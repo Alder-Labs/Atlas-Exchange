@@ -142,7 +142,7 @@ export const MarketWatchlist = ({ className }: MarketWatchlistProps) => {
         align: 'left',
         widthClassName: 'w-20 sm:w-24 lg:w-28 2xl:w-32',
         renderCell: (item) => (
-          <div className="ml-1 lg:ml-0">
+          <div className="ml-1 text-black dark:text-grayDark-120 lg:ml-0">
             {renderCurrency({
               amount: item.ask,
               coinId: item.quoteCurrency,
