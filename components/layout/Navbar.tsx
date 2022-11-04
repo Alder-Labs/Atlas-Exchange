@@ -31,6 +31,7 @@ import { Dropdown } from './Dropdown';
 import { NotificationDropdown } from './NotificationDropdown';
 import { Responsive } from './Responsive';
 import { SidePadding } from './SidePadding';
+import { useBasicMode } from '../../hooks/utils/useBasicMode';
 
 export function IconButton(props: {
   icon: ReactNode;
@@ -119,10 +120,9 @@ function MobileNavbar() {
 
   const { authStatus } = useAuthStatus();
   // Under basic mode, the user can only sign out and change app appearance.
-  const basicMode = authStatus === AuthStatus.KycLevel0;
+  const basicMode = useBasicMode();
 
   const [isOpen, handlers] = useModal(false);
-
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isDesktop = useMediaQuery({ showIfBiggerThan: 'lg' });
   useEffect(() => {
@@ -130,6 +130,7 @@ function MobileNavbar() {
       setDrawerOpen(false);
     }
   }, [isDesktop]);
+
   return (
     <>
       <div className="flex w-full items-center justify-between bg-grayLight-20 dark:bg-grayDark-20">

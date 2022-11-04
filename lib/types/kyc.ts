@@ -35,7 +35,7 @@ export interface KycForm {
   fullLegalName: string;
   phoneNumber: string;
   dateOfBirth: string;
-  socialSecurityNumber: string;
+  socialSecurityNumber?: string;
   smsCode: string;
 }
 
