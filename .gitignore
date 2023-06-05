@@ -41,4 +41,6 @@ yarn-error.log*
 # Sentry
 .sentryclirc
 
+# revisionist history
 clean-up.sh
+clean-files.sh
