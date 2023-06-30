@@ -103,4 +103,6 @@ const sentryWebpackPluginOptions = {
 };
 
 const withAnalyzer = withBundleAnalyzer(nextConfig);
-module.exports = withSentryConfig(withAnalyzer, sentryWebpackPluginOptions);
+
+// Uncomment this once sentry is set up
+// module.exports = withSentryConfig(withAnalyzer, sentryWebpackPluginOptions);

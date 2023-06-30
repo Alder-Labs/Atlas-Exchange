@@ -1,6 +1,4 @@
-import clsx from 'clsx';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import { useDarkOrLightMode } from '../lib/dark-mode';
 
@@ -17,7 +15,7 @@ export const BrandLogo = (props: {
     <div className="flex items-center">
       {!noIcon && (
         <img
-          src="/atlas-lion-logo-rgb.svg"
+          src="/atlas-logo-rgb.svg"
           className="mr-2.5 h-9 w-6"
           alt="Logo"
         />
@@ -38,7 +36,7 @@ export const BrandLogo = (props: {
       <div className="flex items-center">
         {!noIcon && (
           <img
-            src="/atlas-lion-logo-rgb.svg"
+            src="/atlas-logo-rgb.svg"
             className="mr-2.5 h-9 w-6"
             alt="Logo"
           />

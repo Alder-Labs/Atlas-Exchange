@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import { uuid4 } from '@sentry/utils';
 import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,

@@ -1,2 +1,2 @@
-export const BRAND_NAME = 'atlasX';
-export const WEBSITE_URL = 'atlasx.com';
+export const BRAND_NAME = 'atlas';
+export const WEBSITE_URL = 'atlas.com';
