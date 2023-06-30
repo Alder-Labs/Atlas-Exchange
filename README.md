@@ -25,27 +25,26 @@ Flows/support for the following are included:
 - and more!
 
 ## Screenshots
-Home Page
-<p align="center">
-  <img width="100%" src="https://github.com/Alder-Labs/atlas/assets/10263842/1c4a13bb-b799-4a76-896c-9f6ab3912913">
-</p>
-Wallet Page
-<p align="center">
-  <img width="100%" src="https://github.com/Alder-Labs/atlas/assets/10263842/846e9b3b-c407-473f-9e10-356a1b0efc79">
-</p>
-Settings Page
-<p align="center">
-  <img width="100%" src="https://github.com/Alder-Labs/atlas/assets/10263842/c48f08a0-d61a-40f6-b696-88fff89ec8ee">
-</p>
-Support Page
-<p align="center">
-  <img width="100%" src="https://github.com/Alder-Labs/atlas/assets/10263842/d30be07e-47d9-46db-8f36-527781feaa3c">
-</p>
-Buy Widget
-<p align="center">
-  <img width="40%" src="https://github.com/Alder-Labs/atlas/assets/10263842/05f1eb21-d04a-4f7a-9c07-84d5d6d059de">
-</p>
 
+Home Page
+
+![Home Page](https://github.com/Alder-Labs/atlas/assets/10263842/2904e9ad-96bc-45a0-9172-3522e9d1acdd)
+
+Wallet Page
+
+![Wallet Page](https://github.com/Alder-Labs/atlas/assets/10263842/8526040d-bacf-4f36-8705-69fb0bb2002d)
+
+Settings Page
+
+<img width="1200" alt="Settings Page" src="https://github.com/Alder-Labs/atlas/assets/10263842/11aaffc7-b27f-46a2-8845-e3922618af59">
+
+Support Page
+
+![Support](https://github.com/Alder-Labs/atlas/assets/10263842/460d5f3a-3ffe-4f47-b808-97bf630a50ba)
+
+Buy Widget
+
+![Buy:Sell:Convert](https://github.com/Alder-Labs/atlas/assets/10263842/73f7e326-0ee7-4b8f-9e9e-540ec00ab908)
 
 ## Getting Started
 
